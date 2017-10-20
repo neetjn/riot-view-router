@@ -18,7 +18,6 @@ class Router {
       }
     });
     
-    self.location = window.location.hash
     self.$utils = { }
     self.regex = {
       stateName: /[a-zA-Z0-9]/g,
