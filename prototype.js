@@ -1,8 +1,8 @@
 /**
  * Represents the riot-view-router mixin.
  * @constructor
- * @param {object} options - Router options.
- * @param {array} states - States for router to read from.
+ * @param (object) options - Router options.
+ * @param (array) states - States for router to read from.
  */
 class Router {
 
