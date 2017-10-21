@@ -169,6 +169,18 @@ class Router {
       self.fallbackState = self.defaultState
     }
 
+    if (self.marker) {
+      if (!self.marker.match(self.$constants.regex.marker)) {
+        if (debugging) {
+          console.warn(`Marker "${self.marker}" contains unsupported characters`)
+          console.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
+        }
+        self.marker = self.$constants.defaults.marker
+      }
+    }
+    else {
+      self.marker = self.$constants.defaults.marker
+    }
     self.marker = self.marker || self.$constants.defaults.marker
     self.start()
   }

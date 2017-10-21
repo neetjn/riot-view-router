@@ -6,7 +6,8 @@
     "object-curly-spacing": ["error", "always"],
     "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
     "semi": ["error", "never"],
-    "no-unused-vars": ["error", "always"]
+    "no-unused-vars": ["error", "always"],
+    "space-before-blocks": ["error", "always"]
   },
   "globals": {
     "riot": true,
