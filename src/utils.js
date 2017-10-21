@@ -1,4 +1,4 @@
-export default {
+export const Utils = {
 
   /**
    * Used to search for states by their name.
