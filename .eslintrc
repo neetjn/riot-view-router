@@ -5,7 +5,7 @@
   "rules": {
     "object-curly-spacing": ["error", "always"],
     "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
-    "no-extra-semi": ["error", "always"],
+    "semi": ["error", "never"],
     "no-unused-vars": ["error", "always"]
   },
   "globals": {

@@ -1,3 +1,4 @@
+import constants from './constants'
 import utils from './utils'
 
 /**
@@ -9,8 +10,9 @@ import utils from './utils'
 class Router {
 
   constructor(options, states) {
+
     let self = this.$router = {  }
-    
+
     Object.defineProperty(self, 'location', {
       get: function() {
         return window.location.hash
@@ -18,118 +20,26 @@ class Router {
       set: function(location) {
         window.location.hash = location
       }
-    });
-    
-    self.$utils = { }
-    self.regex = {
-      stateName: /[a-zA-Z0-9]/g,
-      routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
-      routeVariable: /(:[a-zA-Z]*)/g
-    }
-    
-    /**
-    * Used to search for states by their name.
-    * @param (string) name - Name of state to search for.
-    */
-    self.$utils.stateByName = function(name) {
-      return self.states.find((state) => name == state.name)
-    }
-    
-    /**
-    * Used for extracting route patterns.
-    * @param (string) route - Route from state.
-    */
-    self.$utils.splitRoute = function(route) {
-      if (!route.match(self.regex.routeFormat)) {
-        throw Error(`Route "${route}" did not match expected route format`)
-      }
-      let pattern = route.split('/').slice(1)
-      let variables = pattern.filter((item) => {
-        return item.match(self.regex.routeVariable)
-      }).map((item) => {
-        return {
-          name: item.split('').slice(1).join(''),
-          position: pattern.indexOf(item)
-        }
-      })
-      variables.forEach((item) => {
-        if (variables.filter((_item) => item).length > 1) {
-          throw Error(`Found duplicate route variable pattern\n\t "${route}"`)
-        }
-      })
-      return {
-        route,
-        pattern,
-        variables
-      }
-    }
-    
-    /** Used to search for a state by your current route. */
-    self.$utils.stateByRoute = function() {
-      let stubs = self.location.split('#!')
-      if (stubs.length > 1) {
-        stubs = stubs[1].split('/').slice(1)
-      }
-      else {
-        stubs = ["/"]
-      }
-      let state = self.states.find((state) => {
-        let route = state.route
-        if (stubs.length == route.pattern.length) {
-          for (let stub in stubs) {
-            if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
-              if (!route.variables.find((variable) => variable.position == stub)) {
-                return false
-              }
-            }
-          }
-          return true
-        }
-      })
-      
-      if (state) {
-        return state
-      }
-      
-      if (self.debugging) {
-        console.warn('Route was not matched, defaulting to fallback state')
-      }
+    })
 
-      return self.$utils.stateByName(self.fallbackState)
-    }
-    
+    self.$utils = utils
+
     /**
-    * Used to extract route variables.
-    * @param (object) state - State object for variable matching.
-    */
-    self.$utils.extractRouteVars = function(state) {
-      let stubs = self.location.split('#!')
-      if (stubs.length > 1) {
-        stubs = stubs[1].split('/').slice(1)
-      }
-      let variables = state.route.variables
-      variables.forEach((variable) => {
-        variable.value = stubs[variable.position]
-      })
-      return variables
-    }
-    
-    /**
-    * Used to navigate with hash pattern.
-    * @param (string) route - Route to relocate to.
-      */
+     * Used to navigate with hash pattern.
+     * @param (string) route - Route to relocate to.
+     */
     self.navigate = function(route) {
       self.location = '#!' + route
     }
-    
+
     /**
-    * Used to change states. 
-    * @param (string) name - Name of state to transition to.
-    */
+     * Used to change states.
+     * @param (string) name - Name of state to transition to.
+     */
     self.pushState = function(name) {
       let state = self.$utils.stateByName(name)
       let location = self.location.split('#!')[1]
-      
+
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
           self.navigate(state.route.route)
@@ -142,7 +52,7 @@ class Router {
           }
         }
       }
-      
+
       if (self.onBeforeStateChange) {
         self.onBeforeStateChange(state)
       }
@@ -158,11 +68,11 @@ class Router {
       } // # call onEnter, pass new state
       self.$state = state
     }
-    
+
     /**
-    * Used to mount state.
-    * @param (object) state - State object for mounting.
-    */
+     * Used to mount state.
+     * @param (object) state - State object for mounting.
+     */
     self.transition = function(state) {
       let variables = self.$utils.extractRouteVars(state)
       if (self.$state) {
@@ -181,10 +91,10 @@ class Router {
       variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
       document.title = title
     }
-    
+
     /**
-    * Used to initialize the router and listeners.
-    */
+     * Used to initialize the router and listeners.
+     */
     self.start = function() {
       if (!self.location) {
         window.location.hash = `#!${ self.$utils.stateByName(self.defaultState).route.route }`
@@ -202,21 +112,21 @@ class Router {
         }
       }, 250) // # search for view context
     }
-    
+
     let requiredOptions = ['defaultState']
     let optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
-    
+
     for (let option in options) {
       if (acceptedOptions.indexOf(option) == -1) {
         throw Error(`Unknown option "${option} is not supported`)
       }
     } // # validate router optionsu
-    
+
     self = Object.assign(self, options)
-    
+
     self.debugging = self.debugging || false
-    
+
     let stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [states] : states
     states.forEach((state) => {
@@ -236,7 +146,7 @@ class Router {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
     self.states = states
-    
+
     if (!self.defaultState) {
       throw Error('Default state must be specified')
     } else {
@@ -247,7 +157,7 @@ class Router {
         throw Error(`State "${self.defaultState}" not found in specified states`)
       }
     }
-    
+
     if (self.fallbackState) {
       if (!self.$utils.stateByName(self.fallbackState)) {
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
@@ -259,8 +169,8 @@ class Router {
       }
       self.fallbackState = self.defaultState
     }
-    
-    self.marker = self.marker || 'r-view'
+
+    self.marker = self.marker || constants.defaults.marker
     self.start()
   }
 

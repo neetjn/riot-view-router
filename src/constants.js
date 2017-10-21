@@ -1,3 +1,12 @@
 export const Constants = {
-
+  defaults: {
+    marker: 'r-view',
+    anchorMarker: 'r-sref'
+  },
+  regex: {
+    marker: /[a-zA-Z\-]*/g,
+    stateName: /[a-zA-Z0-9]/g,
+    routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
+    routeVariable: /(:[a-zA-Z]*)/g
+  }
 }
