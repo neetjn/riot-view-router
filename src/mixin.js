@@ -15,8 +15,9 @@ export class Router {
     let self = this.$router = {  }
 
     self.$constants = Constants
-    self = Object.assign(self, Core)
-    self.$utils = Utils
+    self = Object.assign(self, Core(self))
+    self.$utils = Utils(self)
+    // TODO: left here, turn core and utils into classes, pass self as reference
 
     Object.defineProperty(self, 'location', {
       get: function() {
