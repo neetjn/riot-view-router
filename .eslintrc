@@ -1,15 +1,15 @@
 {
-    "root": true,
-    "parser": "babel-eslint",
-    "plugins": ["riot"],
-    "rules": {
-      "object-curly-spacing": ["error", "always"],
-      "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
-      "no-extra-semi": ["error", "always"],
-      "no-unused-vars": ["error", "always"]
-    },
-    "globals": {
-      "riot": true,
-      "window": true
-    }
+  "root": true,
+  "parser": "babel-eslint",
+  "plugins": ["riot"],
+  "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
+    "no-extra-semi": ["error", "always"],
+    "no-unused-vars": ["error", "always"]
+  },
+  "globals": {
+    "riot": true,
+    "window": true
   }
+}
