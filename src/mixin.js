@@ -37,7 +37,7 @@ class Router {
      * @param (string) name - Name of state to transition to.
      */
     self.pushState = function(name) {
-      let state = self.$utils.stateByName(name)
+      let state = self.$utils.stateByName(self, name)
       let location = self.location.split('#!')[1]
 
       if (location !== state.route.route) {
@@ -74,7 +74,7 @@ class Router {
      * @param (object) state - State object for mounting.
      */
     self.transition = function(state) {
-      let variables = self.$utils.extractRouteVars(state)
+      let variables = self.$utils.extractRouteVars(self, state)
       if (self.$state) {
         let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
         if (!tag) throw Error('Could not find a matching tag to unmount')
@@ -97,16 +97,16 @@ class Router {
      */
     self.start = function() {
       if (!self.location) {
-        window.location.hash = `#!${ self.$utils.stateByName(self.defaultState).route.route }`
+        window.location.hash = `#!${ self.$utils.stateByName(self, self.defaultState).route.route }`
       } // # route to default state
       self.context_id = '$' + new Date().getTime().toString()
       window[self.context_id] = window.setInterval(function() {
         let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
         if (context) {
           self.context = context
-          self.pushState(self.$utils.stateByRoute().name) // # route to initial state
+          self.pushState(self.$utils.stateByRoute(self).name) // # route to initial state
           window.onhashchange = function() {
-            self.pushState(self.$utils.stateByRoute().name) // # update state
+            self.pushState(self.$utils.stateByRoute(self).name) // # update state
           } // # create listener for route changes
           window.clearInterval(window[self.context_id])
         }
@@ -143,7 +143,7 @@ class Router {
       })
     }) // # validate state options
     states.forEach(function(item) {
-      item.route = self.$utils.splitRoute(item.route)
+      item.route = self.$utils.splitRoute(self, item.route)
     }) // # get route pattern
     self.states = states
 
@@ -153,13 +153,13 @@ class Router {
       if (self.defaultState.indexOf(':') > -1) {
         throw Error(`Default state route cannot take variable parameters`)
       }
-      if (!self.$utils.stateByName(self.defaultState)) {
+      if (!self.$utils.stateByName(self, self.defaultState)) {
         throw Error(`State "${self.defaultState}" not found in specified states`)
       }
     }
 
     if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState)) {
+      if (!self.$utils.stateByName(self, self.fallbackState)) {
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
       }
     }
