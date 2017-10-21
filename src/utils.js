@@ -38,7 +38,7 @@ export const Utils = {
   },
 
   /** Used to search for a state by your current route. */
-  stateByRoute(this.$router) {
+  stateByRoute() {
     let stubs = this.$router.location.split('#!')
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)

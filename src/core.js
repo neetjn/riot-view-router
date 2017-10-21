@@ -13,7 +13,7 @@ export const Core = {
    * @param (string) name - Name of state to transition to.
    */
   pushState (name) {
-    let state = this.$router.$utils.stateByName(this.$router, name)
+    let state = this.$router.$utils.stateByName(name)
     let location = this.$router.location.split('#!')[1]
 
     if (location !== state.route.route) {
@@ -50,7 +50,7 @@ export const Core = {
    * @param (object) state - State object for mounting.
    */
   transition (state) {
-    let variables = this.$router.$utils.extractRouteVars(this.$router, state)
+    let variables = this.$router.$utils.extractRouteVars(state)
     if (this.$router.$state) {
       let tag = riot.util.vdom.find((tag) => tag.root.localName == this.$router.$state.tag)
       if (!tag) throw Error('Could not find a matching tag to unmount')
@@ -74,16 +74,16 @@ export const Core = {
   start () {
     console.log(this.$router)
     if (!this.$router.location) {
-      window.location.hash = `#!${ this.$router.$utils.stateByName(this.$router, this.$router.defaultState).route.route }`
+      window.location.hash = `#!${ this.$router.$utils.stateByName(this.$router.defaultState).route.route }`
     } // # route to default state
     this.$router.context_id = '$' + new Date().getTime().toString()
     window[this.$router.context_id] = window.setInterval(function() {
       let context = document.querySelector(this.$router.marker) || document.querySelector(`[${this.$router.marker}]`)
       if (context) {
         this.$router.context = context
-        this.$router.pushState(this.$router.$utils.stateByRoute(this.$router).name) // # route to initial state
+        this.$router.pushState(this.$router.$utils.stateByRoute().name) // # route to initial state
         window.onhashchange = function() {
-          this.$router.pushState(this.$router.$utils.stateByRoute(this.$router).name) // # update state
+          this.$router.pushState(this.$router.$utils.stateByRoute().name) // # update state
         } // # create listener for route changes
         window.clearInterval(window[this.$router.context_id])
       }

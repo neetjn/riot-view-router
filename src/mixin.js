@@ -56,7 +56,7 @@ export class Router {
       })
     }) // # validate state options
     states.forEach(function(item) {
-      item.route = self.$utils.splitRoute(self, item.route)
+      item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
     self.states = states
 
@@ -66,13 +66,13 @@ export class Router {
       if (self.defaultState.indexOf(':') > -1) {
         throw Error(`Default state route cannot take variable parameters`)
       }
-      if (!self.$utils.stateByName(self, self.defaultState)) {
+      if (!self.$utils.stateByName(self.defaultState)) {
         throw Error(`State "${self.defaultState}" not found in specified states`)
       }
     }
 
     if (self.fallbackState) {
-      if (!self.$utils.stateByName(self, self.fallbackState)) {
+      if (!self.$utils.stateByName(self.fallbackState)) {
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
       }
     }
