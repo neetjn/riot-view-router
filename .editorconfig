@@ -1,4 +1,4 @@
-[*.{js,html,json},.travis.yml]
+[*.{js,html,json,yml}]
 charset = utf-8
 indent_style = space
 indent_size = 2
