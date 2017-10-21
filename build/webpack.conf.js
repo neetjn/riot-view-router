@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: resolve('./dist'),
     publicPath: 'dist/',
-    filename: 'v-localize.js',
+    filename: 'riot-view-router.js',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
