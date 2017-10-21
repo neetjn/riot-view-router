@@ -13,9 +13,11 @@ export class Router {
   constructor(options, states) {
 
     let self = this.$router = {  }
+
     self.$constants = Constants
     self = Object.assign(self, Core)
     self.$utils = Utils
+
     Object.defineProperty(self, 'location', {
       get: function() {
         return window.location.hash

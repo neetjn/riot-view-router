@@ -2,25 +2,23 @@ export const Utils = {
 
   /**
    * Used to search for states by their name.
-   * @param (object) self - Mixin instance.
    * @param (string) name - Name of state to search for.
    */
-  stateByName(self, name) {
-    return self.states.find((state) => name == state.name)
+  stateByName(name) {
+    return this.$router.states.find((state) => name == state.name)
   },
 
   /**
    * Used for extracting route patterns.
-   * @param (object) self - Mixin instance.
    * @param (string) route - Route from state.
    */
-  splitRoute(self, route) {
-    if (!route.match(self.$constants.regex.routeFormat)) {
+  splitRoute(route) {
+    if (!route.match(this.$router.$constants.regex.routeFormat)) {
       throw Error(`Route "${route}" did not match expected route format`)
     }
     let pattern = route.split('/').slice(1)
     let variables = pattern.filter((item) => {
-      return item.match(self.$constants.regex.routeVariable)
+      return item.match(this.$router.$constants.regex.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),
@@ -39,19 +37,16 @@ export const Utils = {
     }
   },
 
-  /**
-   * Used to search for a state by your current route.
-   * @param (object) self - Mixin instance.
-   */
-  stateByRoute(self) {
-    let stubs = self.location.split('#!')
+  /** Used to search for a state by your current route. */
+  stateByRoute(this.$router) {
+    let stubs = this.$router.location.split('#!')
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }
     else {
       stubs = ["/"]
     }
-    let state = self.states.find((state) => {
+    let state = this.$router.states.find((state) => {
       let route = state.route
       if (stubs.length == route.pattern.length) {
         for (let stub in stubs) {
@@ -69,20 +64,19 @@ export const Utils = {
       return state
     }
 
-    if (self.debugging) {
+    if (this.$router.debugging) {
       console.warn('Route was not matched, defaulting to fallback state')
     }
 
-    return self.$utils.stateByName(self.fallbackState)
+    return this.$router.$utils.stateByName(this.$router.fallbackState)
   },
 
   /**
    * Used to extract route variables.
-   * @param (object) self - Mixin instance.
    * @param (object) state - State object for variable matching.
    */
-  extractRouteVars(self, state) {
-    let stubs = self.location.split('#!')
+  extractRouteVars(state) {
+    let stubs = this.$router.location.split('#!')
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }

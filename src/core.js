@@ -5,7 +5,7 @@ export const Core = {
    * @param (string) route - Route to relocate to.
    */
   navigate (route) {
-    self.location = '#!' + route
+    this.$router.location = '#!' + route
   },
 
   /**
@@ -13,36 +13,36 @@ export const Core = {
    * @param (string) name - Name of state to transition to.
    */
   pushState (name) {
-    let state = self.$utils.stateByName(self, name)
-    let location = self.location.split('#!')[1]
+    let state = this.$router.$utils.stateByName(this.$router, name)
+    let location = this.$router.location.split('#!')[1]
 
     if (location !== state.route.route) {
       if (!state.route.variables.length) {
-        self.navigate(state.route.route)
+        this.$router.navigate(state.route.route)
         return // # assume function will be retriggered
       }
       else {
-        if (self.debugging) {
+        if (this.$router.debugging) {
           console.warn(`State "${name}" does not match current route.`)
           console.warn('Could not re-route due to route variables.')
         }
       }
     }
 
-    if (self.onBeforeStateChange) {
-      self.onBeforeStateChange(state)
+    if (this.$router.onBeforeStateChange) {
+      this.$router.onBeforeStateChange(state)
     }
-    if (self.$state && self.$state.onLeave) {
-      self.$state.onLeave(state)
+    if (this.$router.$state && this.$router.$state.onLeave) {
+      this.$router.$state.onLeave(state)
     } // # call onLeave, pass old state
-    self.transition(state)
-    if (self.onStateChange) {
-      self.onStateChange(state)
+    this.$router.transition(state)
+    if (this.$router.onStateChange) {
+      this.$router.onStateChange(state)
     }
     if (state.onEnter) {
       state.onEnter(state)
     } // # call onEnter, pass new state
-    self.$state = state
+    this.$router.$state = state
   },
 
   /**
@@ -50,9 +50,9 @@ export const Core = {
    * @param (object) state - State object for mounting.
    */
   transition (state) {
-    let variables = self.$utils.extractRouteVars(self, state)
-    if (self.$state) {
-      let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
+    let variables = this.$router.$utils.extractRouteVars(this.$router, state)
+    if (this.$router.$state) {
+      let tag = riot.util.vdom.find((tag) => tag.root.localName == this.$router.$state.tag)
       if (!tag) throw Error('Could not find a matching tag to unmount')
       tag.unmount()
     }
@@ -61,7 +61,7 @@ export const Core = {
     variables.forEach((variable) => {
       opts[variable.name] = variable.value
     }) // # add props
-    self.context.appendChild(node)
+    this.$router.context.appendChild(node)
     riot.mount(state.tag, opts)
     let title = state.title
     variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
@@ -72,20 +72,20 @@ export const Core = {
    * Used to initialize the router and listeners.
    */
   start () {
-    console.log(self)
-    if (!self.location) {
-      window.location.hash = `#!${ self.$utils.stateByName(self, self.defaultState).route.route }`
+    console.log(this.$router)
+    if (!this.$router.location) {
+      window.location.hash = `#!${ this.$router.$utils.stateByName(this.$router, this.$router.defaultState).route.route }`
     } // # route to default state
-    self.context_id = '$' + new Date().getTime().toString()
-    window[self.context_id] = window.setInterval(function() {
-      let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+    this.$router.context_id = '$' + new Date().getTime().toString()
+    window[this.$router.context_id] = window.setInterval(function() {
+      let context = document.querySelector(this.$router.marker) || document.querySelector(`[${this.$router.marker}]`)
       if (context) {
-        self.context = context
-        self.pushState(self.$utils.stateByRoute(self).name) // # route to initial state
+        this.$router.context = context
+        this.$router.pushState(this.$router.$utils.stateByRoute(this.$router).name) // # route to initial state
         window.onhashchange = function() {
-          self.pushState(self.$utils.stateByRoute(self).name) // # update state
+          this.$router.pushState(this.$router.$utils.stateByRoute(this.$router).name) // # update state
         } // # create listener for route changes
-        window.clearInterval(window[self.context_id])
+        window.clearInterval(window[this.$router.context_id])
       }
     }, 250) // # search for view context
   }
