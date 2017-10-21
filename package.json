@@ -22,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/neetjn/riot-view-router/issues"
   },
-  "homepage": "https://github.com/neetjn/riot-view-router#readme"
+  "homepage": "https://github.com/neetjn/riot-view-router#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.8.1"
+  }
 }
