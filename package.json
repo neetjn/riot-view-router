@@ -2,9 +2,12 @@
   "name": "riot-view-router",
   "version": "0.0.1",
   "description": "Lightweight, extensive riot.js router for tag views.",
-  "main": "prototype.js",
+  "main": "dist/riot-view-router.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js",
+    "build:dev": "node_modules/.bin/webpack --config build/webpack.conf.js",
+    "lint": "node_modules/.bin/eslint src/**.js",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
