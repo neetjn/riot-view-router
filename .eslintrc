@@ -1,0 +1,12 @@
+{
+    "root": true,
+    "plugins": ["riot"],
+    "rules": {
+      "object-curly-spacing": ["error", "always"],
+      "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }]
+    },
+    "globals": {
+      "riot": true,
+      "window": true
+    }
+  }

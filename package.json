@@ -27,6 +27,11 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.9.0",
+    "eslint-plugin-riot": "^0.1.7",
     "webpack": "^3.8.1"
+  },
+  "dependencies": {
+    "cross-env": "^5.1.0"
   }
 }
