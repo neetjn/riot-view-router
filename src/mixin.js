@@ -123,7 +123,6 @@ class Router {
     } // # validate router optionsu
 
     self = Object.assign(self, options)
-
     self.debugging = self.debugging || false
 
     let stateProperties = ['name', 'route', 'tag']
