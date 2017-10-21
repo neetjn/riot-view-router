@@ -1,0 +1,26 @@
+{
+  "name": "riot-view-router",
+  "version": "0.0.1",
+  "description": "Lightweight, extensive riot.js router for tag views.",
+  "main": "prototype.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neetjn/riot-view-router.git"
+  },
+  "keywords": [
+    "riot",
+    "riot.js",
+    "javascript",
+    "route",
+    "tag"
+  ],
+  "author": "John Nolette",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/neetjn/riot-view-router/issues"
+  },
+  "homepage": "https://github.com/neetjn/riot-view-router#readme"
+}
