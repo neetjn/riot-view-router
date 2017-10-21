@@ -12,7 +12,8 @@ class Router {
   constructor(options, states) {
 
     let self = this.$router = {  }
-
+    self.$constants = constants
+    self.$utils = utils
     Object.defineProperty(self, 'location', {
       get: function() {
         return window.location.hash
@@ -21,8 +22,6 @@ class Router {
         window.location.hash = location
       }
     })
-
-    self.$utils = utils
 
     /**
      * Used to navigate with hash pattern.
@@ -130,7 +129,7 @@ class Router {
     let stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [states] : states
     states.forEach((state) => {
-      if (!state.name.match(self.regex.stateName)) {
+      if (!state.name.match(self.$constants.regex.stateName)) {
         throw Error(`Invalid state name "${state.name}",\
         state names must be a valid alphanumeric string.`)
       }
@@ -170,7 +169,7 @@ class Router {
       self.fallbackState = self.defaultState
     }
 
-    self.marker = self.marker || constants.defaults.marker
+    self.marker = self.marker || self.$constants.defaults.marker
     self.start()
   }
 

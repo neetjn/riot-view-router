@@ -15,12 +15,12 @@ export default {
    * @param (string) route - Route from state.
    */
   splitRoute(self, route) {
-    if (!route.match(self.regex.routeFormat)) {
+    if (!route.match(self.$constants.regex.routeFormat)) {
       throw Error(`Route "${route}" did not match expected route format`)
     }
     let pattern = route.split('/').slice(1)
     let variables = pattern.filter((item) => {
-      return item.match(self.regex.routeVariable)
+      return item.match(self.$constants.regex.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),
