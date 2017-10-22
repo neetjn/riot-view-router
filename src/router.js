@@ -52,7 +52,6 @@ export class Router {
         }
       })
     }) // # validate state options
-    console.log(self)
     states.forEach(function(item) {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
