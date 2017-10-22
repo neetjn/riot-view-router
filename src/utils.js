@@ -13,10 +13,8 @@ export class Utils {
    * @param (string) name - Name of state to search for.
    */
   stateByName(name) {
-
     var self = this.$router
     return self.states.find((state) => name == state.name)
-
   }
 
   /**
@@ -24,7 +22,6 @@ export class Utils {
    * @param (string) route - Route from state.
    */
   splitRoute(route) {
-
     var self = this.$router
 
     if (!route.match(self.$constants.regex.routeFormat)) {
@@ -49,12 +46,10 @@ export class Utils {
       pattern,
       variables
     }
-
   }
 
   /** Used to search for a state by your current route. */
   stateByRoute() {
-
     var self = this.$router
 
     let stubs = self.location.split(self.$constants.hash)
@@ -87,7 +82,6 @@ export class Utils {
     }
 
     return state
-
   }
 
   /**
@@ -95,7 +89,6 @@ export class Utils {
    * @param (object) state - State object for variable matching.
    */
   extractRouteVars(state) {
-
     var self = this.$router
 
     let stubs = self.location.split(self.$constants.hash)
@@ -107,7 +100,6 @@ export class Utils {
       variable.value = stubs[variable.position]
     })
     return variables
-
   }
 
 }

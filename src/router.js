@@ -10,7 +10,6 @@ import { Utils } from './utils'
 export class Router {
 
   constructor(options, states) {
-
     var self = this
 
     self.$constants = Constants
@@ -95,7 +94,6 @@ export class Router {
       self.marker = self.$constants.defaults.marker
     }
     self.marker = self.marker || self.$constants.defaults.marker
-
   }
 
   /**
@@ -111,7 +109,6 @@ export class Router {
    * @param (string) name - Name of state to transition to.
    */
   pushState (name) {
-
     var self = this
 
     let state = self.$utils.stateByName(name)
@@ -144,7 +141,6 @@ export class Router {
       state.onEnter(state)
     } // # call onEnter, pass new state
     self.$state = state
-
   }
 
   /**
@@ -152,7 +148,6 @@ export class Router {
    * @param (object) state - State object for mounting.
    */
   transition (state) {
-
     var self = this
 
     let variables = self.$utils.extractRouteVars(state)
@@ -173,12 +168,10 @@ export class Router {
       variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
       document.title = title
     }
-
   }
 
   /** Used to initialize the router and listeners. */
   start () {
-
     var self = this
 
     if (!self.running) {
@@ -203,12 +196,10 @@ export class Router {
         console.warn('Router was already running')
       }
     }
-
   }
 
   /** Used to stop the router and listeners. */
   stop () {
-
     var self = this
 
     if (self.running) {
@@ -220,7 +211,6 @@ export class Router {
         console.warn('Router was not running')
       }
     }
-
   }
 
 }
