@@ -168,9 +168,11 @@ export class Router {
     }) // # add props
     self.context.appendChild(node)
     riot.mount(state.tag, opts)
-    let title = state.title
-    variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
-    document.title = title
+    if (state.title) {
+      let title = state.title
+      variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
+      document.title = title
+    }
 
   }
 
