@@ -1,7 +1,7 @@
 export class Utils {
 
   /**
-   *
+   * Utilities for the riot-view-router mixin.
    * @param (Router) router - Router for utilities to reference
    */
   constructor(router) {
