@@ -1,5 +1,4 @@
 import { Constants } from './constants'
-import { Core } from './core'
 import { Utils } from './utils'
 
 /**
@@ -12,9 +11,10 @@ export class Router {
 
   constructor(options, states) {
 
-    let self = this
+    var self = this
 
     self.$constants = Constants
+    self.$utils = Utils(self)
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -28,10 +28,9 @@ export class Router {
     let requiredOptions = ['defaultState']
     let optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
-
     for (let option in options) {
       if (acceptedOptions.indexOf(option) == -1) {
-        throw Error(`Unknown option "${option} is not supported`)
+        throw Error(`Unknown option "${option}" is not supported`)
       }
     } // # validate router optionsu
 
@@ -53,6 +52,7 @@ export class Router {
         }
       })
     }) // # validate state options
+    console.log(self)
     states.forEach(function(item) {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
@@ -95,6 +95,7 @@ export class Router {
     }
     self.marker = self.marker || self.$constants.defaults.marker
     self.start()
+
   }
 
   /**
@@ -102,54 +103,61 @@ export class Router {
    * @param (string) route - Route to relocate to.
    */
   navigate (route) {
-    this.$router.location = '#!' + route
-  },
+    this.location = '#!' + route
+  }
 
   /**
    * Used to change states.
    * @param (string) name - Name of state to transition to.
    */
   pushState (name) {
-    let state = this.$router.$utils.stateByName(name)
-    let location = this.$router.location.split('#!')[1]
+
+    var self = this
+
+    let state = self.$utils.stateByName(name)
+    let location = self.location.split('#!')[1]
 
     if (location !== state.route.route) {
       if (!state.route.variables.length) {
-        this.$router.navigate(state.route.route)
+        self.navigate(state.route.route)
         return // # assume function will be retriggered
       }
       else {
-        if (this.$router.debugging) {
+        if (self.debugging) {
           console.warn(`State "${name}" does not match current route.`)
           console.warn('Could not re-route due to route variables.')
         }
       }
     }
 
-    if (this.$router.onBeforeStateChange) {
-      this.$router.onBeforeStateChange(state)
+    if (self.onBeforeStateChange) {
+      self.onBeforeStateChange(state)
     }
-    if (this.$router.$state && this.$router.$state.onLeave) {
-      this.$router.$state.onLeave(state)
+    if (self.$state && self.$state.onLeave) {
+      self.$state.onLeave(state)
     } // # call onLeave, pass old state
-    this.$router.transition(state)
-    if (this.$router.onStateChange) {
-      this.$router.onStateChange(state)
+    self.transition(state)
+    if (self.onStateChange) {
+      self.onStateChange(state)
     }
     if (state.onEnter) {
       state.onEnter(state)
     } // # call onEnter, pass new state
-    this.$router.$state = state
-  },
+    self.$state = state
+
+  }
 
   /**
    * Used to mount state.
    * @param (object) state - State object for mounting.
    */
   transition (state) {
-    let variables = this.$router.$utils.extractRouteVars(state)
-    if (this.$router.$state) {
-      let tag = riot.util.vdom.find((tag) => tag.root.localName == this.$router.$state.tag)
+
+    var self = this
+
+    let variables = self.$utils.extractRouteVars(state)
+    if (self.$state) {
+      let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
       if (!tag) throw Error('Could not find a matching tag to unmount')
       tag.unmount()
     }
@@ -158,33 +166,37 @@ export class Router {
     variables.forEach((variable) => {
       opts[variable.name] = variable.value
     }) // # add props
-    this.$router.context.appendChild(node)
+    self.context.appendChild(node)
     riot.mount(state.tag, opts)
     let title = state.title
     variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
     document.title = title
-  },
+
+  }
 
   /**
    * Used to initialize the router and listeners.
    */
   start () {
-    console.log(this.$router)
-    if (!this.$router.location) {
-      window.location.hash = `#!${ this.$router.$utils.stateByName(this.$router.defaultState).route.route }`
+
+    var self = this
+
+    if (!self.location) {
+      window.location.hash = `#!${ self.$utils.stateByName(self.defaultState).route.route }`
     } // # route to default state
-    this.$router.context_id = '$' + new Date().getTime().toString()
-    window[this.$router.context_id] = window.setInterval(function() {
-      let context = document.querySelector(this.$router.marker) || document.querySelector(`[${this.$router.marker}]`)
+    self.context_id = '$' + new Date().getTime().toString()
+    window[self.context_id] = window.setInterval(function() {
+      let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
       if (context) {
-        this.$router.context = context
-        this.$router.pushState(this.$router.$utils.stateByRoute().name) // # route to initial state
+        self.context = context
+        self.pushState(self.$utils.stateByRoute().name) // # route to initial state
         window.onhashchange = function() {
-          this.$router.pushState(this.$router.$utils.stateByRoute().name) // # update state
+          self.pushState(self.$utils.stateByRoute().name) // # update state
         } // # create listener for route changes
-        window.clearInterval(window[this.$router.context_id])
+        window.clearInterval(window[self.context_id])
       }
     }, 250) // # search for view context
+
   }
 
 }

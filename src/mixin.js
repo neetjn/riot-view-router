@@ -1,4 +1,5 @@
-import { Router as router } from './router'
+import { Router as _Router } from './router'
 
-export
-// # wrapper for this.$router, we don't want the mixin to merge into the main object
+export const Router = function(options, states) {
+  this.$router = new _Router(options, states)
+}

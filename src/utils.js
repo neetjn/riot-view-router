@@ -1,24 +1,38 @@
-export const Utils = {
+export class Utils {
+
+  /**
+   *
+   * @param (Router) router - Router for utilities to reference
+   */
+  constructor(router) {
+    this.$router = router
+  }
 
   /**
    * Used to search for states by their name.
    * @param (string) name - Name of state to search for.
    */
   stateByName(name) {
-    return this.$router.states.find((state) => name == state.name)
-  },
+
+    var self = this.$router
+    return self.states.find((state) => name == state.name)
+
+  }
 
   /**
    * Used for extracting route patterns.
    * @param (string) route - Route from state.
    */
   splitRoute(route) {
-    if (!route.match(this.$router.$constants.regex.routeFormat)) {
+
+    var self = this.$router
+
+    if (!route.match(self.$constants.regex.routeFormat)) {
       throw Error(`Route "${route}" did not match expected route format`)
     }
     let pattern = route.split('/').slice(1)
     let variables = pattern.filter((item) => {
-      return item.match(this.$router.$constants.regex.routeVariable)
+      return item.match(self.$constants.regex.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),
@@ -35,18 +49,22 @@ export const Utils = {
       pattern,
       variables
     }
-  },
+
+  }
 
   /** Used to search for a state by your current route. */
   stateByRoute() {
-    let stubs = this.$router.location.split('#!')
+
+    var self = this.$router
+
+    let stubs = self.location.split('#!')
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }
     else {
       stubs = ["/"]
     }
-    let state = this.$router.states.find((state) => {
+    let state = self.states.find((state) => {
       let route = state.route
       if (stubs.length == route.pattern.length) {
         for (let stub in stubs) {
@@ -64,19 +82,23 @@ export const Utils = {
       return state
     }
 
-    if (this.$router.debugging) {
+    if (self.debugging) {
       console.warn('Route was not matched, defaulting to fallback state')
     }
 
-    return this.$router.$utils.stateByName(this.$router.fallbackState)
-  },
+    return this.stateByName(self.fallbackState)
+
+  }
 
   /**
    * Used to extract route variables.
    * @param (object) state - State object for variable matching.
    */
   extractRouteVars(state) {
-    let stubs = this.$router.location.split('#!')
+
+    var self = this.$router
+
+    let stubs = self.location.split('#!')
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }
@@ -85,6 +107,7 @@ export const Utils = {
       variable.value = stubs[variable.position]
     })
     return variables
+
   }
 
 }
