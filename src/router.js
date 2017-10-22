@@ -94,7 +94,6 @@ export class Router {
       self.marker = self.$constants.defaults.marker
     }
     self.marker = self.marker || self.$constants.defaults.marker
-    self.start()
 
   }
 
