@@ -14,7 +14,7 @@ export class Router {
     var self = this
 
     self.$constants = Constants
-    self.$utils = Utils(self)
+    self.$utils = new Utils(self)
 
     Object.defineProperty(self, 'location', {
       get: function() {
