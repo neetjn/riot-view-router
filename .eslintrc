@@ -10,7 +10,8 @@
     "space-before-blocks": ["error", "always"]
   },
   "globals": {
-    "riot": true,
-    "window": true
+    "document": true,
+    "window": true,
+    "riot": true
   }
 }
