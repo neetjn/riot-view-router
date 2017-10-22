@@ -25,6 +25,8 @@ export class Router {
       }
     })
 
+    self.running = false
+
     let requiredOptions = ['defaultState']
     let optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
@@ -101,7 +103,7 @@ export class Router {
    * @param (string) route - Route to relocate to.
    */
   navigate (route) {
-    this.location = '#!' + route
+    this.location = self.$constants.hash + route
   }
 
   /**
@@ -113,7 +115,7 @@ export class Router {
     var self = this
 
     let state = self.$utils.stateByName(name)
-    let location = self.location.split('#!')[1]
+    let location = self.location.split(self.$constants.hash)[1]
 
     if (location !== state.route.route) {
       if (!state.route.variables.length) {
@@ -172,28 +174,50 @@ export class Router {
 
   }
 
-  /**
-   * Used to initialize the router and listeners.
-   */
+  /** Used to initialize the router and listeners. */
   start () {
 
     var self = this
 
-    if (!self.location) {
-      window.location.hash = `#!${ self.$utils.stateByName(self.defaultState).route.route }`
-    } // # route to default state
-    self.context_id = '$' + new Date().getTime().toString()
-    window[self.context_id] = window.setInterval(function() {
-      let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
-      if (context) {
-        self.context = context
-        self.pushState(self.$utils.stateByRoute().name) // # route to initial state
-        window.onhashchange = function() {
-          self.pushState(self.$utils.stateByRoute().name) // # update state
-        } // # create listener for route changes
-        window.clearInterval(window[self.context_id])
+    if (!self.running) {
+      if (!self.location) {
+        window.location.hash = `${ self.$constants.hash }${ self.$utils.stateByName(self.defaultState).route.route }`
+      } // # route to default state
+      self.context_id = '$' + new Date().getTime().toString()
+      window[self.context_id] = window.setInterval(function() {
+        let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+        if (context) {
+          self.context = context
+          self.pushState(self.$utils.stateByRoute().name) // # route to initial state
+          window.onhashchange = function() {
+            self.pushState(self.$utils.stateByRoute().name) // # update state
+          } // # create listener for route changes
+          window.clearInterval(window[self.context_id])
+        }
+      }, 250) // # search for view context
+    }
+    else {
+      if (self.debugging) {
+        console.warn('Router was already running')
       }
-    }, 250) // # search for view context
+    }
+
+  }
+
+  /** Used to stop the router and listeners. */
+  stop () {
+
+    var self = this
+
+    if (self.running) {
+      self.running = false
+      delete window.onhashchange
+    }
+    else {
+      if (self.debugging) {
+        console.warn('Router was not running')
+      }
+    }
 
   }
 

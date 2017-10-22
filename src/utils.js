@@ -57,7 +57,7 @@ export class Utils {
 
     var self = this.$router
 
-    let stubs = self.location.split('#!')
+    let stubs = self.location.split(self.$constants.hash)
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }
@@ -98,7 +98,7 @@ export class Utils {
 
     var self = this.$router
 
-    let stubs = self.location.split('#!')
+    let stubs = self.location.split(self.$constants.hash)
     if (stubs.length > 1) {
       stubs = stubs[1].split('/').slice(1)
     }

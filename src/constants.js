@@ -1,5 +1,6 @@
 export const Constants = {
   defaults: {
+    hash: '#!',
     marker: 'r-view',
     anchorMarker: 'r-sref'
   },
