@@ -76,7 +76,7 @@ export class Router {
     }
     else {
       if (self.debugging) {
-        console.warn(`Fallback state not specified, dfaulting to "${self.defaultState}"`)
+        console.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
       }
       self.fallbackState = self.defaultState
     }

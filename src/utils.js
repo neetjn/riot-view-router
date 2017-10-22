@@ -78,15 +78,15 @@ export class Utils {
       }
     })
 
-    if (state) {
-      return state
+    if (!state) {
+      if (self.debugging) {
+        console.warn('Route was not matched, defaulting to fallback state')
+      }
+
+      return this.stateByName(self.fallbackState)
     }
 
-    if (self.debugging) {
-      console.warn('Route was not matched, defaulting to fallback state')
-    }
-
-    return this.stateByName(self.fallbackState)
+    return state
 
   }
 
