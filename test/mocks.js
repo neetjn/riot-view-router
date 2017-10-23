@@ -36,6 +36,10 @@ export var states = [
  */
 export var tags = [
   {
+    name: 'app',
+    template: '<app><r-view></r-view></app>'
+  },
+  {
     name: 'home',
     template: '<home><h1>home page</h1></home>'
   },
