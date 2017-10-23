@@ -1,17 +1,24 @@
 import riot from 'riot'
-import { document, window, option, states, _riot } from './mocks'
-
+import { document, window, tags, option, states } from './mocks'
 import { Router } from '../../dist/riot-view-router'
 
 describe('riot-view-router', function() {
-  describe('mixin', function() {
-    it('creates riot property $router', function() {
-      let router = new Router({
+  describe('registering mixin', function() {
 
-      })
+    var router = new Router({
+      options, states
     })
-    it('processes states', function() {
+    riot.mixin(router)
+
+    it('creates riot property "$router"', function() {
 
     })
+    it('processes and merges options', function() {
+
+    })
+    it('processes and merges states', function() {
+
+    })
+
   })
 })

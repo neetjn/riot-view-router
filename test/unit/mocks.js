@@ -1,9 +1,13 @@
 export var window = {
-  setInterval() {
-
+  $timeouts: 0,
+  setInterval(func, timeout) {
+    return $timeouts += 1
   },
-  clearInterval() {
-
+  clearInterval(func, timeout) {
+    return true
+  },
+  location: {
+    hash: ''
   }
 }
 
@@ -18,6 +22,13 @@ export var document = {
 
 /**
  *
+ */
+export var tags = [
+
+]
+
+/**
+ * Options for riot-view-router
  */
 export var options = {
   debugging: true,
@@ -57,10 +68,3 @@ export var states = [
     title: '<username>\'s profile'
   }
 ]
-
-/**
- * Riot properties to merge
- */
-export var _riot = {
-
-}
