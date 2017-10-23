@@ -51,7 +51,7 @@ export class Router {
     stateProperties.forEach((prop) => {
       states.forEach((state) => {
         if (!state[prop]) {
-          throw Error(`Required state option "${prop}" not specified`)
+          throw ReferenceError(`Required state option "${prop}" not specified`)
         }
       })
     }) // # validate state options
@@ -61,7 +61,7 @@ export class Router {
     self.states = states
 
     if (!self.defaultState) {
-      throw Error('Default state must be specified')
+      throw ReferenceError('Default state must be specified')
     } else {
       if (self.defaultState.indexOf(':') > -1) {
         throw Error(`Default state route cannot take variable parameters`)
