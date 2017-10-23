@@ -5,9 +5,9 @@ import { Router } from '../../dist/riot-view-router'
 
 describe('riot-view-router', function() {
   describe('registering router mixin', function() {
-    
+
     var Random = random()
-    
+
     function helperGetMixin(options, states) {
       var router = new Router({
         options || OPTIONS, states || STATES
@@ -72,7 +72,9 @@ describe('riot-view-router', function() {
     })
     it('unsupported options should not be processed', function() {
       expect(function() {
-        // # todo left here
+        helperGetMixin(Object.assign(OPTIONS, {
+          Random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)
+        }), STATES)
       })
     })
 
