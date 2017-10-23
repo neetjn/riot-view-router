@@ -47,21 +47,12 @@ export var states = [
   	name: 'home',
     route: '/',
     tag:'home',
-    title: 'Hello World',
-    onEnter: function(state) {
-    	console.log(`transitioning to home from ${state.name}`)
-    }
+    title: 'Hello World'
   },
   {
   	name: '404',
     route: '/notfound',
     tag:'not-found',
     title: '404 Page Not Found'
-  },
-  {
-  	name: 'profile',
-    route: '/profile/:username',
-    tag: 'profile',
-    title: '<username>\'s profile'
   }
 ]

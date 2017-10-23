@@ -23,8 +23,15 @@ describe('riot-view-router', function() {
     })
     it('processes and merges states', function() {
       expect(mixin.$router.states.length).toBe(states.length)
-      mixin.$router.states.forEach((state) => {
-        state.
+      mixin.$router.states.forEach((_state) => {
+        for (let prop, val in _state) {
+          if (prop !== 'route') {
+            expect(_state[prop] == state[prop])
+          } // # ensure state value was merged correctly
+          else {
+            // # left here
+          } // # ensure route was split
+        }
       })
     })
 
