@@ -3,12 +3,6 @@
  */
 export var window = {
   $timeouts: 0,
-  setInterval(func, timeout) {
-    return $timeouts += 1
-  },
-  clearInterval(func, timeout) {
-    return true
-  },
   location: {
     hash: ''
   }
@@ -18,9 +12,6 @@ export var window = {
  * Document mockup
  */
 export var document = {
-  querySelector() {
-
-  },
   title: ''
 }
 
