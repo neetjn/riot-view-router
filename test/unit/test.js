@@ -53,6 +53,20 @@ describe('riot-view-router', function() {
       expect(variables[0].name).toBe('username')
       expect(variables[0].position).toBe(2)
     })
+    it('debugging is defaulted to false', function() {
+      let mixin = helperGetMixin({
+        defaultState: 'home',
+        fallbackState: '404'
+      }, STATES)
+      expect(mixin.$router.debugging).toBe(false)
+    })
+    it('default state is enforced', function() {
+      expect(function() {
+        helperGetMixin({
+          debugging: false
+        }, STATES)
+      }).toThrowError(ReferenceError)
+    })
 
   })
 })
