@@ -69,7 +69,7 @@ describe('riot-view-router', function() {
       }).toThrowError(ReferenceError)
     })
     it('unsupported options should not be processed', function() {
-      let opt = Random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)
+      let opt = Random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
       expect(function() {
         helperGetMixin(Object.assign(OPTIONS, {
           [opt]: opt
