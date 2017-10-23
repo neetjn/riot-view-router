@@ -1,9 +1,12 @@
+import random from 'random'
 import riot from 'riot'
 import { option as OPTIONS, states as STATES } from '../mocks'
 import { Router } from '../../dist/riot-view-router'
 
 describe('riot-view-router', function() {
   describe('registering router mixin', function() {
+    
+    var Random = random()
     
     function helperGetMixin(options, states) {
       var router = new Router({
@@ -66,6 +69,11 @@ describe('riot-view-router', function() {
           debugging: false
         }, STATES)
       }).toThrowError(ReferenceError)
+    })
+    it('unsupported options should not be processed', function() {
+      expect(function() {
+        // # todo left here
+      })
     })
 
   })
