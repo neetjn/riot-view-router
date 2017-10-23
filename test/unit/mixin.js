@@ -33,10 +33,10 @@ describe('riot-view-router', function() {
           if (prop !== 'route') {
             expect(state[prop]).toBe(STATES[prop])
           } // # ensure state value was merged correctly
-        }
-        else {
-          let route = state[prop]
-          expect(route.route).toBe(STATE[prop].route)
+          else {
+            let route = state[prop]
+            expect(route.route).toBe(STATE[prop].route)
+          }
         }
       })
     })
@@ -45,7 +45,7 @@ describe('riot-view-router', function() {
         name: 'profile',
         route: '/profile/:username',
         tag: 'profile'
-      ))
+      }))
       let states = mixin.$router
       let variables = mixin.states.find((state) => {
         return state.name == 'profile'
