@@ -30,3 +30,17 @@ export var states = [
     title: '404 Page Not Found'
   }
 ]
+
+/**
+ * Tags for riot-view-router
+ */
+export var tags = [
+  {
+    name: 'home',
+    template: '<home><h1>home page</h1></home>'
+  },
+  {
+    name: 'not-found',
+    template: '<not-found><h1>404 not found</h1></not-found>'
+  }
+]
