@@ -1,3 +1,6 @@
+/**
+ * Window mockup
+ */
 export var window = {
   $timeouts: 0,
   setInterval(func, timeout) {
@@ -17,15 +20,9 @@ export var window = {
 export var document = {
   querySelector() {
 
-  }
+  },
+  title: ''
 }
-
-/**
- *
- */
-export var tags = [
-
-]
 
 /**
  * Options for riot-view-router
