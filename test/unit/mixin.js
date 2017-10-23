@@ -9,9 +9,7 @@ describe('riot-view-router', function() {
     var Random = random()
 
     function helperGetMixin(options, states) {
-      var router = new Router({
-        options || OPTIONS, states || STATES
-      })
+      var router = new Router(options || OPTIONS, states || STATES)
       riot.mixin('router', router)
       return riot.mixin('router')
     }
@@ -71,11 +69,12 @@ describe('riot-view-router', function() {
       }).toThrowError(ReferenceError)
     })
     it('unsupported options should not be processed', function() {
+      let opt = Random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)
       expect(function() {
         helperGetMixin(Object.assign(OPTIONS, {
-          Random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)
+          [opt]: opt
         }), STATES)
-      })
+      }).toThrowError(Error)
     })
 
   })
