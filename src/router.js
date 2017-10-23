@@ -1,3 +1,4 @@
+import { version } from '../package.json'
 import { Constants } from './constants'
 import { Utils } from './utils'
 
@@ -12,6 +13,7 @@ export class Router {
   constructor(options, states) {
     var self = this
 
+    self.version = version
     self.$constants = Constants
     self.$utils = new Utils(self)
 
