@@ -42,9 +42,13 @@ describe('riot-view-router', function() {
         tag: 'profile',
         title: '<username>\'s profile'
       ))
-      let variables = mixin.$router.routes[mixin.$router.routes.length].variables
+      let states = mixin.$router
+      let variables = mixin.states.find((state) => {
+        return state.name == 'profile'
+      })[0].variables
       expect(variables.length).toBe(1)
-      expect()
+      expect(variables[0].name).toBe('username')
+      expect(variables[0].position).toBe(2)
     })
 
   })
