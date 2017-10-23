@@ -1,21 +1,4 @@
 /**
- * Window mockup
- */
-export var window = {
-  $timeouts: 0,
-  location: {
-    hash: ''
-  }
-}
-
-/**
- * Document mockup
- */
-export var document = {
-  title: ''
-}
-
-/**
  * Options for riot-view-router
  */
 export var options = {
