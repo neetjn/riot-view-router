@@ -21,7 +21,7 @@ describe('riot-view-router', function() {
     it('processes and merges options', function() {
       let mixin = helperGetMixin()
       for (let opt in OPTIONS) {
-        expect(riot.mixin)
+        expect(riot.mixin[opt]).toBe(OPTIONS[opt])
       }
     })
     it('processes and merges states', function() {
@@ -33,14 +33,17 @@ describe('riot-view-router', function() {
             expect(state[prop]).toBe(STATES[prop])
           } // # ensure state value was merged correctly
         }
+        else {
+          let route = state[prop]
+          expect(route.route).toBe(STATE[prop].route)
+        }
       })
     })
     it('splits routes with variables as intended', function() {
       let mixin = helperGetMixin(OPTIONS, STATES.append({
         name: 'profile',
         route: '/profile/:username',
-        tag: 'profile',
-        title: '<username>\'s profile'
+        tag: 'profile'
       ))
       let states = mixin.$router
       let variables = mixin.states.find((state) => {
