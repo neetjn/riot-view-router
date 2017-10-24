@@ -28,7 +28,7 @@ describe('riot-view-router', function() {
       for (var opt in OPTIONS) {
         expect(mixin[opt]).toBe(OPTIONS[opt])
       }
-    }) // # left here, STATES is somehow getting modified as a reference
+    })
 
     // it('processes and merges states', function() {
     //   var mixin = helperGetMixin()

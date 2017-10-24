@@ -153,7 +153,9 @@ var Router = exports.Router = function () {
     self.debugging = self.debugging || false;
 
     var stateProperties = ['name', 'route', 'tag'];
-    states = Array.from(states);
+    states = !Array.isArray(states) ? [Object.create(state)] : states.map(function (state) {
+      return Object.create(state);
+    });
     states.forEach(function (state) {
       if (!state.name.match(self.$constants.regex.stateName)) {
         throw Error('Invalid state name "' + state.name + '",        state names must be a valid alphanumeric string.');
