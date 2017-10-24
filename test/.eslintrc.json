@@ -1,7 +1,5 @@
 {
   "root": true,
-  "parser": "babel-eslint",
-  "plugins": ["riot"],
   "rules": {
     "object-curly-spacing": ["error", "always"],
     "semi": ["error", "never"],

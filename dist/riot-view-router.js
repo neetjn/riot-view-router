@@ -1,1 +1,533 @@
-!function(t,e){if("object"==typeof exports&&"object"==typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n=e();for(var r in n)("object"==typeof exports?exports:t)[r]=n[r]}}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="dist/",e(e.s=0)}([function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Router=void 0;var r=n(1);e.Router=function(t,e){return{$router:new r.Router(t,e)}}},function(t,e,n){"use strict";function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0}),e.Router=void 0;var o=function(){function t(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}(),a=n(2),i=n(3);e.Router=function(){function t(e,n){r(this,t);var o=this;o.$constants=a.Constants,o.$utils=new i.Utils(o),Object.defineProperty(o,"location",{get:function(){return window.location.hash},set:function(t){window.location.hash=t}});var u=["defaultState"],s=["debugging","fallbackState","onBeforeStateChange","onStateChange"],c=u.concat(s);for(var l in e)if(-1==c.indexOf(l))throw Error('Unknown option "'+l+'" is not supported');o=Object.assign(o,e),o.debugging=o.debugging||!1;var f=["name","route","tag"];if(n=Array.isArray(n)?n:[n],n.forEach(function(t){if(!t.name.match(o.$constants.regex.stateName))throw Error('Invalid state name "'+t.name+'",        state names must be a valid alphanumeric string.')}),f.forEach(function(t){n.forEach(function(e){if(!e[t])throw Error('Required state option "'+t+'" not specified')})}),console.log(o),n.forEach(function(t){t.route=o.$utils.splitRoute(t.route)}),o.states=n,!o.defaultState)throw Error("Default state must be specified");if(o.defaultState.indexOf(":")>-1)throw Error("Default state route cannot take variable parameters");if(!o.$utils.stateByName(o.defaultState))throw Error('State "'+o.defaultState+'" not found in specified states');if(o.fallbackState){if(!o.$utils.stateByName(o.fallbackState))throw Error('Fallback state "'+o.fallbackState+'" not found in specified states')}else o.debugging&&console.warn('Fallback state not specified, dfaulting to "'+o.defaultState+'"'),o.fallbackState=o.defaultState;o.marker?o.marker.match(o.$constants.regex.marker)||(debugging&&(console.warn('Marker "'+o.marker+'" contains unsupported characters'),console.warn('Defaulting to "'+o.$constants.defaults.marker+'"')),o.marker=o.$constants.defaults.marker):o.marker=o.$constants.defaults.marker,o.marker=o.marker||o.$constants.defaults.marker}return o(t,[{key:"navigate",value:function(t){this.location="#!"+t}},{key:"pushState",value:function(t){var e=this,n=e.$utils.stateByName(t);if(e.location.split("#!")[1]!==n.route.route){if(!n.route.variables.length)return void e.navigate(n.route.route);e.debugging&&(console.warn('State "'+t+'" does not match current route.'),console.warn("Could not re-route due to route variables."))}e.onBeforeStateChange&&e.onBeforeStateChange(n),e.$state&&e.$state.onLeave&&e.$state.onLeave(n),e.transition(n),e.onStateChange&&e.onStateChange(n),n.onEnter&&n.onEnter(n),e.$state=n}},{key:"transition",value:function(t){var e=this,n=e.$utils.extractRouteVars(t);if(e.$state){var r=riot.util.vdom.find(function(t){return t.root.localName==e.$state.tag});if(!r)throw Error("Could not find a matching tag to unmount");r.unmount()}var o=document.createElement(t.tag),a={};n.forEach(function(t){a[t.name]=t.value}),e.context.appendChild(o),riot.mount(t.tag,a);var i=t.title;n.forEach(function(t){return i=i.replace("<"+t.name+">",t.value)}),document.title=i}},{key:"start",value:function(){var t=this;t.location||(window.location.hash="#!"+t.$utils.stateByName(t.defaultState).route.route),t.context_id="$"+(new Date).getTime().toString(),window[t.context_id]=window.setInterval(function(){var e=document.querySelector(t.marker)||document.querySelector("["+t.marker+"]");e&&(t.context=e,t.pushState(t.$utils.stateByRoute().name),window.onhashchange=function(){t.pushState(t.$utils.stateByRoute().name)},window.clearInterval(window[t.context_id]))},250)}}]),t}()},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});e.Constants={defaults:{marker:"r-view",anchorMarker:"r-sref"},regex:{marker:/[a-zA-Z\-]*/g,stateName:/[a-zA-Z0-9]/g,routeFormat:/^\/(?::?[a-zA-Z0-9]+\/?)*$/g,routeVariable:/(:[a-zA-Z]*)/g}}},function(t,e,n){"use strict";function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0});var o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},a=function(){function t(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}();e.Utils=function(){function t(e){r(this,t),this.$router=e}return a(t,[{key:"stateByName",value:function(t){return this.$router.states.find(function(e){return t==e.name})}},{key:"splitRoute",value:function(t){var e=this.$router;if(!t.match(e.$constants.regex.routeFormat))throw Error('Route "'+t+'" did not match expected route format');var n=t.split("/").slice(1),r=n.filter(function(t){return t.match(e.$constants.regex.routeVariable)}).map(function(t){return{name:t.split("").slice(1).join(""),position:n.indexOf(t)}});return r.forEach(function(e){if(r.filter(function(t){return e}).length>1)throw Error('Found duplicate route variable pattern\n\t "'+t+'"')}),{route:t,pattern:n,variables:r}}},{key:"stateByRoute",value:function(){var t=this.$router,e=t.location.split("#!");e=e.length>1?e[1].split("/").slice(1):["/"];var n=t.states.find(function(t){var n=t.route;if(e.length==n.pattern.length){for(var r in e){var a=function(t){if(e[t]!==n.pattern[t]&&"*"!==n.pattern[t]&&!n.variables.find(function(e){return e.position==t}))return{v:!1}}(r);if("object"===(void 0===a?"undefined":o(a)))return a.v}return!0}});return n||(t.debugging&&console.warn("Route was not matched, defaulting to fallback state"),this.stateByName(t.fallbackState))}},{key:"extractRouteVars",value:function(t){var e=this.$router,n=e.location.split("#!");n.length>1&&(n=n[1].split("/").slice(1));var r=t.route.variables;return r.forEach(function(t){t.value=n[t.position]}),r}}]),t}()}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "dist/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _router = __webpack_require__(1);
+
+var Router = function Router(options, states) {
+  return {
+    $router: new _router.Router(options, states)
+  };
+};
+
+exports.Router = Router;
+module.exports = Router;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Router = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _package = __webpack_require__(2);
+
+var _constants = __webpack_require__(3);
+
+var _utils = __webpack_require__(4);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Represents the riot-view-router mixin.
+ * @constructor
+ * @param (object) options - Router options.
+ * @param (array) states - States for router to read from.
+ */
+var Router = exports.Router = function () {
+  function Router(options, states) {
+    _classCallCheck(this, Router);
+
+    var self = this;
+
+    self.version = _package.version;
+    self.$constants = _constants.Constants;
+    self.$utils = new _utils.Utils(self);
+
+    Object.defineProperty(self, 'location', {
+      get: function get() {
+        return window.location.hash;
+      },
+      set: function set(location) {
+        window.location.hash = location;
+      }
+    });
+
+    self.running = false;
+
+    var requiredOptions = ['defaultState'];
+    var optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange'];
+    var acceptedOptions = requiredOptions.concat(optionalDefaultOptions);
+    for (var option in options) {
+      if (acceptedOptions.indexOf(option) == -1) {
+        throw Error('Unknown option "' + option + '" is not supported');
+      }
+    } // # validate router optionsu
+
+    self = Object.assign(self, options);
+    self.debugging = self.debugging || false;
+
+    var stateProperties = ['name', 'route', 'tag'];
+    states = !Array.isArray(states) ? [states] : states;
+    states.forEach(function (state) {
+      if (!state.name.match(self.$constants.regex.stateName)) {
+        throw Error('Invalid state name "' + state.name + '",        state names must be a valid alphanumeric string.');
+      }
+    });
+    stateProperties.forEach(function (prop) {
+      states.forEach(function (state) {
+        if (!state[prop]) {
+          throw ReferenceError('Required state option "' + prop + '" not specified');
+        }
+      });
+    }); // # validate state options
+    states.forEach(function (item) {
+      item.route = self.$utils.splitRoute(item.route);
+    }); // # get route pattern
+    self.states = states;
+
+    if (!self.defaultState) {
+      throw ReferenceError('Default state must be specified');
+    } else {
+      if (self.defaultState.indexOf(':') > -1) {
+        throw Error('Default state route cannot take variable parameters');
+      }
+      if (!self.$utils.stateByName(self.defaultState)) {
+        throw Error('State "' + self.defaultState + '" not found in specified states');
+      }
+    }
+
+    if (self.fallbackState) {
+      if (!self.$utils.stateByName(self.fallbackState)) {
+        throw Error('Fallback state "' + self.fallbackState + '" not found in specified states');
+      }
+    } else {
+      if (self.debugging) {
+        console.warn('Fallback state not specified, defaulting to "' + self.defaultState + '"');
+      }
+      self.fallbackState = self.defaultState;
+    }
+
+    if (self.marker) {
+      if (!self.marker.match(self.$constants.regex.marker)) {
+        if (debugging) {
+          console.warn('Marker "' + self.marker + '" contains unsupported characters');
+          console.warn('Defaulting to "' + self.$constants.defaults.marker + '"');
+        }
+        self.marker = self.$constants.defaults.marker;
+      }
+    } else {
+      self.marker = self.$constants.defaults.marker;
+    }
+    self.marker = self.marker || self.$constants.defaults.marker;
+  }
+
+  /**
+   * Used to navigate with hash pattern.
+   * @param (string) route - Route to relocate to.
+   */
+
+
+  _createClass(Router, [{
+    key: 'navigate',
+    value: function navigate(route) {
+      this.location = self.$constants.hash + route;
+    }
+
+    /**
+     * Used to change states.
+     * @param (string) name - Name of state to transition to.
+     */
+
+  }, {
+    key: 'pushState',
+    value: function pushState(name) {
+      var self = this;
+
+      var state = self.$utils.stateByName(name);
+      var location = self.location.split(self.$constants.hash)[1];
+
+      if (location !== state.route.route) {
+        if (!state.route.variables.length) {
+          self.navigate(state.route.route);
+          return; // # assume function will be retriggered
+        } else {
+          if (self.debugging) {
+            console.warn('State "' + name + '" does not match current route.');
+            console.warn('Could not re-route due to route variables.');
+          }
+        }
+      }
+
+      if (self.onBeforeStateChange) {
+        self.onBeforeStateChange(state);
+      }
+      if (self.$state && self.$state.onLeave) {
+        self.$state.onLeave(state);
+      } // # call onLeave, pass old state
+      self.transition(state);
+      if (self.onStateChange) {
+        self.onStateChange(state);
+      }
+      if (state.onEnter) {
+        state.onEnter(state);
+      } // # call onEnter, pass new state
+      self.$state = state;
+    }
+
+    /**
+     * Used to mount state.
+     * @param (object) state - State object for mounting.
+     */
+
+  }, {
+    key: 'transition',
+    value: function transition(state) {
+      var self = this;
+
+      var variables = self.$utils.extractRouteVars(state);
+      if (self.$state) {
+        var tag = riot.util.vdom.find(function (tag) {
+          return tag.root.localName == self.$state.tag;
+        });
+        if (!tag) throw Error('Could not find a matching tag to unmount');
+        tag.unmount();
+      }
+      var node = document.createElement(state.tag);
+      var opts = {};
+      variables.forEach(function (variable) {
+        opts[variable.name] = variable.value;
+      }); // # add props
+      self.context.appendChild(node);
+      riot.mount(state.tag, opts);
+      if (state.title) {
+        var title = state.title;
+        variables.forEach(function (variable) {
+          return title = title.replace('<' + variable.name + '>', variable.value);
+        });
+        document.title = title;
+      }
+    }
+
+    /** Used to initialize the router and listeners. */
+
+  }, {
+    key: 'start',
+    value: function start() {
+      var self = this;
+
+      if (!self.running) {
+        if (!self.location) {
+          window.location.hash = '' + self.$constants.hash + self.$utils.stateByName(self.defaultState).route.route;
+        } // # route to default state
+        self.context_id = '$' + new Date().getTime().toString();
+        window[self.context_id] = window.setInterval(function () {
+          var context = document.querySelector(self.marker) || document.querySelector('[' + self.marker + ']');
+          if (context) {
+            self.context = context;
+            self.pushState(self.$utils.stateByRoute().name); // # route to initial state
+            window.onhashchange = function () {
+              self.pushState(self.$utils.stateByRoute().name); // # update state
+            }; // # create listener for route changes
+            window.clearInterval(window[self.context_id]);
+          }
+        }, 250); // # search for view context
+      } else {
+        if (self.debugging) {
+          console.warn('Router was already running');
+        }
+      }
+    }
+
+    /** Used to stop the router and listeners. */
+
+  }, {
+    key: 'stop',
+    value: function stop() {
+      var self = this;
+
+      if (self.running) {
+        self.running = false;
+        delete window.onhashchange;
+      } else {
+        if (self.debugging) {
+          console.warn('Router was not running');
+        }
+      }
+    }
+  }]);
+
+  return Router;
+}();
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"riot-view-router","version":"0.0.1","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","lint":"node_modules/.bin/eslint src/**.js","test":"npm run lint"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"^2.8.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Constants = exports.Constants = {
+  defaults: {
+    hash: '#!',
+    marker: 'r-view',
+    anchorMarker: 'r-sref'
+  },
+  regex: {
+    marker: /[a-zA-Z\-]*/g,
+    stateName: /[a-zA-Z0-9]/g,
+    routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
+    routeVariable: /(:[a-zA-Z]*)/g
+  }
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Utils = exports.Utils = function () {
+
+  /**
+   * Utilities for the riot-view-router mixin.
+   * @param (Router) router - Router for utilities to reference
+   */
+  function Utils(router) {
+    _classCallCheck(this, Utils);
+
+    this.$router = router;
+  }
+
+  /**
+   * Used to search for states by their name.
+   * @param (string) name - Name of state to search for.
+   */
+
+
+  _createClass(Utils, [{
+    key: 'stateByName',
+    value: function stateByName(name) {
+      var self = this.$router;
+      return self.states.find(function (state) {
+        return name == state.name;
+      });
+    }
+
+    /**
+     * Used for extracting route patterns.
+     * @param (string) route - Route from state.
+     */
+
+  }, {
+    key: 'splitRoute',
+    value: function splitRoute(route) {
+      var self = this.$router;
+
+      if (!route.match(self.$constants.regex.routeFormat)) {
+        throw Error('Route "' + route + '" did not match expected route format');
+      }
+      var pattern = route.split('/').slice(1);
+      var variables = pattern.filter(function (item) {
+        return item.match(self.$constants.regex.routeVariable);
+      }).map(function (item) {
+        return {
+          name: item.split('').slice(1).join(''),
+          position: pattern.indexOf(item)
+        };
+      });
+      variables.forEach(function (item) {
+        if (variables.filter(function (_item) {
+          return item;
+        }).length > 1) {
+          throw Error('Found duplicate route variable pattern\n\t "' + route + '"');
+        }
+      });
+      return {
+        route: route,
+        pattern: pattern,
+        variables: variables
+      };
+    }
+
+    /** Used to search for a state by your current route. */
+
+  }, {
+    key: 'stateByRoute',
+    value: function stateByRoute() {
+      var self = this.$router;
+
+      var stubs = self.location.split(self.$constants.hash);
+      if (stubs.length > 1) {
+        stubs = stubs[1].split('/').slice(1);
+      } else {
+        stubs = ["/"];
+      }
+      var state = self.states.find(function (state) {
+        var route = state.route;
+        if (stubs.length == route.pattern.length) {
+          var _loop = function _loop(stub) {
+            if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
+              if (!route.variables.find(function (variable) {
+                return variable.position == stub;
+              })) {
+                return {
+                  v: false
+                };
+              }
+            }
+          };
+
+          for (var stub in stubs) {
+            var _ret = _loop(stub);
+
+            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+          }
+          return true;
+        }
+      });
+
+      if (!state) {
+        if (self.debugging) {
+          console.warn('Route was not matched, defaulting to fallback state');
+        }
+
+        return this.stateByName(self.fallbackState);
+      }
+
+      return state;
+    }
+
+    /**
+     * Used to extract route variables.
+     * @param (object) state - State object for variable matching.
+     */
+
+  }, {
+    key: 'extractRouteVars',
+    value: function extractRouteVars(state) {
+      var self = this.$router;
+
+      var stubs = self.location.split(self.$constants.hash);
+      if (stubs.length > 1) {
+        stubs = stubs[1].split('/').slice(1);
+      }
+      var variables = state.route.variables;
+      variables.forEach(function (variable) {
+        variable.value = stubs[variable.position];
+      });
+      return variables;
+    }
+  }]);
+
+  return Utils;
+}();
+
+/***/ })
+/******/ ]);
+});
