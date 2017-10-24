@@ -7,36 +7,29 @@ var OPTIONS = mocks.options
 var STATES = mocks.states
 
 describe('riot-view-router', function() {
-  describe('registering router mixin', function() {
 
-    beforeEach(function() {
-      this.riot = require('riot')
-    })
+  describe('registering valid router mixin', function() {
 
-    afterEach(function() {
-      delete riot
-    })
+    riot = require('riot')
 
     function helperGetMixin(options, states) {
       var router = new Router(options || OPTIONS, states || STATES)
       riot.mixin('router', router)
-      return riot.mixin('router').$router
+      return riot.mixin('router')
     }
 
     it('creates property "$router"', function() {
-      var mixin
-      expect(function() {
-        mixin = helperGetMixin()
-      }).not.toThrowError()
-      expect(mixin).not.toBe(undefined)
+      var mixin = helperGetMixin()
+      expect(mixin.$router).not.toBe(undefined)
     })
 
     it('processes and merges options', function() {
-      var mixin = helperGetMixin()
+      var mixin = helperGetMixin().$router
       for (var opt in OPTIONS) {
         expect(mixin[opt]).toBe(OPTIONS[opt])
       }
-    })
+    }) // # left here, STATES is somehow getting modified as a reference
+
     // it('processes and merges states', function() {
     //   var mixin = helperGetMixin()
     //   expect(mixin.$router.states.length).toBe(STATES.length)
@@ -90,4 +83,5 @@ describe('riot-view-router', function() {
     // })
 
   })
+
 })

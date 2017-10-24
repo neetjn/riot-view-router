@@ -153,7 +153,7 @@ var Router = exports.Router = function () {
     self.debugging = self.debugging || false;
 
     var stateProperties = ['name', 'route', 'tag'];
-    states = !Array.isArray(states) ? [states] : states;
+    states = Array.from(states);
     states.forEach(function (state) {
       if (!state.name.match(self.$constants.regex.stateName)) {
         throw Error('Invalid state name "' + state.name + '",        state names must be a valid alphanumeric string.');
@@ -349,7 +349,7 @@ var Router = exports.Router = function () {
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"riot-view-router","version":"0.0.1","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","lint":"node_modules/.bin/eslint src/**.js","test":"npm run lint"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"^2.8.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
+module.exports = {"name":"riot-view-router","version":"0.0.1","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine --config=test/jasmine.unit.json","test":"npm run lint && npm run test:unit"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"^2.8.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
 
 /***/ }),
 /* 3 */
