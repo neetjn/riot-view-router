@@ -20,31 +20,36 @@ describe('riot-view-router', function() {
 
     it('creates property "$router"', function() {
       var mixin = helperGetMixin()
-      expect(mixin.$router).not.toBe(undefined)
+      expect(mixin.$router).not.toBeUndefined()
     })
 
     it('processes and merges options', function() {
-      var mixin = helperGetMixin().$router
+      var mixin = helperGetMixin()
       for (var opt in OPTIONS) {
-        expect(mixin[opt]).toBe(OPTIONS[opt])
+        expect(mixin.$router[opt]).toBe(OPTIONS[opt])
       }
     })
 
-    // it('processes and merges states', function() {
-    //   var mixin = helperGetMixin()
-    //   expect(mixin.$router.states.length).toBe(STATES.length)
-    //   mixin.$router.states.forEach((state) => {
-    //     for (var prop in state) {
-    //       if (prop !== 'route') {
-    //         expect(state[prop]).toBe(STATES[prop])
-    //       } // # ensure state value was merged correctly
-    //       else {
-    //         var route = state[prop]
-    //         expect(route.route).toBe(STATE[prop].route)
-    //       }
-    //     }
-    //   })
-    // })
+    it('processes and merges states', function() {
+      var mixin = helperGetMixin()
+      expect(mixin.$router.states.length).toBe(STATES.length)
+      mixin.$router.states.forEach(function(state) {
+        for (var prop in state) {
+          if (prop !== 'route') {
+            expect(state[prop]).toBe(STATES[prop])
+          } // # ensure state value was merged correctly
+          else {
+            var route = state[prop].route
+            v = STATES.find(function(state) {
+              return state.route == route
+            })
+            console.log(v)
+            expect(v).not.toBeUndefined()
+          }
+        }
+      })
+    })
+
     // it('splits routes with variables as intended', function() {
     //   var mixin = helperGetMixin(OPTIONS, STATES.append({
     //     name: 'profile',
