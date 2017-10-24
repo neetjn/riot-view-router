@@ -1,7 +1,7 @@
 {
   "name": "riot-view-router",
   "description": "Lightweight, extensive riot.js router for tag views.",
-  "main": "prototype.js",
+  "main": "dist/riot-view-router.js",
   "authors": [
     "John Nolette"
   ],
