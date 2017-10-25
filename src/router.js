@@ -32,9 +32,8 @@ export class Router {
     let optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
     for (let option in options) {
-      if (acceptedOptions.indexOf(option) == -1) {
+      if (acceptedOptions.indexOf(option) == -1)
         throw Error(`Unknown option "${option}" is not supported`)
-      }
     } // # validate router optionsu
 
     self = Object.assign(self, options)
@@ -50,9 +49,8 @@ export class Router {
     })
     stateProperties.forEach((prop) => {
       states.forEach((state) => {
-        if (!state[prop]) {
+        if (!state[prop])
           throw ReferenceError(`Required state option "${prop}" not specified`)
-        }
       })
     }) // # validate state options
     states.forEach(function(item) {
@@ -60,26 +58,24 @@ export class Router {
     }) // # get route pattern
     self.states = states
 
-    if (!self.defaultState) {
+    if (!self.defaultState)
       throw ReferenceError('Default state must be specified')
-    } else {
-      if (self.defaultState.indexOf(':') > -1) {
+    else {
+      if (self.defaultState.indexOf(':') > -1)
         throw Error(`Default state route cannot take variable parameters`)
-      }
-      if (!self.$utils.stateByName(self.defaultState)) {
+
+      if (!self.$utils.stateByName(self.defaultState))
         throw Error(`State "${self.defaultState}" not found in specified states`)
-      }
     }
 
     if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState)) {
+      if (!self.$utils.stateByName(self.fallbackState))
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
-      }
     }
     else {
-      if (self.debugging) {
+      if (self.debugging)
         console.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
-      }
+
       self.fallbackState = self.defaultState
     }
 
@@ -129,19 +125,20 @@ export class Router {
       }
     }
 
-    if (self.onBeforeStateChange) {
+    if (self.onBeforeStateChange)
       self.onBeforeStateChange(state)
-    }
-    if (self.$state && self.$state.onLeave) {
-      self.$state.onLeave(state)
-    } // # call onLeave, pass old state
+
+    if (self.$state && self.$state.onLeave)
+      self.$state.onLeave(state) // # call onLeave, pass old state
+
     self.transition(state)
-    if (self.onStateChange) {
+
+    if (self.onStateChange)
       self.onStateChange(state)
-    }
-    if (state.onEnter) {
-      state.onEnter(state)
-    } // # call onEnter, pass new state
+
+    if (state.onEnter)
+      state.onEnter(state) // # call onEnter, pass new state
+
     self.$state = state
   }
 
@@ -194,9 +191,8 @@ export class Router {
       }, 250) // # search for view context
     }
     else {
-      if (self.debugging) {
+      if (self.debugging)
         console.warn('Router was already running')
-      }
     }
   }
 
@@ -209,9 +205,8 @@ export class Router {
       delete window.onhashchange
     }
     else {
-      if (self.debugging) {
+      if (self.debugging)
         console.warn('Router was not running')
-      }
     }
   }
 

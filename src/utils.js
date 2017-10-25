@@ -24,9 +24,9 @@ export class Utils {
   splitRoute(route) {
     var self = this.$router
 
-    if (!route.match(self.$constants.regex.routeFormat)) {
+    if (!route.match(self.$constants.regex.routeFormat))
       throw Error(`Route "${route}" did not match expected route format`)
-    }
+
     let pattern = route.split('/').slice(1)
     let variables = pattern.filter((item) => {
       return item.match(self.$constants.regex.routeVariable)
@@ -37,9 +37,8 @@ export class Utils {
       }
     })
     variables.forEach((item) => {
-      if (variables.filter((_item) => item).length > 1) {
+      if (variables.filter((_item) => item).length > 1)
         throw Error(`Found duplicate route variable pattern\n\t "${route}"`)
-      }
     })
     return {
       route,
@@ -53,12 +52,11 @@ export class Utils {
     var self = this.$router
 
     let stubs = self.location.split(self.$constants.hash)
-    if (stubs.length > 1) {
+    if (stubs.length > 1)
       stubs = stubs[1].split('/').slice(1)
-    }
-    else {
+    else
       stubs = ["/"]
-    }
+
     let state = self.states.find((state) => {
       let route = state.route
       if (stubs.length == route.pattern.length) {
@@ -74,9 +72,8 @@ export class Utils {
     })
 
     if (!state) {
-      if (self.debugging) {
+      if (self.debugging)
         console.warn('Route was not matched, defaulting to fallback state')
-      }
 
       return this.stateByName(self.fallbackState)
     }
@@ -92,9 +89,8 @@ export class Utils {
     var self = this.$router
 
     let stubs = self.location.split(self.$constants.hash)
-    if (stubs.length > 1) {
+    if (stubs.length > 1)
       stubs = stubs[1].split('/').slice(1)
-    }
     let variables = state.route.variables
     variables.forEach((variable) => {
       variable.value = stubs[variable.position]

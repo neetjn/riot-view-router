@@ -144,9 +144,7 @@ var Router = exports.Router = function () {
     var optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange'];
     var acceptedOptions = requiredOptions.concat(optionalDefaultOptions);
     for (var option in options) {
-      if (acceptedOptions.indexOf(option) == -1) {
-        throw Error('Unknown option "' + option + '" is not supported');
-      }
+      if (acceptedOptions.indexOf(option) == -1) throw Error('Unknown option "' + option + '" is not supported');
     } // # validate router optionsu
 
     self = Object.assign(self, options);
@@ -163,9 +161,7 @@ var Router = exports.Router = function () {
     });
     stateProperties.forEach(function (prop) {
       states.forEach(function (state) {
-        if (!state[prop]) {
-          throw ReferenceError('Required state option "' + prop + '" not specified');
-        }
+        if (!state[prop]) throw ReferenceError('Required state option "' + prop + '" not specified');
       });
     }); // # validate state options
     states.forEach(function (item) {
@@ -173,25 +169,17 @@ var Router = exports.Router = function () {
     }); // # get route pattern
     self.states = states;
 
-    if (!self.defaultState) {
-      throw ReferenceError('Default state must be specified');
-    } else {
-      if (self.defaultState.indexOf(':') > -1) {
-        throw Error('Default state route cannot take variable parameters');
-      }
-      if (!self.$utils.stateByName(self.defaultState)) {
-        throw Error('State "' + self.defaultState + '" not found in specified states');
-      }
+    if (!self.defaultState) throw ReferenceError('Default state must be specified');else {
+      if (self.defaultState.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
+
+      if (!self.$utils.stateByName(self.defaultState)) throw Error('State "' + self.defaultState + '" not found in specified states');
     }
 
     if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState)) {
-        throw Error('Fallback state "' + self.fallbackState + '" not found in specified states');
-      }
+      if (!self.$utils.stateByName(self.fallbackState)) throw Error('Fallback state "' + self.fallbackState + '" not found in specified states');
     } else {
-      if (self.debugging) {
-        console.warn('Fallback state not specified, defaulting to "' + self.defaultState + '"');
-      }
+      if (self.debugging) console.warn('Fallback state not specified, defaulting to "' + self.defaultState + '"');
+
       self.fallbackState = self.defaultState;
     }
 
@@ -246,19 +234,16 @@ var Router = exports.Router = function () {
         }
       }
 
-      if (self.onBeforeStateChange) {
-        self.onBeforeStateChange(state);
-      }
-      if (self.$state && self.$state.onLeave) {
-        self.$state.onLeave(state);
-      } // # call onLeave, pass old state
+      if (self.onBeforeStateChange) self.onBeforeStateChange(state);
+
+      if (self.$state && self.$state.onLeave) self.$state.onLeave(state); // # call onLeave, pass old state
+
       self.transition(state);
-      if (self.onStateChange) {
-        self.onStateChange(state);
-      }
-      if (state.onEnter) {
-        state.onEnter(state);
-      } // # call onEnter, pass new state
+
+      if (self.onStateChange) self.onStateChange(state);
+
+      if (state.onEnter) state.onEnter(state); // # call onEnter, pass new state
+
       self.$state = state;
     }
 
@@ -320,9 +305,7 @@ var Router = exports.Router = function () {
           }
         }, 250); // # search for view context
       } else {
-        if (self.debugging) {
-          console.warn('Router was already running');
-        }
+        if (self.debugging) console.warn('Router was already running');
       }
     }
 
@@ -337,9 +320,7 @@ var Router = exports.Router = function () {
         self.running = false;
         delete window.onhashchange;
       } else {
-        if (self.debugging) {
-          console.warn('Router was not running');
-        }
+        if (self.debugging) console.warn('Router was not running');
       }
     }
   }]);
@@ -431,9 +412,8 @@ var Utils = exports.Utils = function () {
     value: function splitRoute(route) {
       var self = this.$router;
 
-      if (!route.match(self.$constants.regex.routeFormat)) {
-        throw Error('Route "' + route + '" did not match expected route format');
-      }
+      if (!route.match(self.$constants.regex.routeFormat)) throw Error('Route "' + route + '" did not match expected route format');
+
       var pattern = route.split('/').slice(1);
       var variables = pattern.filter(function (item) {
         return item.match(self.$constants.regex.routeVariable);
@@ -446,9 +426,7 @@ var Utils = exports.Utils = function () {
       variables.forEach(function (item) {
         if (variables.filter(function (_item) {
           return item;
-        }).length > 1) {
-          throw Error('Found duplicate route variable pattern\n\t "' + route + '"');
-        }
+        }).length > 1) throw Error('Found duplicate route variable pattern\n\t "' + route + '"');
       });
       return {
         route: route,
@@ -465,11 +443,8 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.split(self.$constants.hash);
-      if (stubs.length > 1) {
-        stubs = stubs[1].split('/').slice(1);
-      } else {
-        stubs = ["/"];
-      }
+      if (stubs.length > 1) stubs = stubs[1].split('/').slice(1);else stubs = ["/"];
+
       var state = self.states.find(function (state) {
         var route = state.route;
         if (stubs.length == route.pattern.length) {
@@ -495,9 +470,7 @@ var Utils = exports.Utils = function () {
       });
 
       if (!state) {
-        if (self.debugging) {
-          console.warn('Route was not matched, defaulting to fallback state');
-        }
+        if (self.debugging) console.warn('Route was not matched, defaulting to fallback state');
 
         return this.stateByName(self.fallbackState);
       }
@@ -516,9 +489,7 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.split(self.$constants.hash);
-      if (stubs.length > 1) {
-        stubs = stubs[1].split('/').slice(1);
-      }
+      if (stubs.length > 1) stubs = stubs[1].split('/').slice(1);
       var variables = state.route.variables;
       variables.forEach(function (variable) {
         variable.value = stubs[variable.position];

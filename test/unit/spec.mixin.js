@@ -64,13 +64,14 @@ describe('riot-view-router', function() {
     expect(variables[0].position).toBe(2) // # check
   })
 
-  // it('debugging is defaulted to false', function() {
-  //   var mixin = helperGetMixin({
-  //     defaultState: 'home',
-  //     fallbackState: '404'
-  //   }, STATES)
-  //   expect(mixin.$router.debugging).toBe(false)
-  // })
+  it('debugging is defaulted to false', function() {
+    var mixin = helperGetMixin({
+      defaultState: 'home',
+      fallbackState: '404'
+    }, STATES)
+    expect(mixin.$router.debugging).toBe(false)
+  })
+
   // it('default state is enforced', function() {
   //   expect(function() {
   //     helperGetMixin({
@@ -78,6 +79,7 @@ describe('riot-view-router', function() {
   //     }, STATES)
   //   }).toThrowError(ReferenceError)
   // })
+
   // it('unsupported options should not be processed', function() {
   //   var opt = random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
   //   expect(function() {

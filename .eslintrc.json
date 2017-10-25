@@ -7,7 +7,8 @@
     "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
     "semi": ["error", "never"],
     "no-unused-vars": ["error", "always"],
-    "space-before-blocks": ["error", "always"]
+    "space-before-blocks": ["error", "always"],
+    "quotes": ["error", "single"]
   },
   "globals": {
     "document": true,
