@@ -47,7 +47,9 @@ export class Utils {
     }
   }
 
-  /** Used to search for a state by your current route. */
+  /**
+   * Used to search for a state by your current route.
+   */
   stateByRoute() {
     var self = this.$router
 

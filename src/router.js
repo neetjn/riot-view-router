@@ -2,14 +2,14 @@ import { version } from '../package.json'
 import { Constants } from './constants'
 import { Utils } from './utils'
 
-/**
- * Represents the riot-view-router mixin.
- * @constructor
- * @param (object) options - Router options.
- * @param (array) states - States for router to read from.
- */
 export class Router {
 
+  /**
+   * Represents the riot-view-router mixin.
+   * @constructor
+   * @param (object) options - Router options.
+   * @param (array) states - States for router to read from.
+   */
   constructor(options, states) {
     var self = this
 
@@ -169,7 +169,9 @@ export class Router {
     }
   }
 
-  /** Used to initialize the router and listeners. */
+  /**
+   * Used to initialize the router and listeners.
+   */
   start () {
     var self = this
 
@@ -196,7 +198,9 @@ export class Router {
     }
   }
 
-  /** Used to stop the router and listeners. */
+  /**
+   * Used to stop the router and listeners.
+   */
   stop () {
     var self = this
 
