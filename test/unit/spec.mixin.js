@@ -6,7 +6,7 @@ var Router = require('../../dist/riot-view-router')
 var OPTIONS = mocks.options
 var STATES = mocks.states
 
-describe('riot-view-router', function() {
+describe('riot-view-router mixin', function() {
 
   riot = require('riot')
 
@@ -45,7 +45,7 @@ describe('riot-view-router', function() {
     })
   })
 
-  it('splits routes with variables as intended', function() {
+  it('splits state routes with variables as intended', function() {
     var states = STATES.map(function(state) {
       return Object.assign({}, state)
     }) // # we create a new array of new objects as to not polute our mock global
@@ -64,7 +64,7 @@ describe('riot-view-router', function() {
     expect(variables[0].position).toBe(2) // # check
   })
 
-  it('debugging is defaulted to false', function() {
+  it('debugging option is defaulted to false', function() {
     var mixin = helperGetMixin({
       defaultState: 'home',
       fallbackState: '404'
@@ -72,21 +72,21 @@ describe('riot-view-router', function() {
     expect(mixin.$router.debugging).toBe(false)
   })
 
-  // it('default state is enforced', function() {
-  //   expect(function() {
-  //     helperGetMixin({
-  //       debugging: false
-  //     }, STATES)
-  //   }).toThrowError(ReferenceError)
-  // })
+  it('default state is enforced', function() {
+    expect(function() {
+      helperGetMixin({
+        debugging: false
+      }, STATES)
+    }).toThrowError(ReferenceError)
+  })
 
-  // it('unsupported options should not be processed', function() {
-  //   var opt = random.string('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
-  //   expect(function() {
-  //     helperGetMixin(Object.assign(OPTIONS, {
-  //       [opt]: opt
-  //     }), STATES)
-  //   }).toThrowError(Error)
-  // })
+  it('unsupported options should not be processed', function() {
+    var opt = random.string(15, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    expect(function() {
+      helperGetMixin(Object.assign(OPTIONS, {
+        [opt]: opt
+      }), STATES)
+    }).toThrowError(Error)
+  })
 
 })
