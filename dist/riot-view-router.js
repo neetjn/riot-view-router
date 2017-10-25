@@ -153,8 +153,8 @@ var Router = exports.Router = function () {
     self.debugging = self.debugging || false;
 
     var stateProperties = ['name', 'route', 'tag'];
-    states = !Array.isArray(states) ? [Object.create(state)] : states.map(function (state) {
-      return Object.create(state);
+    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(function (state) {
+      return Object.assign({}, state);
     });
     states.forEach(function (state) {
       if (!state.name.match(self.$constants.regex.stateName)) {

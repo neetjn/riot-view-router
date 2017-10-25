@@ -41,7 +41,7 @@ export class Router {
     self.debugging = self.debugging || false
 
     let stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.create(state)] : states.map((state)=>Object.create(state))
+    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state)=>Object.assign({}, state))
     states.forEach((state) => {
       if (!state.name.match(self.$constants.regex.stateName)) {
         throw Error(`Invalid state name "${state.name}",\
