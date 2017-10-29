@@ -3,7 +3,7 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine', 'riot'],
     files: [
-      'test/e2e/*.spec.js'
+      'test/e2e/spec.*.js'
     ],
     reporters: ['progress'],
     port: 9876,

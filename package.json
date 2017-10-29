@@ -38,6 +38,7 @@
     "jasmine": "^2.8.0",
     "karma": "^1.7.1",
     "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
     "karma-riot": "^2.0.0",
     "random-js": "1.0.8",
     "riot": "^3.7.3",
