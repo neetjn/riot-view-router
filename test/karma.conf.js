@@ -3,8 +3,7 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine', 'riot'],
     files: [
-      '**/*.tag',
-      'test/**/*Spec.js'
+      'test/e2e/*.spec.js'
     ],
     preprocessors: {
       '**/*.tag': ['riot']
@@ -16,5 +15,5 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['PhantomJS'],
     singleRun: true
-  });
+  })
 }

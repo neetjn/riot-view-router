@@ -1,5 +1,4 @@
 
-/*global riot, describe, it, beforeEach, expect*/
 describe('Hello World', function() {
 
   beforeEach(function() {
