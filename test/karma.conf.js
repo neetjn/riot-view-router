@@ -5,9 +5,6 @@ module.exports = function (config) {
     files: [
       'test/e2e/*.spec.js'
     ],
-    preprocessors: {
-      '**/*.tag': ['riot']
-    },
     reporters: ['progress'],
     port: 9876,
     colors: true,

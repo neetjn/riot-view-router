@@ -37,6 +37,7 @@
     "eslint-plugin-riot": "^0.1.7",
     "jasmine": "^2.8.0",
     "karma": "^1.7.1",
+    "karma-jasmine": "^1.1.0",
     "random-js": "1.0.8",
     "riot": "^3.7.3",
     "webpack": "^3.8.1"
