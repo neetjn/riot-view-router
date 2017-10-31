@@ -8,9 +8,9 @@ describe('riot-view-router', function() {
     var html = document.createElement('app')
     document.body.appendChild(html)
     //riot.mount('app')
-    var router = new Router({
+    // var router = new Router({
 
-    }, [{}])
+    // }, [{}])
   })
 
   it('should mount the tag', function() {

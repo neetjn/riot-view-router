@@ -1,8 +1,10 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
+    browsers: ['Electron'],
     frameworks: ['jasmine', 'riot'],
     files: [
+      'mocks.js',
       '../dist/riot-view-router.js',
       'e2e/spec.*.js'
     ],
@@ -11,7 +13,6 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['PhantomJS'],
     singleRun: true
   })
 }
