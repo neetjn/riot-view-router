@@ -1,10 +1,8 @@
 import { Router as _Router } from './router'
 
-const Router = function(options, states) {
+exports.default = function(options, states) {
   return {
     $router: new _Router(options, states)
   }
 }
-
-exports.Router = Router
-exports.default = Router
+module.exports = exports['default']
