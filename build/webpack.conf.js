@@ -23,7 +23,8 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: ['env']
+            presets: ['env'],
+            plugins: ['add-module-exports']
           }
         }
       }

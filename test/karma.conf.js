@@ -3,6 +3,7 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine', 'riot'],
     files: [
+      '../dist/riot-view-router.js',
       'e2e/spec.*.js'
     ],
     reporters: ['progress'],

@@ -7,4 +7,4 @@ const Router = function(options, states) {
 }
 
 exports.Router = Router
-module.exports = Router
+exports.default = Router
