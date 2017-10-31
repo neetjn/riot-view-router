@@ -39,15 +39,15 @@ var mocks = {
   tags: [
     {
       name: 'app',
-      template: '<app><r-view></r-view></app>'
+      template: '<r-view></r-view>'
     },
     {
       name: 'home',
-      template: '<home><h1>home page</h1></home>'
+      template: '<h1>home page</h1>'
     },
     {
       name: 'not-found',
-      template: '<not-found><h1>404 not found</h1></not-found>'
+      template: '<h1>404 not found</h1>'
     }
   ]
 
