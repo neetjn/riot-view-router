@@ -12,7 +12,7 @@ describe('riot-view-router', function() {
   })
 
   it('should not start until called', function() {
-    expect(document.querySelector('app r-view').firstChild).toBeUndefined()
+    expect(document.querySelector('app r-view').firstChild).toBeNull()
   })
 
   it('should instantiate property "$router"', function() {
@@ -21,20 +21,21 @@ describe('riot-view-router', function() {
 
   it('should navigate to default state and render tag on start', function() {
     router.start()
-    expect(window.location.hash).toBe(router.$constants.default.hash + '/')
+    console.log(window.location.hash)
+    expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
     expect(document.querySelector('r-view home')).toBeDefined()
   })
 
   it('should render tag when navigated to route', function() {
     router.start()
-    window.location.hash = router.$constants.default.hash + 'about'
+    window.location.hash = router.$constants.defaults.hash + 'about'
     expect(document.querySelector('r-view about')).toBeDefined()
   })
 
   it('should navigate to fallback state and render tag on invalid route', function() {
     router.start()
-    window.location.hash = router.$constants.default.hash + new Date().getTime().toString(16)
-    expect(window.location.hash).toBe(router.$constants.default.hash + '/notFound')
+    window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
+    expect(window.location.hash).toBe(router.$constants.defaults.hash + '/notFound')
     expect(document.querySelector('r-view not-found')).toBeDefined()
   })
 

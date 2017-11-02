@@ -99,7 +99,7 @@ export class Router {
    * @param (string) route - Route to relocate to.
    */
   navigate (route) {
-    this.location = self.$constants.hash + route
+    this.location = this.$constants.defaults.hash + route
   }
 
   /**
@@ -110,7 +110,7 @@ export class Router {
     var self = this
 
     let state = self.$utils.stateByName(name)
-    let location = self.location.split(self.$constants.hash)[1]
+    let location = self.location.split(self.$constants.defaults.hash)[1]
 
     if (location !== state.route.route) {
       if (!state.route.variables.length) {
@@ -177,7 +177,7 @@ export class Router {
 
     if (!self.running) {
       if (!self.location) {
-        window.location.hash = `${ self.$constants.hash }${ self.$utils.stateByName(self.defaultState).route.route }`
+        self.location = self.$constants.defaults.hash + self.$utils.stateByName(self.defaultState).route.route
       } // # route to default state
       self.context_id = '$' + new Date().getTime().toString()
       window[self.context_id] = window.setInterval(function() {
