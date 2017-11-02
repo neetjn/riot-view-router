@@ -46,18 +46,9 @@ describe('riot-view-router mixin', function() {
   })
 
   it('splits state routes with variables as intended', function() {
-    var states = STATES.map(function(state) {
-      return Object.assign({}, state)
-    }) // # we create a new array of new objects as to not polute our mock global
-    var var_state = {
-      name: 'profile',
-      route: '/profile/view/:username',
-      tag: 'profile'
-    }
-    states.push(var_state)
-    var mixin = helperGetMixin(OPTIONS, states).$router
+    var mixin = helperGetMixin(OPTIONS, STATES).$router
     var variables = mixin.states.find(function(state) {
-      return state.name == var_state.name
+      return state.name == 'profile'
     }).route.variables // # get variables processed by route splitter
     expect(variables.length).toBe(1)
     expect(variables[0].name).toBe('username') // # check name
