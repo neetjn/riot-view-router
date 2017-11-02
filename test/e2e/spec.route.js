@@ -21,7 +21,6 @@ describe('riot-view-router', function() {
 
   it('should navigate to default state and render tag on start', function() {
     router.start()
-    console.log(window.location.hash)
     expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
     expect(document.querySelector('r-view home')).toBeDefined()
   })
@@ -32,11 +31,26 @@ describe('riot-view-router', function() {
     expect(document.querySelector('r-view about')).toBeDefined()
   })
 
-  it('should navigate to fallback state and render tag on invalid route', function() {
-    router.start()
-    window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
-    expect(window.location.hash).toBe(router.$constants.defaults.hash + '/notFound')
-    expect(document.querySelector('r-view not-found')).toBeDefined()
+  describe('given an invalid route', function() {
+    beforeEach(function() {
+      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 2500
+    })
+
+    it('should navigate to fallback state and render tag on invalid route', function() {
+      router.start()
+      window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
+      setTimeout(function() {
+        console.log('ol?')
+        expect(window.location.hash).toBe(router.$constants.defaults.hash + '/nofetFound')
+        expect(document.querySelector('r-view not-found')).toBeDefined()
+        done()
+      }, 2000)
+    })
+
+    afterEach(function() {
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout
+    })
   })
 
 })
