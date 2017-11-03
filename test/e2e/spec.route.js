@@ -11,19 +11,19 @@ describe('riot-view-router', function() {
     riot.mount('app')
   })
 
-  // it('should not start until called', function() {
-  //   expect(document.querySelector('app r-view').firstChild).toBeNull()
-  // })
+  it('should not start until called', function() {
+    expect(document.querySelector('app r-view').firstChild).toBeNull()
+  })
 
-  // it('should instantiate property "$router"', function() {
-  //   expect(router).toBeDefined()
-  // })
+  it('should instantiate property "$router"', function() {
+    expect(router).toBeDefined()
+  })
 
-  // it('should navigate to default state and render tag on start', function() {
-  //   router.start()
-  //   expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
-  //   expect(document.querySelector('r-view home')).toBeDefined()
-  // })
+  it('should navigate to default state and render tag on start', function() {
+    router.start()
+    expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
+    expect(document.querySelector('r-view home')).toBeDefined()
+  })
 
   it('should render tag when navigated to route', function() {
     router.start()
@@ -36,16 +36,16 @@ describe('riot-view-router', function() {
     //expect(document.querySelector('r-view abofut')).not.toBeNull()
   })
 
-  // describe('given an invalid route', function() {
+  describe('given an invalid route', function() {
 
-  //   it('should navigate to fallback state and render tag on invalid route', function() {
-  //     router.start()
-  //     window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
-  //     console.log(document.body.innerHTML)
-  //     expect(window.location.hash).toBe(router.$constants.defaults.hash + '/about')
-  //     expect(document.querySelector('r-view not-found')).toBeDefined()
-  //   })
+    it('should navigate to fallback state and render tag on invalid route', function() {
+      router.start()
+      window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
+      console.log(document.body.innerHTML)
+      expect(window.location.hash).toBe(router.$constants.defaults.hash + '/about')
+      expect(document.querySelector('r-view not-found')).toBeDefined()
+    })
 
-  // })
+  })
 
 })
