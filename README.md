@@ -86,3 +86,6 @@ riot.mixin(new Router({
 
 ### Support
 **riot-view-router** supports riot.js 3, support for previous versions is not available.
+
+---
+Copyright (c) 2017 John Nolette Licensed under the MIT license.
