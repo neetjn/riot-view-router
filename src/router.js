@@ -19,10 +19,10 @@ export class Router {
 
     Object.defineProperty(self, 'location', {
       get: function() {
-        return window.location.hash
+        return window.location.href
       },
       set: function(location) {
-        window.location.hash = location
+        window.location.href = location
       }
     })
 
