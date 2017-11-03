@@ -30,14 +30,22 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following options,
 
-    debugging: Will default to true, spits errors and warnings to console.
-    defaultState: Default state for router to navigate to on start if route not matched.
-    fallbackState: Will default to fallbackState, 
-    onBeforeChange: Callback for before a state change.
-    onAfterChange: Callback for after a state change.
+* `*debugging`: Will default to true, spits errors and warnings to console.
+* `*defaultState`: Default state for router to navigate to on start if route not matched.
+* `fallbackState`: Will default to fallbackState, state to fallback to on mismatch.
+* `onBeforeChange`: Callback for before a state change.
+* `onAfterChange`: Callback for after a state change.
 
+States are composed of the following settings,
 
-Using the mixin should then be as simple as,
+* `*name`: State name.
+* `*route`: Route to match state by.
+* `*tag`: Tag to inject into rout view, mount.
+* `title`: Title to set window.
+* `onEnter`: Callback for entering state.
+* `onLeave`: Callback for leaving state.
+
+Using the mixin is then as simple as,
 
 ```js
 import Router from 'riot-view-router'
@@ -50,16 +58,16 @@ const states = [
     title: 'Hello World',
     onEnter: (state) => {
       console.log('Entering home')
-    },
-    onLeave: (state) => {
-      console.log('Leaving home')
     }
   },
   {
     name: '404',
     route: '/notfound',
     tag:'not-found',
-    title: '404 Page Not Found'
+    title: '404 Page Not Found',
+    onLeave: (state) => {
+      console.log('Leaving home')
+    }
   },
   {
     name: 'profile',
@@ -72,13 +80,7 @@ const states = [
 riot.mixin(new Router({
   debugging: true,
   defaultState: 'home',
-  fallbackState: '404',
-  onBeforeStateChange(state) {
-    console.warn('about to change states!')
-  },
-  onStateChange(state) {
-    console.log('just changed states!')
-  }
+  fallbackState: '404'
 }, states))
 ```
 
