@@ -84,7 +84,24 @@ riot.mixin(new Router({
 }, states))
 ```
 
+### Contributing
+
+Contributing guidelines are as follows,
+
+* Any new features must include either a unit test, e2e test, or both.
+* Branches for bugs and features should be structued like so, `issue-x-username`.
+* Before putting in a pull request, be sure to verify you've built all your changes.
+  
+  *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
+
+* Include your name and email in the contributors list below.
+
+### Contributors
+
+**John Nolette** (john@neetgroup.net)
+
 ### Support
+
 **riot-view-router** supports riot.js 3, support for previous versions is not available.
 
 ---
