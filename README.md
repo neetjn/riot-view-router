@@ -84,7 +84,30 @@ riot.mixin(new Router({
 }, states))
 ```
 
-### Contributing
+you may then access the `Router` instance via your tags with `$router` like so,
+
+```html
+<app>
+  <r-view></r-view>
+
+  this.$router.start()
+</app>
+```
+
+### Router API
+
+The **riot-view-router** has a very simple, easily operable API.
+
+* `pushState(name)`: Invoke a state change.
+* `start()`: Start router, listen on window href changes.
+* `stop()`: Stop router, related listeners and lifecycle events.
+
+
+### Contributors
+
+**John Nolette** (john@neetgroup.net)
+
+#### Contributing
 
 Contributing guidelines are as follows,
 
@@ -95,10 +118,6 @@ Contributing guidelines are as follows,
   *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
 
 * Include your name and email in the contributors list below.
-
-### Contributors
-
-**John Nolette** (john@neetgroup.net)
 
 ### Support
 
