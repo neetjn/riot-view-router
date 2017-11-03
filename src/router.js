@@ -62,7 +62,7 @@ export class Router {
       throw ReferenceError('Default state must be specified')
     else {
       if (self.defaultState.indexOf(':') > -1)
-        throw Error(`Default state route cannot take variable parameters`)
+        throw Error('Default state route cannot take variable parameters')
 
       if (!self.$utils.stateByName(self.defaultState))
         throw Error(`State "${self.defaultState}" not found in specified states`)

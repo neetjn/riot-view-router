@@ -37,7 +37,7 @@ export class Utils {
       }
     })
     variables.forEach((item) => {
-      if (variables.filter((_item) => item).length > 1)
+      if (variables.filter((_item) => _item == item).length > 1)
         throw Error(`Found duplicate route variable pattern\n\t "${route}"`)
     })
     return {
@@ -57,7 +57,7 @@ export class Utils {
     if (stubs.length > 1)
       stubs = stubs[1].split('/').slice(1)
     else
-      stubs = ["/"]
+      stubs = ['/']
 
     let state = self.states.find((state) => {
       let route = state.route
