@@ -105,9 +105,7 @@ The **riot-view-router** has a very simple, easily operable API.
 
 ### Contributors
 
-**John Nolette** (john@neetgroup.net)
-
-#### Contributing
+* **John Nolette** (john@neetgroup.net)
 
 Contributing guidelines are as follows,
 
@@ -117,7 +115,7 @@ Contributing guidelines are as follows,
   
   *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
 
-* Include your name and email in the contributors list below.
+* Include your name and email in the contributors list.
 
 ### Support
 
