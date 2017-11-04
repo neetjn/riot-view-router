@@ -99,7 +99,9 @@ export class Router {
    * @param (string) route - Route to relocate to.
    */
   navigate (route) {
-    this.location = this.$constants.defaults.hash + route
+    var self = this
+    self.location = self.$constants.defaults.hash + route
+    return self
   }
 
   /**
@@ -204,14 +206,18 @@ export class Router {
   stop () {
     var self = this
 
-    if (self.running) {
-      self.running = false
-      delete window.onhashchange
-    }
-    else {
-      if (self.debugging)
-        console.warn('Router was not running')
-    }
+    return new Promise(function(resolve, reject) {
+      if (self.running) {
+        self.running = false
+        delete window.onhashchange
+        resolve()
+      }
+      else {
+        if (self.debugging)
+          console.warn('Router was not running')
+        reject()
+      }
+    })
   }
 
 }
