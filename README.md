@@ -31,20 +31,20 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following options,
 
-* `*debugging`: Will default to true, spits errors and warnings to console.
-* `*defaultState`: Default state for router to navigate to on start if route not matched.
-* `fallbackState`: Will default to fallbackState, state to fallback to on mismatch.
-* `onBeforeChange`: Callback for before a state change.
-* `onAfterChange`: Callback for after a state change.
+    debugging: Will default to true, spits errors and warnings to console.
+    *defaultState: Default state for router to navigate to on start if route not matched.
+    fallbackState: Will default to fallbackState, state to fallback to on mismatch.
+    onBeforeChange: Callback for before a state change.
+    onAfterChange: Callback for after a state change.
 
 States are composed of the following settings,
 
-* `*name`: State name.
-* `*route`: Route to match state by.
-* `*tag`: Tag to inject into rout view, mount.
-* `title`: Title to set window.
-* `onEnter`: Callback for entering state.
-* `onLeave`: Callback for leaving state.
+    *name: State name.
+    *route: Route to match state by.
+    *tag: Tag to inject into rout view, mount.
+    title: Title to set window.
+    onEnter: Callback for entering state.
+    onLeave: Callback for leaving state.
 
 Using the mixin is then as simple as,
 
@@ -99,10 +99,10 @@ you may then access the `Router` instance via your tags with `$router` like so,
 
 The **riot-view-router** has a very simple, easily operable API.
 
-* `navigate(route)`: Navigate 
-* `pushState(name)`: Invoke a state change.
-* `start()`: Start router, listen on window href changes.
-* `stop()`: Stop router, related listeners and lifecycle events.
+    navigate(*route): Navigate to a given route.
+    push(*name, args): Invoke a state change.
+    start(): Start router, listen on window href   changes.
+    stop(): Stop router, related listeners and lifecycle events.
 
 
 ### Contributors
