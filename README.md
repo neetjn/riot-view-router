@@ -33,6 +33,8 @@ For a quick start using jsdelivr:
 
     debugging: Will default to true, spits errors and warnings to console.
 
+    href: Will default to originating location, router will operate off of this.
+
     *defaultState: Default state for router to navigate to on start if route not matched.
 
     fallbackState: Will default to fallbackState, state to fallback to on mismatch.
@@ -90,7 +92,8 @@ const states = [
 riot.mixin(new Router({
   debugging: true,
   defaultState: 'home',
-  fallbackState: '404'
+  fallbackState: '404',
+  href: 'https://mysite.com/blogs'
 }, states))
 ```
 

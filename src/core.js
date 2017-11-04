@@ -32,7 +32,7 @@ export class Router {
     self.running = false
 
     let requiredOptions = ['defaultState']
-    let optionalDefaultOptions = ['debugging', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
+    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
     for (let option in options) {
       if (acceptedOptions.indexOf(option) == -1)
@@ -41,6 +41,9 @@ export class Router {
 
     self = Object.assign(self, options)
     self.debugging = self.debugging || false
+    self.href = self.href || self.location
+    if (!self.href.endsWith('/'))
+      self.href = self.href + '/'
 
     let stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state)=>Object.assign({}, state))
@@ -106,7 +109,7 @@ export class Router {
     var self = this
 
     return new Promise((resolve) => {
-      self.location = self.$constants.defaults.hash + route
+      self.location = self.href + self.$constants.defaults.hash + route
       resolve()
     })
   }

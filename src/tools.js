@@ -24,17 +24,21 @@ export class Tools {
         tag.unmount()
       }
       let node = document.createElement(state.tag)
-      let parsed_opts = { }
-      opts.forEach((opt) => {
-        parsed_opts[opt.name] = opt.value
-      }) // # add props
       self.context.appendChild(node)
-      riot.mount(state.tag, parsed_opts)
-      if (state.title) {
-        let title = state.title
-        opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
-        document.title = title
+      if (opts) {
+        let parsed_opts = { }
+        opts.forEach((opt) => {
+          parsed_opts[opt.name] = opt.value
+        }) // # add props
+        riot.mount(state.tag, parsed_opts)
+        if (state.title) {
+          let title = state.title
+          opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
+          document.title = title
+        }
       }
+      else
+        riot.mount(state.tag)
       resolve()
     })
   }
