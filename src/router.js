@@ -17,6 +17,7 @@ export class Router {
 
     self.version = version
     self.$constants = Constants
+    self.$tools = new Tools(self)
     self.$utils = new Utils(self)
 
     Object.defineProperty(self, 'location', {
@@ -113,10 +114,15 @@ export class Router {
   /**
    * Used to change states.
    * @param {string} name - Name of state to transition to.
+   * @param {object} args - Arguments to pass to state.
    * @returns {Promise}
    */
-  pushState (name) {
+  push (name, args) {
     var self = this
+
+    // # TODO: left here, allow push of new state with variable
+    // # update existing references to pipe state variables instead of extracting
+    // # int the transition
 
     return new Promise((resolve) => {
       let state = self.$utils.stateByName(name)
@@ -141,7 +147,7 @@ export class Router {
       if (self.$state && self.$state.onLeave)
         self.$state.onLeave(state) // # call onLeave, pass old state
 
-      self.transition(state)
+      self.$tools.transition(state)
 
       if (self.onStateChange)
         self.onStateChange(state)
@@ -150,37 +156,6 @@ export class Router {
         state.onEnter(state) // # call onEnter, pass new state
 
       self.$state = state
-      resolve()
-    })
-  }
-
-  /**
-   * Used to mount state.
-   * @param {object} state - State object for mounting.
-   */
-  transition (state) {
-    var self = this
-
-    return new Promise((resolve) => {
-      let variables = self.$utils.extractRouteVars(state)
-      if (self.$state) {
-        let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!tag)
-          throw Error('Could not find a matching tag to unmount')
-        tag.unmount()
-      }
-      let node = document.createElement(state.tag)
-      let opts = { }
-      variables.forEach((variable) => {
-        opts[variable.name] = variable.value
-      }) // # add props
-      self.context.appendChild(node)
-      riot.mount(state.tag, opts)
-      if (state.title) {
-        let title = state.title
-        variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
-        document.title = title
-      }
       resolve()
     })
   }
@@ -201,9 +176,9 @@ export class Router {
           let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
           if (context) {
             self.context = context
-            self.pushState(self.$utils.stateByRoute().name) // # route to initial state
+            self.push(self.$utils.stateByRoute().name) // # route to initial state
             window.onhashchange = function() {
-              self.pushState(self.$utils.stateByRoute().name) // # update state
+              self.push(self.$utils.stateByRoute().name) // # update state
             } // # create listener for route changes
             window.clearInterval(view_check)
             resolve()
