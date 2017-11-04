@@ -99,6 +99,7 @@ you may then access the `Router` instance via your tags with `$router` like so,
 
 The **riot-view-router** has a very simple, easily operable API.
 
+* `navigate(route)`: Navigate 
 * `pushState(name)`: Invoke a state change.
 * `start()`: Start router, listen on window href changes.
 * `stop()`: Stop router, related listeners and lifecycle events.

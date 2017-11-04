@@ -1,6 +1,7 @@
 import { version } from '../package.json'
 import { Constants } from './constants'
 import { Utils } from './utils'
+import { Tools } from './tools'
 
 export class Router {
 
