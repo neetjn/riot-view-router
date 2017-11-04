@@ -100,8 +100,11 @@ export class Router {
    */
   navigate (route) {
     var self = this
-    self.location = self.$constants.defaults.hash + route
-    return self
+
+    return new Promise((resolve) => {
+      self.location = self.$constants.defaults.hash + route
+      resolve()
+    })
   }
 
   /**
@@ -177,27 +180,30 @@ export class Router {
   start () {
     var self = this
 
-    if (!self.running) {
-      if (!self.location) {
-        self.location = self.$constants.defaults.hash + self.$utils.stateByName(self.defaultState).route.route
-      } // # route to default state
-      self.context_id = '$' + new Date().getTime().toString()
-      window[self.context_id] = window.setInterval(function() {
-        let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
-        if (context) {
-          self.context = context
-          self.pushState(self.$utils.stateByRoute().name) // # route to initial state
-          window.onhashchange = function() {
-            self.pushState(self.$utils.stateByRoute().name) // # update state
-          } // # create listener for route changes
-          window.clearInterval(window[self.context_id])
-        }
-      }, 250) // # search for view context
-    }
-    else {
-      if (self.debugging)
-        console.warn('Router was already running')
-    }
+    return new Promise((resolve, reject) => {
+      if (!self.running) {
+        if (!self.location) {
+          self.navigate(self.$utils.stateByName(self.defaultState).route.route)
+        } // # route to default state
+        var view_check = window.setInterval(() => {
+          let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+          if (context) {
+            self.context = context
+            self.pushState(self.$utils.stateByRoute().name) // # route to initial state
+            window.onhashchange = function() {
+              self.pushState(self.$utils.stateByRoute().name) // # update state
+            } // # create listener for route changes
+            window.clearInterval(view_check)
+            resolve()
+          }
+        }, 500) // # search for view context
+      }
+      else {
+        if (self.debugging)
+          console.warn('Router was already running')
+        reject()
+      }
+    })
   }
 
   /**
@@ -206,7 +212,7 @@ export class Router {
   stop () {
     var self = this
 
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (self.running) {
         self.running = false
         delete window.onhashchange
