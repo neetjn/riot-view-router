@@ -24,15 +24,15 @@ export class Tools {
         tag.unmount()
       }
       let node = document.createElement(state.tag)
-      let opts = { }
-      variables.forEach((variable) => {
-        opts[variable.name] = variable.value
+      let parsed_opts = { }
+      opts.forEach((opt) => {
+        parsed_opts[opt.name] = opt.value
       }) // # add props
       self.context.appendChild(node)
-      riot.mount(state.tag, opts)
+      riot.mount(state.tag, parsed_opts)
       if (state.title) {
         let title = state.title
-        variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
+        opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
         document.title = title
       }
       resolve()
