@@ -127,7 +127,7 @@ export class Router {
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
           self.navigate(state.route.route)
-          return // # assume function will be retriggered
+          resolve() // # assume function will be retriggered
         }
         else {
           if (self.debugging) {
@@ -175,7 +175,7 @@ export class Router {
             self.push(self.$utils.stateByRoute().name) // # route to initial state
             window.onhashchange = function() {
               let state = self.$utils.stateByRoute()
-              let opts = self.$utils.extractRouteVars(state.name)
+              let opts = self.$utils.extractRouteVars(state)
               self.push(state.name, opts) // # update state
             } // # create listener for route changes
             window.clearInterval(view_check)
