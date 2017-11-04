@@ -7,8 +7,9 @@ export class Router {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
-   * @param (object) options - Router options.
-   * @param (array) states - States for router to read from.
+   * @param {object} options - Router options.
+   * @param {array} states - States for router to read from.
+   * @returns {Router}
    */
   constructor(options, states) {
     var self = this
@@ -96,7 +97,8 @@ export class Router {
 
   /**
    * Used to navigate with hash pattern.
-   * @param (string) route - Route to relocate to.
+   * @param {string} route - Route to relocate to.
+   * @returns {Promise}
    */
   navigate (route) {
     var self = this
@@ -109,73 +111,82 @@ export class Router {
 
   /**
    * Used to change states.
-   * @param (string) name - Name of state to transition to.
+   * @param {string} name - Name of state to transition to.
+   * @returns {Promise}
    */
   pushState (name) {
     var self = this
 
-    let state = self.$utils.stateByName(name)
-    let location = self.location.split(self.$constants.defaults.hash)[1]
+    return new Promise((resolve) => {
+      let state = self.$utils.stateByName(name)
+      let location = self.location.split(self.$constants.defaults.hash)[1]
 
-    if (location !== state.route.route) {
-      if (!state.route.variables.length) {
-        self.navigate(state.route.route)
-        return // # assume function will be retriggered
-      }
-      else {
-        if (self.debugging) {
-          console.warn(`State "${name}" does not match current route.`)
-          console.warn('Could not re-route due to route variables.')
+      if (location !== state.route.route) {
+        if (!state.route.variables.length) {
+          self.navigate(state.route.route)
+          return // # assume function will be retriggered
+        }
+        else {
+          if (self.debugging) {
+            console.warn(`State "${name}" does not match current route.`)
+            console.warn('Could not re-route due to route variables.')
+          }
         }
       }
-    }
 
-    if (self.onBeforeStateChange)
-      self.onBeforeStateChange(state)
+      if (self.onBeforeStateChange)
+        self.onBeforeStateChange(state)
 
-    if (self.$state && self.$state.onLeave)
-      self.$state.onLeave(state) // # call onLeave, pass old state
+      if (self.$state && self.$state.onLeave)
+        self.$state.onLeave(state) // # call onLeave, pass old state
 
-    self.transition(state)
+      self.transition(state)
 
-    if (self.onStateChange)
-      self.onStateChange(state)
+      if (self.onStateChange)
+        self.onStateChange(state)
 
-    if (state.onEnter)
-      state.onEnter(state) // # call onEnter, pass new state
+      if (state.onEnter)
+        state.onEnter(state) // # call onEnter, pass new state
 
-    self.$state = state
+      self.$state = state
+      resolve()
+    })
   }
 
   /**
    * Used to mount state.
-   * @param (object) state - State object for mounting.
+   * @param {object} state - State object for mounting.
    */
   transition (state) {
     var self = this
 
-    let variables = self.$utils.extractRouteVars(state)
-    if (self.$state) {
-      let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-      if (!tag) throw Error('Could not find a matching tag to unmount')
-      tag.unmount()
-    }
-    let node = document.createElement(state.tag)
-    let opts = { }
-    variables.forEach((variable) => {
-      opts[variable.name] = variable.value
-    }) // # add props
-    self.context.appendChild(node)
-    riot.mount(state.tag, opts)
-    if (state.title) {
-      let title = state.title
-      variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
-      document.title = title
-    }
+    return new Promise((resolve) => {
+      let variables = self.$utils.extractRouteVars(state)
+      if (self.$state) {
+        let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
+        if (!tag)
+          throw Error('Could not find a matching tag to unmount')
+        tag.unmount()
+      }
+      let node = document.createElement(state.tag)
+      let opts = { }
+      variables.forEach((variable) => {
+        opts[variable.name] = variable.value
+      }) // # add props
+      self.context.appendChild(node)
+      riot.mount(state.tag, opts)
+      if (state.title) {
+        let title = state.title
+        variables.forEach((variable) => title = title.replace(`<${variable.name}>`, variable.value))
+        document.title = title
+      }
+      resolve()
+    })
   }
 
   /**
    * Used to initialize the router and listeners.
+   * @returns {Promise}
    */
   start () {
     var self = this
@@ -208,6 +219,7 @@ export class Router {
 
   /**
    * Used to stop the router and listeners.
+   * @returns {Promise}
    */
   stop () {
     var self = this
