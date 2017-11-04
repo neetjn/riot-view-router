@@ -2,7 +2,7 @@ export class Utils {
 
   /**
    * Utilities for the riot-view-router mixin.
-   * @param (Router) router - Router for utilities to reference
+   * @param {Router} router - Router for utilities to reference
    */
   constructor(router) {
     this.$router = router
@@ -10,7 +10,7 @@ export class Utils {
 
   /**
    * Used to search for states by their name.
-   * @param (string) name - Name of state to search for.
+   * @param {string} name - Name of state to search for.
    */
   stateByName(name) {
     var self = this.$router
@@ -19,7 +19,7 @@ export class Utils {
 
   /**
    * Used for extracting route patterns.
-   * @param (string) route - Route from state.
+   * @param {string} route - Route from state.
    */
   splitRoute(route) {
     var self = this.$router
@@ -85,7 +85,7 @@ export class Utils {
 
   /**
    * Used to extract route variables.
-   * @param (object) state - State object for variable matching.
+   * @param {object} state - State object for variable matching.
    */
   extractRouteVars(state) {
     var self = this.$router

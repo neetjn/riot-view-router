@@ -1,4 +1,4 @@
-import { Router as _Router } from './router'
+import { Router as _Router } from './core'
 
 export default function(options, states) {
   return {
