@@ -25,7 +25,6 @@ describe('riot-view-router', function() {
     }
 
     router.start().then(() => {
-      console.log(router.location)
       expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
       expect(document.querySelector('r-view home')).toBeDefined()
       done()

@@ -108,9 +108,14 @@ export class Router {
   navigate (route) {
     var self = this
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       self.location = self.href + self.$constants.defaults.hash + route
-      resolve()
+      setTimeout(() => {
+        if (self.location == self.href + self.$constants.defaults.hash + route)
+          resolve()
+        else
+          reject()
+      }, 500)
     })
   }
 
@@ -168,7 +173,7 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        if (!self.location) {
+        if (self.location.split(self.$constants.hash).length !== 2) {
           self.navigate(self.$utils.stateByName(self.defaultState).route.route)
         } // # route to default state
         var view_check = window.setInterval(() => {
