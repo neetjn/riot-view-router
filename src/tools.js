@@ -11,12 +11,12 @@ export class Tools {
   /**
    * Used to mount state.
    * @param {object} state - State object for mounting.
+   * @param {array}
    */
-  transition (state) {
+  transition (state, opts) {
     var self = this.$router
 
     return new Promise((resolve) => {
-      let variables = self.$utils.extractRouteVars(state)
       if (self.$state) {
         let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
         if (!tag)

@@ -114,15 +114,11 @@ export class Router {
   /**
    * Used to change states.
    * @param {string} name - Name of state to transition to.
-   * @param {object} args - Arguments to pass to state.
+   * @param {object} opts - Arguments to pass to mounted tag.
    * @returns {Promise}
    */
-  push (name, args) {
+  push (name, opts) {
     var self = this
-
-    // # TODO: left here, allow push of new state with variable
-    // # update existing references to pipe state variables instead of extracting
-    // # int the transition
 
     return new Promise((resolve) => {
       let state = self.$utils.stateByName(name)
@@ -147,7 +143,7 @@ export class Router {
       if (self.$state && self.$state.onLeave)
         self.$state.onLeave(state) // # call onLeave, pass old state
 
-      self.$tools.transition(state)
+      self.$tools.transition(state, opts)
 
       if (self.onStateChange)
         self.onStateChange(state)
@@ -178,7 +174,9 @@ export class Router {
             self.context = context
             self.push(self.$utils.stateByRoute().name) // # route to initial state
             window.onhashchange = function() {
-              self.push(self.$utils.stateByRoute().name) // # update state
+              let state = self.$utils.stateByRoute()
+              let opts = self.$utils.extractRouteVars(state.name)
+              self.push(state.name, opts) // # update state
             } // # create listener for route changes
             window.clearInterval(view_check)
             resolve()
