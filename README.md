@@ -20,7 +20,7 @@
 |--------|------|---------|----------|--------|
 | 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
 
-**riot-view-router** supports riot.js 3, support for previous versions is not available.
+*This project only supports riot.js 3, support for previous versions is not available.*
 
 ### Usage
 
