@@ -4,6 +4,10 @@ describe('riot-view-router', function() {
     expect(error).toBeUndefined()
   }
 
+  isLocation = function(location) {
+    expect(window.location.hash).toBe(router.$constants.defaults.hash + location)
+  }
+
   beforeEach(function() {
     mocks.tags.forEach(function(tag) {
       riot.tag(tag.name, tag.template)
@@ -15,32 +19,32 @@ describe('riot-view-router', function() {
     riot.mount('app')
   })
 
-  // it('should not start until called', function() {
-  //   expect(document.querySelector('app r-view').firstChild).toBeNull()
-  // })
+  it('should not start until called', function() {
+    expect(document.querySelector('app r-view').firstChild).toBeNull()
+    expect(router.running).toBeFalsy()
+  })
 
-  // it('should instantiate property "$router"', function() {
-  //   expect(router).toBeDefined()
-  // })
+  it('should instantiate property "$router"', function() {
+    expect(router).toBeDefined()
+  })
 
   it('should navigate to default state and render tag on start', function(done) {
-    router.start().then(() => {
-      expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
+    router.start().then(function() {
+      isLocation('/')
       expect(document.querySelector('r-view home')).toBeDefined()
-      done()
+      router.stop().then(done)
     }).catch(failTest)
   })
 
-  // it('should render tag when navigated to route', function() {
-  //   router.start()
-
-  //   setTimeout(function() {
-  //     expect(document.querySelector('r-view not-found'))
-  //     window.location = `/${router.$constants.defaults.hash}/about`
-  //     done()
-  //   }, 1500)
-  //   //expect(document.querySelector('r-view abofut')).not.toBeNull()
-  // })
+  it('should render tag when navigated to route', function(done) {
+    router.start().then(function() {
+      router.navigate('/about').then(() => {
+        isLocation('/about')
+        expect(document.querySelector('r-view about')).toBeDefined()
+        router.stop().then(done)
+      })
+    }).catch(failTest)
+  })
 
   // describe('given an invalid route', function() {
 
