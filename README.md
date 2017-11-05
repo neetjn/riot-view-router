@@ -14,6 +14,14 @@
 
 **riot-view-router** is a lightweight, extensive state based riot.js router for tag views. It was designed after the ui-router project, with all the quirks of riot.js.
 
+### Support
+
+| Chome  | Edge | Firefox | Opera    | Safari |
+|--------|------|---------|----------|--------|
+| 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
+
+*This project only supports riot.js 3, support for previous versions is not available.*
+
 ### Usage
 
 To install via Bower, simply do the following:
@@ -31,29 +39,31 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following options,
 
-    debugging: Will default to true, spits errors and warnings to console.
+> **`debugging`**: Will default to true, spits errors and warnings to console.
 
-    *defaultState: Default state for router to navigate to on start if route not matched.
+> **`href`**: Will default to originating location, router will operate off of this.
 
-    fallbackState: Will default to fallbackState, state to fallback to on mismatch.
+> ***defaultState**: Default state for router to navigate to on start if route not matched.
 
-    onBeforeChange: Callback for before a state change.
+> **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
 
-    onAfterChange: Callback for after a state change.
+> **`onBeforeChange`**: Callback for before a state change.
+
+> **`onAfterChange`**: Callback for after a state change.
 
 States are composed of the following settings,
 
-    *name: State name.
+> **`*name`**: *State name.*
 
-    *route: Route to match state by.
+> **`*route`**: *Route to match state by.*
 
-    *tag: Tag to inject into rout view, mount.
+> **`*tag`**: *Tag to inject into rout view, mount.*
 
-    title: Title to set window.
+> **`title`**: *Title to set window.*
 
-    onEnter: Callback for entering state.
+> **`onEnter`**: *Callback for entering state.*
 
-    onLeave: Callback for leaving state.
+> **`onLeave`**: *Callback for leaving state.*
 
 Using the mixin is then as simple as,
 
@@ -90,7 +100,8 @@ const states = [
 riot.mixin(new Router({
   debugging: true,
   defaultState: 'home',
-  fallbackState: '404'
+  fallbackState: '404',
+  href: 'https://mysite.com/blogs'
 }, states))
 ```
 
@@ -108,14 +119,13 @@ you may then access the `Router` instance via your tags with `$router` like so,
 
 The **riot-view-router** has a very simple, easily operable API.
 
-    navigate(*route): Navigate to a given route.
+> **`navigate(*route, skipPush)`** *Navigate to a given route.*
 
-    push(*name, args): Invoke a state change.
+> **`push(name, opts)`** *Invoke a state change. If arguments arent specified, automatically detect the state and extract opts from the defined state variables.*
 
-    start(): Start router, listen on window href   changes.
-    
-    stop(): Stop router, related listeners and lifecycle events.
+> **`start()`** *Start router, listen on window hash   changes.*
 
+> **`stop()`** *Stop router, related listeners and lifecycle events.*
 
 ### Contributors
 
@@ -130,10 +140,6 @@ Contributing guidelines are as follows,
   *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
 
 * Include your name and email in the contributors list.
-
-### Support
-
-**riot-view-router** supports riot.js 3, support for previous versions is not available.
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the MIT license.

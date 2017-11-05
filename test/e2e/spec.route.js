@@ -1,49 +1,74 @@
 describe('riot-view-router', function() {
 
-  beforeEach(function() {
+  failTest = function(error) {
+    expect(error).toBeUndefined()
+  }
+
+  isLocation = function(location) {
+    expect(window.location.hash).toBe(router.$constants.defaults.hash + location)
+  }
+
+  isRendered = function(tagName) {
+    expect(document.querySelector(router.$constants.defaults.marker + ' ' + tagName)).not.toBeNull()
+  }
+
+  beforeEach(function(done) {
     mocks.tags.forEach(function(tag) {
       riot.tag(tag.name, tag.template)
     }) // # create our mock tags
-    riot.mixin('router', new Router(mocks.options, mocks.states))
-    router = riot.mixin('router').$router
-    var html = document.createElement('app')
+    let html = document.createElement('app')
     document.body.appendChild(html)
     riot.mount('app')
+    riot.mixin('router', new Router(mocks.options, mocks.states))
+    router = riot.mixin('router').$router
+    router.start().then(done).catch(failTest)
   })
 
-  it('should not start until called', function() {
-    expect(document.querySelector('app r-view').firstChild).toBeNull()
-  })
-
-  it('should instantiate property "$router"', function() {
-    expect(router).toBeDefined()
-  })
-
-  it('should navigate to default state and render tag on start', function() {
-    router.start()
-    expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
-    expect(document.querySelector('r-view home')).toBeDefined()
-  })
-
-  it('should render tag when navigated to route', function() {
-    router.start()
-
-    setTimeout(function() {
-      expect(document.querySelector('r-view not-found'))
-      window.location = `/${router.$constants.defaults.hash}/about`
+  afterEach(function(done) {
+    if (router.running)
+      router.stop().then(() => {
+        window.history.pushState(null, null, '/')
+        done()
+      }).catch(failTest)
+    else {
+      window.history.pushState(null, null, '/')
       done()
-    }, 1500)
-    //expect(document.querySelector('r-view abofut')).not.toBeNull()
+    }
+  })
+
+  it ('should stop running and clear listeners when stop called', function(done) {
+    router.stop().then(() => {
+      expect(router.running).toBeFalsy()
+      expect(window.onhashchange).toBeUndefined()
+      done()
+    })
+  })
+
+  it('should navigate to default state and render tag on start', function(done) {
+    isLocation('/')
+    isRendered('home')
+    done()
+  })
+
+  it('should render tag when navigated to route', function(done) {
+    router.navigate('/about').then(() => {
+      isLocation('/about')
+      isRendered('about')
+      done()
+    }).catch(failTest)
   })
 
   describe('given an invalid route', function() {
 
-    it('should navigate to fallback state and render tag on invalid route', function() {
-      router.start()
-      window.location.hash = `${router.$constants.defaults.hash}/${new Date().getTime().toString(16)}`
-      console.log(document.body.innerHTML)
-      expect(window.location.hash).toBe(router.$constants.defaults.hash + '/about')
-      expect(document.querySelector('r-view not-found')).toBeDefined()
+    it('should navigate to fallback state and render tag on invalid route', function(done) {
+      router.navigate('/' + new Date().getTime().toString(16)).then(() => {
+        fallbackCheck = setInterval(() => {
+          isLocation('/notfound')
+          isRendered('not-found')
+          window.clearInterval(fallbackCheck)
+          done()
+        }, router.$constants.intervals.navigate)
+      }).catch(failTest)
     })
 
   })

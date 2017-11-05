@@ -9,7 +9,7 @@
     "lint": "node_modules/.bin/eslint src/**.js",
     "test:unit": "node_modules/.bin/jasmine --config=test/jasmine.unit.json",
     "test:e2e": "node_modules/.bin/karma start test/karma.conf.js",
-    "test": "npm run lint && npm run test:unit"
+    "test": "npm run lint && npm run test:unit && npm run test:e2e"
   },
   "repository": {
     "type": "git",
@@ -38,7 +38,7 @@
     "electron": "^1.7.9",
     "eslint": "^4.9.0",
     "eslint-plugin-riot": "^0.1.7",
-    "jasmine": "^2.8.0",
+    "jasmine": "2.5.2",
     "karma": "^1.7.1",
     "karma-electron": "^5.2.1",
     "karma-jasmine": "^1.1.0",
