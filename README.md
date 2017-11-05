@@ -47,10 +47,6 @@ For a quick start using jsdelivr:
 
 > **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
 
-> **`onBeforeChange`**: Callback for before a state change.
-
-> **`onAfterChange`**: Callback for after a state change.
-
 States are composed of the following settings,
 
 > **`*name`**: *State name.*
@@ -61,9 +57,9 @@ States are composed of the following settings,
 
 > **`title`**: *Title to set window.*
 
-> **`onEnter`**: *Callback for entering state.*
+> **`onEnter(*handler)`**: *Callback for entering state.*
 
-> **`onLeave`**: *Callback for leaving state.*
+> **`onLeave(*handler)`**: *Callback for leaving state.*
 
 Using the mixin is then as simple as,
 
@@ -127,9 +123,7 @@ The **riot-view-router** has a very simple, easily operable API.
 
 > **`stop()`** *Stop router, related listeners and lifecycle events.*
 
-> **`on(*event, *callback)`** *Register a lifecycle event.*
-
-> **`call(*event, *params)`** *Dispatched a registered lifecycle event.*
+> **`on(*event, *handler)`** *Register a lifecycle event (start, stop, navigation, transition).*
 
 ### Contributors
 

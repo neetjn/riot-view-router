@@ -21,6 +21,7 @@ export class Router {
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
+    self.$events = {}
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -120,7 +121,7 @@ export class Router {
     return new Promise((resolve, reject) => {
       if (!self.running) {
         self.$logger.warn('Router has not yet been started')
-        return reject({error: true, message: 'Router has not yet been started'})
+        return reject()
       }
 
       self.location = self.href + self.$constants.defaults.hash + route
@@ -128,9 +129,9 @@ export class Router {
         if (self.location.hash == self.$constants.defaults.hash + route) {
           window.clearInterval(route_check)
           if (!skipPush)
-            self.push().then(resolve)
+            self.push().then(() => self._dispatch('navigation', { route }).then(resolve).catch(resolve))
           else
-            resolve()
+            self._dispatch('navigation', { route }).then(resolve).catch(resolve)
         }
       }, self.$constants.intervals.navigate)
       setTimeout(reject, self.$constants.defaults.timeout)
@@ -148,7 +149,7 @@ export class Router {
 
     return new Promise((resolve) => {
       if (!self.running) {
-        self.$logger.warn('Router has not yet been started')
+        self.$logger.error('Router has not yet been started')
         return reject()
       }
 
@@ -204,7 +205,7 @@ export class Router {
               self.push() // # route to initial state
               window.onhashchange = () => self.push()
               window.clearInterval(view_check)
-              resolve()
+              self._dispatch('start').then(resolve).catch(resolve)
             }
           }, self.$constants.intervals.start) // # search for view context
           setTimeout(reject, self.$constants.defaults.timeout)
@@ -220,7 +221,7 @@ export class Router {
           _start()
       }
       else {
-        self.$logger.warn('Did not start Router, was already running')
+        self.$logger.error('Router already running')
         reject()
       }
     })
@@ -237,7 +238,7 @@ export class Router {
       if (self.running) {
         self.running = false
         delete window.onhashchange
-        resolve()
+        self._dispatch('stop').then(resolve).catch(resolve)
       }
       else {
         self.$logger.error('Did not stop Router, was not running')
@@ -256,19 +257,30 @@ export class Router {
     var self = this
 
     return new Promise((resolve, reject) => {
-      if (!event || self.$constants.events.accepted.indexOf(event) < -1)
-        reject({})
+      if (!event || self.$constants.events.accepted.indexOf(event) < -1) {
+        self.$logger.error(`"${event}" is not a supported event`)
+        reject()
+      }
+      else
+        self.$events[event] = handler
     })
   }
 
   /**
    * Used to dispatch router specific events.
-   * @param {string} event -
+   * @param {string} event - Event to dispatch.
+   * @param {object} params - Parameters to pass to event handler.
+   * @returns {Promise}
    */
-  call (event, params) {
+  _dispatch (event, params) {
     var self = this
 
-
+    return new Promise((resolve) => {
+      if (typeof self.$events[event] == 'function')
+        resolve(self.$events[event](params))
+      else
+        reject()
+    })
   }
 
 }
