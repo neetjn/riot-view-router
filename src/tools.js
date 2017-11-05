@@ -39,7 +39,7 @@ export class Tools {
       }
       else
         riot.mount(state.tag)
-      resolve()
+      self._dispatch('navigation', { state }).then(resolve).catch(resolve)
     })
   }
 
