@@ -41,6 +41,11 @@ export class Router {
 
     self = Object.assign(self, options)
     self.debugging = self.debugging || false
+
+    if (self.href)
+      if (self.location.indexOf(self.href) == -1)
+        throw Error('Defined href not found within location context')
+
     self.href = self.href || self.location
     if (!self.href.endsWith('/'))
       self.href = self.href + '/'
@@ -103,17 +108,27 @@ export class Router {
   /**
    * Used to navigate with hash pattern.
    * @param {string} route - Route to relocate to.
+   * @param {boolean} push - Push state after navigation.
    * @returns {Promise}
    */
-  navigate (route) {
+  navigate (route, skipPush) {
     var self = this
 
     return new Promise((resolve, reject) => {
+      if (!self.running) {
+        if (self.debugging)
+          console.warn('Router has not yet been started')
+        reject()
+      }
+
       self.location = self.href + self.$constants.defaults.hash + route
       var route_check = setInterval(() => {
         if (self.location == self.href + self.$constants.defaults.hash + route) {
           window.clearInterval(route_check)
-          resolve()
+          if (!skipPush)
+            self.push().then(resolve)
+          else
+            resolve()
         }
       }, self.$constants.intervals.navigate)
       setTimeout(reject, self.$constants.defaults.timeout)
@@ -130,7 +145,19 @@ export class Router {
     var self = this
 
     return new Promise((resolve) => {
-      let state = self.$utils.stateByName(name)
+      if (!self.running) {
+        if (self.debugging)
+          console.warn('Router has not yet been started')
+        reject()
+      }
+
+      if (!name) {
+        var state = self.$utils.stateByRoute()
+        opts = self.$utils.extractRouteVars(state)
+      }
+      else
+        var state = self.$utils.stateByName(name)
+
       let location = self.location.split(self.$constants.defaults.hash)[1]
 
       if (location !== state.route.route) {
@@ -181,13 +208,8 @@ export class Router {
             let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
             if (context) {
               self.context = context
-              self.push(self.$utils.stateByRoute().name) // # route to initial state
-              window.history.onpushstate = function() {
-                console.log(self.location)
-                let state = self.$utils.stateByRoute()
-                let opts = self.$utils.extractRouteVars(state)
-                self.push(state.name, opts) // # update state
-              } // # create listener for route changes
+              self.push() // # route to initial state
+              window.onhashchange = () => self.push()
               window.clearInterval(view_check)
               resolve()
             }
@@ -196,7 +218,10 @@ export class Router {
         }
 
         if (self.location.split(self.$constants.hash).length !== 2) {
-          self.navigate(self.$utils.stateByName(self.defaultState).route.route).then(_start)
+          self.navigate(
+            self.$utils.stateByName(
+              self.defaultState
+            ).route.route, true).then(_start)
         }
         else
           _start()
