@@ -25,7 +25,7 @@ export class Router {
         return window.location.href
       },
       set: function(location) {
-        window.location.href = location
+        window.history.pushState(null, null, location)
       }
     })
 
@@ -182,7 +182,8 @@ export class Router {
             if (context) {
               self.context = context
               self.push(self.$utils.stateByRoute().name) // # route to initial state
-              window.onhashchange = function() {
+              window.history.onpushstate = function() {
+                console.log(self.location)
                 let state = self.$utils.stateByRoute()
                 let opts = self.$utils.extractRouteVars(state)
                 self.push(state.name, opts) // # update state

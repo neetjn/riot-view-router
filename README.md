@@ -14,6 +14,14 @@
 
 **riot-view-router** is a lightweight, extensive state based riot.js router for tag views. It was designed after the ui-router project, with all the quirks of riot.js.
 
+### Support
+
+![Chrome](https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_48x48.png) | ![Firefox](https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_48x48.png) | ![IE](https://github.com/alrra/browser-logos/raw/master/src/edge/edge_48x48.png) | ![Opera](https://github.com/alrra/browser-logos/raw/master/src/opera/opera_48x48.png) | ![Safari](https://github.com/alrra/browser-logos/raw/master/src/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+<center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> |
+
+**riot-view-router** supports riot.js 3, support for previous versions is not available.
+
 ### Usage
 
 To install via Bower, simply do the following:
@@ -133,14 +141,6 @@ Contributing guidelines are as follows,
   *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
 
 * Include your name and email in the contributors list.
-
-### Support
-
-![Chrome](https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_48x48.png) | ![Firefox](https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_48x48.png) | ![IE](https://github.com/alrra/browser-logos/raw/master/src/edge/edge_48x48.png) | ![Opera](https://github.com/alrra/browser-logos/raw/master/src/opera/opera_48x48.png) | ![Safari](https://github.com/alrra/browser-logos/raw/master/src/safari/safari_48x48.png)
---- | --- | --- | --- | --- |
-<center>5.0+ ✔</center> | <center>4.0+ ✔</center> | <center>✔</center> | <center>11.5+ ✔</center> | <center>5.0+ ✔</center> |
-
-**riot-view-router** supports riot.js 3, support for previous versions is not available.
 
 ---
 Copyright (c) 2017 John Nolette Licensed under the MIT license.
