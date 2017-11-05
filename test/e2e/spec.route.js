@@ -9,7 +9,7 @@ describe('riot-view-router', function() {
   }
 
   isRendered = function(tagName) {
-    expect(document.querySelector(router.$constants.defaults.marker + ' ' + tagName)).toBeDefined()
+    expect(document.querySelector(router.$constants.defaults.marker + ' ' + tagName)).not.toBeNull()
   }
 
   beforeEach(function(done) {
@@ -62,9 +62,12 @@ describe('riot-view-router', function() {
 
     it('should navigate to fallback state and render tag on invalid route', function(done) {
       router.navigate('/' + new Date().getTime().toString(16)).then(() => {
-        isLocation('/notfound')
-        isRendered('not-fond')
-        done()
+        fallbackCheck = setInterval(() => {
+          isLocation('/notfound')
+          isRendered('not-found')
+          window.clearInterval(fallbackCheck)
+          done()
+        }, router.$constants.intervals.navigate)
       }).catch(failTest)
     })
 
