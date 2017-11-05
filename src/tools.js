@@ -19,8 +19,10 @@ export class Tools {
     return new Promise((resolve) => {
       if (self.$state) {
         let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!tag)
-          throw Error('Could not find a matching tag to unmount')
+        if (!tag) {
+          self.$logger.error('<transition> Could not find a matching tag to unmount')
+          reject()
+        }
         tag.unmount()
       }
       let node = document.createElement(state.tag)
@@ -39,7 +41,7 @@ export class Tools {
       }
       else
         riot.mount(state.tag)
-      self._dispatch('navigation', { state }).then(resolve).catch(resolve)
+      self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
 

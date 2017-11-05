@@ -120,7 +120,7 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        self.$logger.warn('Router has not yet been started')
+        self.$logger.warn('<navigate> Router has not yet been started')
         return reject()
       }
 
@@ -149,7 +149,7 @@ export class Router {
 
     return new Promise((resolve) => {
       if (!self.running) {
-        self.$logger.error('Router has not yet been started')
+        self.$logger.error('<push> Router has not yet been started')
         return reject()
       }
 
@@ -168,8 +168,8 @@ export class Router {
           return resolve() // # assume function will be retriggered
         }
         else {
-          self.$logger.warn(`State "${name}" does not match current route.`)
-          self.$logger.warn('Could not re-route due to route variables.')
+          self.$logger.warn('<push> State does not match current route.')
+          self.$logger.warn('<push> Could not re-route due to route variables.')
         }
       }
 
@@ -221,7 +221,7 @@ export class Router {
           _start()
       }
       else {
-        self.$logger.error('Router already running')
+        self.$logger.error('<start> Router already running')
         reject()
       }
     })
@@ -241,7 +241,7 @@ export class Router {
         self._dispatch('stop').then(resolve).catch(resolve)
       }
       else {
-        self.$logger.error('Did not stop Router, was not running')
+        self.$logger.error('<stop> Router was not running')
         reject()
       }
     })
@@ -257,8 +257,8 @@ export class Router {
     var self = this
 
     return new Promise((resolve, reject) => {
-      if (!event || self.$constants.events.accepted.indexOf(event) < -1) {
-        self.$logger.error(`"${event}" is not a supported event`)
+      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        self.$logger.error(`<on> "${event}" is not a supported event`)
         reject()
       }
       else
@@ -276,6 +276,10 @@ export class Router {
     var self = this
 
     return new Promise((resolve) => {
+      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        self.$logger.error(`<dispatch> "${event}" is not a supported event`)
+        reject()
+      }
       if (typeof self.$events[event] == 'function')
         resolve(self.$events[event](params))
       else

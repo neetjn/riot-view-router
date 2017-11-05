@@ -16,7 +16,7 @@ export const Constants = {
     navigate: 50
   },
   events: {
-    accepted: ['start', 'stop', 'navigation', 'transition'],
+    supported: ['start', 'stop', 'navigation', 'push', 'transition'],
     delay: 0
   }
 }

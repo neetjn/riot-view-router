@@ -123,7 +123,7 @@ The **riot-view-router** has a very simple, easily operable API.
 
 > **`stop()`** *Stop router, related listeners and lifecycle events.*
 
-> **`on(*event, *handler)`** *Register a lifecycle event (start, stop, navigation, transition).*
+> **`on(*event, *handler)`** *Register a lifecycle event (start, stop, navigation, push, transition).*
 
 ### Contributors
 
