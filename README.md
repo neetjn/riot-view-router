@@ -136,6 +136,10 @@ Contributing guidelines are as follows,
 
 ### Support
 
+![Chrome](https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_48x48.png) | ![Firefox](https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_48x48.png) | ![IE](https://github.com/alrra/browser-logos/raw/master/src/edge/edge_48x48.png) | ![Opera](https://github.com/alrra/browser-logos/raw/master/src/opera/opera_48x48.png) | ![Safari](https://github.com/alrra/browser-logos/raw/master/src/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+<center>5.0+ ✔</center> | <center>4.0+ ✔</center> | <center>✔</center> | <center>11.5+ ✔</center> | <center>5.0+ ✔</center> |
+
 **riot-view-router** supports riot.js 3, support for previous versions is not available.
 
 ---

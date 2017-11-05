@@ -110,12 +110,13 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       self.location = self.href + self.$constants.defaults.hash + route
-      setTimeout(() => {
-        if (self.location == self.href + self.$constants.defaults.hash + route)
+      var route_check = setInterval(() => {
+        if (self.location == self.href + self.$constants.defaults.hash + route) {
+          window.clearInterval(route_check)
           resolve()
-        else
-          reject()
-      }, 500)
+        }
+      }, self.$constants.intervals.navigate)
+      setTimeout(reject, self.$constants.defaults.timeout)
     })
   }
 
@@ -173,23 +174,31 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
+        self.running = true
+
+        function _start() {
+          var view_check = window.setInterval(() => {
+            let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+            if (context) {
+              self.context = context
+              self.push(self.$utils.stateByRoute().name) // # route to initial state
+              window.onhashchange = function() {
+                let state = self.$utils.stateByRoute()
+                let opts = self.$utils.extractRouteVars(state)
+                self.push(state.name, opts) // # update state
+              } // # create listener for route changes
+              window.clearInterval(view_check)
+              resolve()
+            }
+          }, self.$constants.intervals.start) // # search for view context
+          setTimeout(reject, self.$constants.defaults.timeout)
+        }
+
         if (self.location.split(self.$constants.hash).length !== 2) {
-          self.navigate(self.$utils.stateByName(self.defaultState).route.route)
-        } // # route to default state
-        var view_check = window.setInterval(() => {
-          let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
-          if (context) {
-            self.context = context
-            self.push(self.$utils.stateByRoute().name) // # route to initial state
-            window.onhashchange = function() {
-              let state = self.$utils.stateByRoute()
-              let opts = self.$utils.extractRouteVars(state)
-              self.push(state.name, opts) // # update state
-            } // # create listener for route changes
-            window.clearInterval(view_check)
-            resolve()
-          }
-        }, 500) // # search for view context
+          self.navigate(self.$utils.stateByName(self.defaultState).route.route).then(_start)
+        }
+        else
+          _start()
       }
       else {
         if (self.debugging)
