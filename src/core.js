@@ -35,7 +35,7 @@ export class Router {
     self.running = false
 
     let requiredOptions = ['defaultState']
-    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
+    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
     for (let option in options) {
       if (acceptedOptions.indexOf(option) == -1)
@@ -176,16 +176,10 @@ export class Router {
         }
       }
 
-      if (self.onBeforeStateChange)
-        self.onBeforeStateChange(state)
-
       if (self.$state && self.$state.onLeave)
         self.$state.onLeave(state) // # call onLeave, pass old state
 
       self.$tools.transition(state, opts)
-
-      if (self.onStateChange)
-        self.onStateChange(state)
 
       if (state.onEnter)
         state.onEnter(state) // # call onEnter, pass new state
