@@ -252,4 +252,14 @@ export class Router {
     })
   }
 
+  /**
+   * Used to register router specific events.
+   * @param {string} event - Name of event to register.
+   * @param {function} callback - Function to execute on listener.
+   * @returns {Promise}
+   */
+  on (event, callback) {
+
+  }
+
 }
