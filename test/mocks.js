@@ -7,12 +7,6 @@ var mocks = {
     debugging: true,
     defaultState: 'home',
     fallbackState: '404',
-    onBeforeStateChange: function(state) {
-      console.warn('about to change states!')
-    },
-    onStateChange: function(state) {
-      console.log('just changed states!')
-    }
   },
 
   /**
