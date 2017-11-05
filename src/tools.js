@@ -20,7 +20,7 @@ export class Tools {
       if (self.$state) {
         let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
         if (!tag) {
-          self.$logger.error('<transition> Could not find a matching tag to unmount')
+          self.$logger.error('(transition) Could not find a matching tag to unmount')
           reject()
         }
         tag.unmount()
