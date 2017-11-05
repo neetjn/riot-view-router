@@ -1,5 +1,9 @@
 describe('riot-view-router', function() {
 
+  failTest = function(error) {
+    expect(error).toBeUndefined()
+  }
+
   beforeEach(function() {
     mocks.tags.forEach(function(tag) {
       riot.tag(tag.name, tag.template)
@@ -20,10 +24,6 @@ describe('riot-view-router', function() {
   // })
 
   it('should navigate to default state and render tag on start', function(done) {
-    var failTest = function(error) {
-      expect(error).toBeUndefined()
-    }
-
     router.start().then(() => {
       expect(window.location.hash).toBe(router.$constants.defaults.hash + '/')
       expect(document.querySelector('r-view home')).toBeDefined()

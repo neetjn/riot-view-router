@@ -53,8 +53,8 @@ export class Utils {
   stateByRoute() {
     var self = this.$router
 
-    let stubs = self.location.split(self.$constants.defaults.hash)
-    if (stubs.length > 1)
+    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    if (stubs.length == 2)
       stubs = stubs[1].split('/').slice(1)
     else
       stubs = ['/']
@@ -90,9 +90,12 @@ export class Utils {
   extractRouteVars(state) {
     var self = this.$router
 
-    let stubs = self.location.split(self.$constants.defaults.hash)
-    if (stubs.length > 1)
+    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    if (stubs.length == 2)
       stubs = stubs[1].split('/').slice(1)
+    else
+      stubs = ['/']
+
     let variables = state.route.variables
     variables.forEach((variable) => {
       variable.value = stubs[variable.position]

@@ -22,7 +22,10 @@ export class Router {
 
     Object.defineProperty(self, 'location', {
       get: function() {
-        return window.location.href
+        return {
+          hash: window.location.hash,
+          href: window.location.href
+        }
       },
       set: function(location) {
         window.history.pushState(null, null, location)
@@ -43,10 +46,10 @@ export class Router {
     self.debugging = self.debugging || false
 
     if (self.href)
-      if (self.location.indexOf(self.href) == -1)
+      if (self.location.href.indexOf(self.href) == -1)
         throw Error('Defined href not found within location context')
 
-    self.href = self.href || self.location
+    self.href = self.href || self.location.href
     if (!self.href.endsWith('/'))
       self.href = self.href + '/'
 
@@ -123,7 +126,7 @@ export class Router {
 
       self.location = self.href + self.$constants.defaults.hash + route
       var route_check = setInterval(() => {
-        if (self.location == self.href + self.$constants.defaults.hash + route) {
+        if (self.location.hash == self.$constants.defaults.hash + route) {
           window.clearInterval(route_check)
           if (!skipPush)
             self.push().then(resolve)
@@ -158,7 +161,7 @@ export class Router {
       else
         var state = self.$utils.stateByName(name)
 
-      let location = self.location.split(self.$constants.defaults.hash)[1]
+      let location = self.location.hash.split(self.$constants.defaults.hash)[1]
 
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
@@ -217,7 +220,7 @@ export class Router {
           setTimeout(reject, self.$constants.defaults.timeout)
         }
 
-        if (self.location.split(self.$constants.hash).length !== 2) {
+        if (self.location.hash.split(self.$constants.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
               self.defaultState
