@@ -14,5 +14,9 @@ export const Constants = {
   intervals: {
     start: 10,
     navigate: 50
+  },
+  events: {
+    accepted: ['start', 'stop', 'navigation', 'transition'],
+    delay: 0
   }
 }

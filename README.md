@@ -127,6 +127,10 @@ The **riot-view-router** has a very simple, easily operable API.
 
 > **`stop()`** *Stop router, related listeners and lifecycle events.*
 
+> **`on(*event, *callback)`** *Register a lifecycle event.*
+
+> **`call(*event, *params)`** *Dispatched a registered lifecycle event.*
+
 ### Contributors
 
 * **John Nolette** (john@neetgroup.net)
