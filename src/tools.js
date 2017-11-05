@@ -4,7 +4,7 @@ export class Tools {
    * Tools for the riot-view-router mixin.
    * @param {Router} router - Router for utilities to reference
    */
-  constructor(router) {
+  constructor (router) {
     this.$router = router
   }
 

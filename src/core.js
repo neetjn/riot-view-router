@@ -1,7 +1,8 @@
 import { version } from '../package.json'
 import { Constants } from './constants'
-import { Utils } from './utils'
+import { Logger } from './logger'
 import { Tools } from './tools'
+import { Utils } from './utils'
 
 export class Router {
 
@@ -12,11 +13,12 @@ export class Router {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor(options, states) {
+  constructor (options, states) {
     var self = this
 
     self.version = version
     self.$constants = Constants
+    self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
 
@@ -87,17 +89,15 @@ export class Router {
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
     }
     else {
-      if (self.debugging)
-        console.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
-
+      self.$logger.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
       self.fallbackState = self.defaultState
     }
 
     if (self.marker) {
       if (!self.marker.match(self.$constants.regex.marker)) {
         if (debugging) {
-          console.warn(`Marker "${self.marker}" contains unsupported characters`)
-          console.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
+          self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
+          self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
         }
         self.marker = self.$constants.defaults.marker
       }
@@ -119,9 +119,8 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        if (self.debugging)
-          console.warn('Router has not yet been started')
-        return reject()
+        self.$logger.warn('Router has not yet been started')
+        return reject({error: true, message: 'Router has not yet been started'})
       }
 
       self.location = self.href + self.$constants.defaults.hash + route
@@ -149,8 +148,7 @@ export class Router {
 
     return new Promise((resolve) => {
       if (!self.running) {
-        if (self.debugging)
-          console.warn('Router has not yet been started')
+        self.$logger.warn('Router has not yet been started')
         return reject()
       }
 
@@ -169,10 +167,8 @@ export class Router {
           return resolve() // # assume function will be retriggered
         }
         else {
-          if (self.debugging) {
-            console.warn(`State "${name}" does not match current route.`)
-            console.warn('Could not re-route due to route variables.')
-          }
+          self.$logger.warn(`State "${name}" does not match current route.`)
+          self.$logger.warn('Could not re-route due to route variables.')
         }
       }
 
@@ -224,8 +220,7 @@ export class Router {
           _start()
       }
       else {
-        if (self.debugging)
-          console.warn('Router was already running')
+        self.$logger.warn('Did not start Router, was already running')
         reject()
       }
     })
@@ -245,8 +240,7 @@ export class Router {
         resolve()
       }
       else {
-        if (self.debugging)
-          console.warn('Router was not running')
+        self.$logger.error('Did not stop Router, was not running')
         reject()
       }
     })
@@ -255,10 +249,25 @@ export class Router {
   /**
    * Used to register router specific events.
    * @param {string} event - Name of event to register.
-   * @param {function} callback - Function to execute on listener.
+   * @param {function} handler - Function to execute on listener.
    * @returns {Promise}
    */
-  on (event, callback) {
+  on (event, handler) {
+    var self = this
+
+    return new Promise((resolve, reject) => {
+      if (!event || self.$constants.events.accepted.indexOf(event) < -1)
+        reject({})
+    })
+  }
+
+  /**
+   * Used to dispatch router specific events.
+   * @param {string} event -
+   */
+  call (event, params) {
+    var self = this
+
 
   }
 
