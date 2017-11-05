@@ -182,7 +182,7 @@ export class Router {
         state.onEnter(state) // # call onEnter, pass new state
 
       self.$state = state
-      resolve()
+      self._dispatch('push').then(resolve).catch(resolve)
     })
   }
 
