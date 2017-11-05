@@ -16,6 +16,10 @@
 
 ### Support
 
+| Chome  | Edge | Firefox | Opera    | Safari |
+|--------|------|---------|----------|--------|
+| 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
+
 ![Chrome](https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_48x48.png) | ![Firefox](https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_48x48.png) | ![IE](https://github.com/alrra/browser-logos/raw/master/src/edge/edge_48x48.png) | ![Opera](https://github.com/alrra/browser-logos/raw/master/src/opera/opera_48x48.png) | ![Safari](https://github.com/alrra/browser-logos/raw/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
 <center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> | <center>Latest ✔</center> |
@@ -119,13 +123,21 @@ you may then access the `Router` instance via your tags with `$router` like so,
 
 The **riot-view-router** has a very simple, easily operable API.
 
-> navigate(*route, skipPush): Navigate to a given route.
+#### navigate(*route, skipPush)
 
-> push(name, opts): Invoke a state change. If arguments arent specified, automatically detect the state and extract opts from the defined state variables.
+*Navigate to a given route.*
 
-> start(): Start router, listen on window hash   changes.
+#### push(name, opts)
 
-> stop(): Stop router, related listeners and lifecycle events.
+*Invoke a state change. If arguments arent specified, automatically detect the state and extract opts from the defined state variables.*
+
+#### start()
+
+*Start router, listen on window hash   changes.*
+
+#### stop()
+
+*Stop router, related listeners and lifecycle events.*
 
 
 ### Contributors
