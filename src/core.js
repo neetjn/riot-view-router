@@ -121,7 +121,7 @@ export class Router {
       if (!self.running) {
         if (self.debugging)
           console.warn('Router has not yet been started')
-        reject()
+        return reject()
       }
 
       self.location = self.href + self.$constants.defaults.hash + route
@@ -151,7 +151,7 @@ export class Router {
       if (!self.running) {
         if (self.debugging)
           console.warn('Router has not yet been started')
-        reject()
+        return reject()
       }
 
       if (!name) {
@@ -166,7 +166,7 @@ export class Router {
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
           self.navigate(state.route.route)
-          resolve() // # assume function will be retriggered
+          return resolve() // # assume function will be retriggered
         }
         else {
           if (self.debugging) {
