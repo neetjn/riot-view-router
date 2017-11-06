@@ -63,7 +63,22 @@ var mocks = {
       name: 'not-found',
       template: '<h1>404 not found</h1>'
     }
-  ]
+  ],
+
+  /**
+   * Window context for riot-view-router
+   */
+  window: {
+    location: {
+      href: 'http://google.com',
+      hash: ''
+    }
+  },
+
+  /**
+   * Document context for riot-view-router
+   */
+  document: { }
 
 }
 
