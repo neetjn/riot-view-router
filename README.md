@@ -49,17 +49,17 @@ For a quick start using jsdelivr:
 
 States are composed of the following settings,
 
-> **`*name`**: *State name.*
+> **`*name`**: State name.
 
-> **`*route`**: *Route to match state by.*
+> **`*route`**: Route to match state by.
 
-> **`*tag`**: *Tag to inject into rout view, mount.*
+> **`*tag`**: Tag to inject into rout view, mount.
 
-> **`title`**: *Title to set window.*
+> **`title`**: Title to set window.
 
-> **`onEnter(*handler)`**: *Callback for entering state.*
+> **`onEnter(*handler)`**: Callback for entering state.
 
-> **`onLeave(*handler)`**: *Callback for leaving state.*
+> **`onLeave(*handler)`**: Callback for leaving state.
 
 Using the mixin is then as simple as,
 
@@ -124,15 +124,15 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
 
 The **riot-view-router** has a very simple, easily operable API.
 
-> **`navigate(*route, skipPush)`** *Navigate to a given route.*
+> **`navigate(*route, skipPush)`**: Navigate to a given route.
 
-> **`push(name, opts)`** *Invoke a state change. If arguments arent specified, automatically detect the state and extract opts from the defined state variables.*
+> **`push(name, opts)`**: Invoke a state change. If arguments arent specified, automatically detect the state and extract opts from the defined state variables.
 
-> **`start()`** *Start router, listen on window hash   changes.*
+> **`start()`**: Start router, listen on window hash   changes.
 
-> **`stop()`** *Stop router, related listeners and lifecycle events.*
+> **`stop()`**: Stop router, related listeners and lifecycle events.
 
-> **`on(*event, *handler)`** *Register a lifecycle event (start, stop, navigation, push, transition).*
+> **`on(*event, *handler)`**: Register a lifecycle event (start, stop, navigation, push, transition).
 
 ### Contributors
 
@@ -144,7 +144,7 @@ Contributing guidelines are as follows,
 * Branches for bugs and features should be structued like so, `issue-x-username`.
 * Before putting in a pull request, be sure to verify you've built all your changes.
   
-  *Travis will build your changes before testing and publishing, but bower pulls from this repository directly.*
+  Travis will build your changes before testing and publishing, but bower pulls from this repository directly.
 
 * Include your name and email in the contributors list.
 
