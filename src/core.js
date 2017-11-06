@@ -261,8 +261,10 @@ export class Router {
         self.$logger.error(`(on) "${event}" is not a supported event`)
         reject()
       }
-      else
+      else {
         self.$events[event] = handler
+        resolve()
+      }
     })
   }
 
