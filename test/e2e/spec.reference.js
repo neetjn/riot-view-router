@@ -3,7 +3,7 @@ describe('riot-view-router state reference', function() {
     beforeEach(setUp)
     afterEach(tearDown)
 
-    it('should trigger "navigate" as expected', function(done) {
+    it('should bind target elements', function(done) {
       var called = false
       router.on('navigation', () => {
         called = true
