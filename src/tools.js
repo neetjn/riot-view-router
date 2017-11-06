@@ -41,6 +41,13 @@ export class Tools {
       }
       else
         riot.mount(state.tag)
+
+      document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+        el.onclick = function () {
+          self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+        }
+      })
+
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
