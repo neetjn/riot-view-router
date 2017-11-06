@@ -95,6 +95,7 @@ describe('riot-view-router mixin', function() {
     for (type in types) {
       router.$logger[type](message)
       expect(router.$logger.$get(types[type])[0].message).toBe(message)
+      expect(router.$logger.$get().length).toBe(3)
     }
   })
 
