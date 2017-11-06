@@ -1,4 +1,4 @@
-describe('riot-view-router lifecycle events', function() {
+describe('riot-view-router lifecycle event', function() {
 
   beforeEach(setUp)
   afterEach(tearDown)
