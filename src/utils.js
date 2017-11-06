@@ -2,7 +2,7 @@ export class Utils {
 
   /**
    * Utilities for the riot-view-router mixin.
-   * @param (Router) router - Router for utilities to reference
+   * @param {Router} router - Router for utilities to reference
    */
   constructor(router) {
     this.$router = router
@@ -10,16 +10,16 @@ export class Utils {
 
   /**
    * Used to search for states by their name.
-   * @param (string) name - Name of state to search for.
+   * @param {string} name - Name of state to search for.
    */
-  stateByName(name) {
+  stateByName (name) {
     var self = this.$router
     return self.states.find((state) => name == state.name)
   }
 
   /**
    * Used for extracting route patterns.
-   * @param (string) route - Route from state.
+   * @param {string} route - Route from state.
    */
   splitRoute(route) {
     var self = this.$router
@@ -53,8 +53,8 @@ export class Utils {
   stateByRoute() {
     var self = this.$router
 
-    let stubs = self.location.split(self.$constants.defaults.hash)
-    if (stubs.length > 1)
+    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    if (stubs.length == 2)
       stubs = stubs[1].split('/').slice(1)
     else
       stubs = ['/']
@@ -74,9 +74,7 @@ export class Utils {
     })
 
     if (!state) {
-      if (self.debugging)
-        console.warn('Route was not matched, defaulting to fallback state')
-
+      self.$logger.warn('Route was not matched, defaulting to fallback state')
       return this.stateByName(self.fallbackState)
     }
 
@@ -85,14 +83,17 @@ export class Utils {
 
   /**
    * Used to extract route variables.
-   * @param (object) state - State object for variable matching.
+   * @param {object} state - State object for variable matching.
    */
   extractRouteVars(state) {
     var self = this.$router
 
-    let stubs = self.location.split(self.$constants.defaults.hash)
-    if (stubs.length > 1)
+    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    if (stubs.length == 2)
       stubs = stubs[1].split('/').slice(1)
+    else
+      stubs = ['/']
+
     let variables = state.route.variables
     variables.forEach((variable) => {
       variable.value = stubs[variable.position]

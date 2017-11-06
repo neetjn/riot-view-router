@@ -1,6 +1,6 @@
-import { Router as _Router } from './router'
+import { Router as _Router } from './core'
 
-export default function(options, states) {
+export default function (options, states) {
   return {
     $router: new _Router(options, states)
   }

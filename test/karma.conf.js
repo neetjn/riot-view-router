@@ -6,6 +6,7 @@ module.exports = function (config) {
     files: [
       'mocks.js',
       '../dist/riot-view-router.js',
+      'e2e/helpers/*.js',
       'e2e/spec.*.js'
     ],
     reporters: ['progress'],

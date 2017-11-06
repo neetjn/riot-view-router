@@ -7,12 +7,6 @@ var mocks = {
     debugging: true,
     defaultState: 'home',
     fallbackState: '404',
-    onBeforeStateChange: function(state) {
-      console.warn('about to change states!')
-    },
-    onStateChange: function(state) {
-      console.log('just changed states!')
-    }
   },
 
   /**
@@ -55,7 +49,7 @@ var mocks = {
     },
     {
       name: 'home',
-      template: '<h1>home page</h1>'
+      template: '<button r-sref="/profile/view/someguy">someguy\'s profile</button>'
     },
     {
       name: 'about',
@@ -69,7 +63,22 @@ var mocks = {
       name: 'not-found',
       template: '<h1>404 not found</h1>'
     }
-  ]
+  ],
+
+  /**
+   * Window context for riot-view-router
+   */
+  window: {
+    location: {
+      href: 'http://google.com',
+      hash: ''
+    }
+  },
+
+  /**
+   * Document context for riot-view-router
+   */
+  document: { }
 
 }
 
