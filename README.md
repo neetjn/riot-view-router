@@ -101,7 +101,7 @@ riot.mixin(new Router({
 }, states))
 ```
 
-you may then access the `Router` instance via your tags with `$router` like so,
+You may then access the `Router` instance via your tags with `$router` like so,
 
 ```html
 <app>
@@ -109,6 +109,15 @@ you may then access the `Router` instance via your tags with `$router` like so,
 
   this.$router.start()
 </app>
+```
+
+To navigate to a route without your riot tags, you may use `r-sref` to reference a state on any element supporting a click event listener,
+
+```html
+<sometag>
+  <button r-sref="/profile/{username}">Navigate to profile</button>
+  <a r-sref="/profile/{username}">Navigate to profile</a>
+</sometag>
 ```
 
 ### Router API
