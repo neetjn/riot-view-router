@@ -12,7 +12,7 @@ export class Utils {
    * Used to search for states by their name.
    * @param {string} name - Name of state to search for.
    */
-  stateByName(name) {
+  stateByName (name) {
     var self = this.$router
     return self.states.find((state) => name == state.name)
   }
@@ -74,9 +74,7 @@ export class Utils {
     })
 
     if (!state) {
-      if (self.debugging)
-        console.warn('Route was not matched, defaulting to fallback state')
-
+      self.$logger.warn('Route was not matched, defaulting to fallback state')
       return this.stateByName(self.fallbackState)
     }
 

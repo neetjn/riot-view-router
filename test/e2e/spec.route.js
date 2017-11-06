@@ -1,40 +1,7 @@
 describe('riot-view-router', function() {
 
-  failTest = function(error) {
-    expect(error).toBeUndefined()
-  }
-
-  isLocation = function(location) {
-    expect(window.location.hash).toBe(router.$constants.defaults.hash + location)
-  }
-
-  isRendered = function(tagName) {
-    expect(document.querySelector(router.$constants.defaults.marker + ' ' + tagName)).not.toBeNull()
-  }
-
-  beforeEach(function(done) {
-    mocks.tags.forEach(function(tag) {
-      riot.tag(tag.name, tag.template)
-    }) // # create our mock tags
-    let html = document.createElement('app')
-    document.body.appendChild(html)
-    riot.mount('app')
-    riot.mixin('router', new Router(mocks.options, mocks.states))
-    router = riot.mixin('router').$router
-    router.start().then(done).catch(failTest)
-  })
-
-  afterEach(function(done) {
-    if (router.running)
-      router.stop().then(() => {
-        window.history.pushState(null, null, '/')
-        done()
-      }).catch(failTest)
-    else {
-      window.history.pushState(null, null, '/')
-      done()
-    }
-  })
+  beforeEach(setUp)
+  afterEach(tearDown)
 
   it ('should stop running and clear listeners when stop called', function(done) {
     router.stop().then(() => {
@@ -55,7 +22,7 @@ describe('riot-view-router', function() {
       isLocation('/about')
       isRendered('about')
       done()
-    }).catch(failTest)
+    }).catch(failAsyncTest)
   })
 
   describe('given an invalid route', function() {
@@ -68,7 +35,7 @@ describe('riot-view-router', function() {
           window.clearInterval(fallbackCheck)
           done()
         }, router.$constants.intervals.navigate)
-      }).catch(failTest)
+      }).catch(failAsyncTest)
     })
 
   })

@@ -4,7 +4,7 @@ export class Tools {
    * Tools for the riot-view-router mixin.
    * @param {Router} router - Router for utilities to reference
    */
-  constructor(router) {
+  constructor (router) {
     this.$router = router
   }
 
@@ -19,8 +19,10 @@ export class Tools {
     return new Promise((resolve) => {
       if (self.$state) {
         let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!tag)
-          throw Error('Could not find a matching tag to unmount')
+        if (!tag) {
+          self.$logger.error('(transition) Could not find a matching tag to unmount')
+          reject()
+        }
         tag.unmount()
       }
       let node = document.createElement(state.tag)
@@ -39,7 +41,7 @@ export class Tools {
       }
       else
         riot.mount(state.tag)
-      resolve()
+      self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
 

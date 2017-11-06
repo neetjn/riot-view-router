@@ -1,7 +1,8 @@
 import { version } from '../package.json'
 import { Constants } from './constants'
-import { Utils } from './utils'
+import { Logger } from './logger'
 import { Tools } from './tools'
+import { Utils } from './utils'
 
 export class Router {
 
@@ -12,13 +13,15 @@ export class Router {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor(options, states) {
+  constructor (options, states) {
     var self = this
 
     self.version = version
     self.$constants = Constants
+    self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
+    self.$events = {}
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -35,7 +38,7 @@ export class Router {
     self.running = false
 
     let requiredOptions = ['defaultState']
-    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState', 'onBeforeStateChange', 'onStateChange']
+    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState']
     let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
     for (let option in options) {
       if (acceptedOptions.indexOf(option) == -1)
@@ -87,17 +90,15 @@ export class Router {
         throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
     }
     else {
-      if (self.debugging)
-        console.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
-
+      self.$logger.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
       self.fallbackState = self.defaultState
     }
 
     if (self.marker) {
       if (!self.marker.match(self.$constants.regex.marker)) {
         if (debugging) {
-          console.warn(`Marker "${self.marker}" contains unsupported characters`)
-          console.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
+          self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
+          self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
         }
         self.marker = self.$constants.defaults.marker
       }
@@ -119,8 +120,7 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        if (self.debugging)
-          console.warn('Router has not yet been started')
+        self.$logger.warn('(navigate) Router has not yet been started')
         return reject()
       }
 
@@ -129,9 +129,9 @@ export class Router {
         if (self.location.hash == self.$constants.defaults.hash + route) {
           window.clearInterval(route_check)
           if (!skipPush)
-            self.push().then(resolve)
+            self.push().then(() => self._dispatch('navigation', { route }).then(resolve).catch(resolve))
           else
-            resolve()
+            self._dispatch('navigation', { route }).then(resolve).catch(resolve)
         }
       }, self.$constants.intervals.navigate)
       setTimeout(reject, self.$constants.defaults.timeout)
@@ -149,8 +149,7 @@ export class Router {
 
     return new Promise((resolve) => {
       if (!self.running) {
-        if (self.debugging)
-          console.warn('Router has not yet been started')
+        self.$logger.error('(push) Router has not yet been started')
         return reject()
       }
 
@@ -169,29 +168,21 @@ export class Router {
           return resolve() // # assume function will be retriggered
         }
         else {
-          if (self.debugging) {
-            console.warn(`State "${name}" does not match current route.`)
-            console.warn('Could not re-route due to route variables.')
-          }
+          self.$logger.warn('(push) State does not match current route.')
+          self.$logger.warn('(push) Could not re-route due to route variables.')
         }
       }
-
-      if (self.onBeforeStateChange)
-        self.onBeforeStateChange(state)
 
       if (self.$state && self.$state.onLeave)
         self.$state.onLeave(state) // # call onLeave, pass old state
 
       self.$tools.transition(state, opts)
 
-      if (self.onStateChange)
-        self.onStateChange(state)
-
       if (state.onEnter)
         state.onEnter(state) // # call onEnter, pass new state
 
       self.$state = state
-      resolve()
+      self._dispatch('push').then(resolve).catch(resolve)
     })
   }
 
@@ -214,7 +205,7 @@ export class Router {
               self.push() // # route to initial state
               window.onhashchange = () => self.push()
               window.clearInterval(view_check)
-              resolve()
+              self._dispatch('start').then(resolve).catch(resolve)
             }
           }, self.$constants.intervals.start) // # search for view context
           setTimeout(reject, self.$constants.defaults.timeout)
@@ -230,8 +221,7 @@ export class Router {
           _start()
       }
       else {
-        if (self.debugging)
-          console.warn('Router was already running')
+        self.$logger.error('(start) Router already running')
         reject()
       }
     })
@@ -248,13 +238,54 @@ export class Router {
       if (self.running) {
         self.running = false
         delete window.onhashchange
-        resolve()
+        self._dispatch('stop').then(resolve).catch(resolve)
       }
       else {
-        if (self.debugging)
-          console.warn('Router was not running')
+        self.$logger.error('(stop) Router was not running')
         reject()
       }
+    })
+  }
+
+  /**
+   * Used to register router specific events.
+   * @param {string} event - Name of event to register.
+   * @param {function} handler - Function to execute on listener.
+   * @returns {Promise}
+   */
+  on (event, handler) {
+    var self = this
+
+    return new Promise((resolve, reject) => {
+      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        self.$logger.error(`(on) "${event}" is not a supported event`)
+        reject()
+      }
+      else {
+        self.$events[event] = handler
+        resolve()
+      }
+    })
+  }
+
+  /**
+   * Used to dispatch router specific events.
+   * @param {string} event - Event to dispatch.
+   * @param {object} params - Parameters to pass to event handler.
+   * @returns {Promise}
+   */
+  _dispatch (event, params) {
+    var self = this
+
+    return new Promise((resolve) => {
+      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        self.$logger.error(`(dispatch) "${event}" is not a supported event`)
+        reject()
+      }
+      if (typeof self.$events[event] == 'function')
+        resolve(self.$events[event](params))
+      else
+        reject()
     })
   }
 
