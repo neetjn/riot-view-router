@@ -49,7 +49,7 @@ var mocks = {
     },
     {
       name: 'home',
-      template: '<h1>home page</h1>'
+      template: '<button r-sref="/profile/view/someguy">someguy\'s profile</button>'
     },
     {
       name: 'about',
