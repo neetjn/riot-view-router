@@ -8,7 +8,7 @@ export class Logger {
     this.$router = router
     this.logs = []
 
-    Object.defineProperty(this.$router, 'time', {
+    Object.defineProperty(this, 'time', {
       get: function() {
         return new Date().getTime()
       }
@@ -18,10 +18,10 @@ export class Logger {
   /**
    * Format log for logstore
    * @param {string} message - message to log.
-   * @param {int} time - timestamp for log.
+   * @param {int} timestamp - timestamp for log.
    */
-  _format(message, time) {
-    return `[${new Date(time).toString()}]: (riot-view-router) "${message}"`
+  _format(message, timestamp) {
+    return `[${new Date(timestamp).toString()}]: (riot-view-router) "${message}"`
   }
 
   /**
@@ -38,10 +38,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   log (message) {
-    let time = self.time
+    let timestamp = this.time
     if (this.$router.debugging)
-      console.log(this._format(message, time))
-    this.logs.push({ type: 'general', message, time })
+      console.log(this._format(message, timestamp))
+    this.logs.push({ type: 'general', message, timestamp })
   }
 
   /**
@@ -49,10 +49,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   warn (message) {
-    let time = self.time
+    let timestamp = this.time
     if (this.$router.debugging)
-      console.warn(this._format(message, time))
-    this.logs.push({ type: 'warning', message, time })
+      console.warn(this._format(message, timestamp))
+    this.logs.push({ type: 'warning', message, timestamp })
   }
 
   /**
@@ -60,10 +60,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   error (message) {
-    let time = self.time
+    let timestamp = this.time
     if (this.$router.debugging)
-      console.error(this._format(message, time))
-    this.logs.push({ type: 'critical', message, time })
+      console.error(this._format(message, timestamp))
+    this.logs.push({ type: 'critical', message, timestamp })
   }
 
 }
