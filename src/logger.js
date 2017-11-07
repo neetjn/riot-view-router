@@ -16,6 +16,15 @@ export class Logger {
   }
 
   /**
+   * Format log for logstore
+   * @param {string} message - message to log.
+   * @param {int} time - timestamp for log.
+   */
+  _format(message, time) {
+    return `[${new Date(time).toString()}]: (riot-view-router) "${message}"`
+  }
+
+  /**
    * Fetch logs, allows for filtering by type.
    * @param {string} type - Log type to filter by.
    * @returns {Array}
@@ -29,12 +38,9 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   log (message) {
-    var self = this.$router
     let time = self.time
-
-    if (self.debugging)
-      console.log(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
-
+    if (this.$router.debugging)
+      console.log(this._format(message, time))
     this.logs.push({ type: 'general', message, time })
   }
 
@@ -43,12 +49,9 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   warn (message) {
-    var self = this.$router
     let time = self.time
-
-    if (self.debugging)
-      console.warn(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
-
+    if (this.$router.debugging)
+      console.warn(this._format(message, time))
     this.logs.push({ type: 'warning', message, time })
   }
 
@@ -57,12 +60,9 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   error (message) {
-    var self = this.$router
     let time = self.time
-
-    if (self.debugging)
-      console.error(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
-
+    if (this.$router.debugging)
+      console.error(this._format(message, time))
     this.logs.push({ type: 'critical', message, time })
   }
 
