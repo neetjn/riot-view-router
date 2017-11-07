@@ -33,7 +33,7 @@ export class Logger {
     let time = self.time
 
     if (self.debugging)
-      console.log(`[${new Date(time).toString()}]: "${message}"`)
+      console.log(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
 
     this.logs.push({ type: 'general', message, time })
   }
@@ -47,7 +47,7 @@ export class Logger {
     let time = self.time
 
     if (self.debugging)
-      console.warn(`[${new Date(time).toString()}]: "${message}"`)
+      console.warn(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
 
     this.logs.push({ type: 'warning', message, time })
   }
@@ -61,7 +61,7 @@ export class Logger {
     let time = self.time
 
     if (self.debugging)
-      console.error(`[${new Date(time).toString()}]: "${message}"`)
+      console.error(`[${new Date(time).toString()}]: (riot-view-router) "${message}"`)
 
     this.logs.push({ type: 'critical', message, time })
   }
