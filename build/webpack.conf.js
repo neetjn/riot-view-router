@@ -12,7 +12,7 @@ module.exports = {
     publicPath: 'dist/',
     filename: 'riot-view-router.js',
     libraryTarget: 'umd',
-    'library': 'Router',
+    library: 'Router',
     umdNamedDefine: true
   },
   module: {
