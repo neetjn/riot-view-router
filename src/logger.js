@@ -8,11 +8,20 @@ export class Logger {
     this.$router = router
     this.logs = []
 
-    Object.defineProperty(this.$router, 'time', {
+    Object.defineProperty(this, 'time', {
       get: function() {
         return new Date().getTime()
       }
     })
+  }
+
+  /**
+   * Format log for logstore
+   * @param {string} message - message to log.
+   * @param {int} timestamp - timestamp for log.
+   */
+  _format(message, timestamp) {
+    return `[${new Date(timestamp).toString()}]: (riot-view-router) "${message}"`
   }
 
   /**
@@ -29,13 +38,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   log (message) {
-    var self = this.$router
-    let time = self.time
-
-    if (self.debugging)
-      console.log(`[${new Date(time).toString()}]: "${message}"`)
-
-    this.logs.push({ type: 'general', message, time })
+    let timestamp = this.time
+    if (this.$router.debugging)
+      console.log(this._format(message, timestamp))
+    this.logs.push({ type: 'general', message, timestamp })
   }
 
   /**
@@ -43,13 +49,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   warn (message) {
-    var self = this.$router
-    let time = self.time
-
-    if (self.debugging)
-      console.warn(`[${new Date(time).toString()}]: "${message}"`)
-
-    this.logs.push({ type: 'warning', message, time })
+    let timestamp = this.time
+    if (this.$router.debugging)
+      console.warn(this._format(message, timestamp))
+    this.logs.push({ type: 'warning', message, timestamp })
   }
 
   /**
@@ -57,13 +60,10 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   error (message) {
-    var self = this.$router
-    let time = self.time
-
-    if (self.debugging)
-      console.error(`[${new Date(time).toString()}]: "${message}"`)
-
-    this.logs.push({ type: 'critical', message, time })
+    let timestamp = this.time
+    if (this.$router.debugging)
+      console.error(this._format(message, timestamp))
+    this.logs.push({ type: 'critical', message, timestamp })
   }
 
 }
