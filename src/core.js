@@ -209,7 +209,7 @@ export class Router {
           setTimeout(reject, self.$constants.defaults.timeout)
         }
 
-        if (self.location.hash.split(self.$constants.hash).length !== 2) {
+        if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
               self.defaultState
