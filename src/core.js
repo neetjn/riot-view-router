@@ -96,10 +96,8 @@ export class Router {
 
     if (self.marker) {
       if (!self.marker.match(self.$constants.regex.marker)) {
-        if (debugging) {
-          self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
-          self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
-        }
+        self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
+        self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
         self.marker = self.$constants.defaults.marker
       }
     }
@@ -211,7 +209,7 @@ export class Router {
           setTimeout(reject, self.$constants.defaults.timeout)
         }
 
-        if (self.location.hash.split(self.$constants.hash).length !== 2) {
+        if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
               self.defaultState
