@@ -1,7 +1,11 @@
-import { Router as _Router } from './core'
+import { Router } from './core'
 
-export default function (options, states) {
-  return {
-    $router: new _Router(options, states)
+export default {
+
+  install(r, options, states) {
+    let router = new Router(options, states)
+    r.mixin({ $router: router })
+    return router
   }
+
 }

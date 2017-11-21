@@ -98,6 +98,19 @@ export class Utils {
     variables.forEach((variable) => {
       variable.value = stubs[variable.position]
     })
+
+    let query = self.location.hash.split('?') ?
+    if (query.length == 2) {
+      query = query[1]
+      variables._query = {}
+      query.split('&').forEach((fragment) => {
+        console.log(fragment)
+        fragment.split('=').forEach((pair) => {
+          variables._query[pair[0]] = pair[1]
+        })
+      })
+    }
+
     return variables
   }
 
