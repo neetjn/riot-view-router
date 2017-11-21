@@ -759,25 +759,24 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.hash.split(self.$constants.defaults.hash);
-      if (stubs.length == 2) stubs = stubs[1].split('/').slice(1);else stubs = ['/'];
-
-      var variables = state.route.variables;
-      variables.forEach(function (variable) {
-        variable.value = stubs[variable.position];
-      });
-
-      var query = self.location.hash.split('?');
-      if (query.length == 2) {
-        variables._query = {};
-        query.split('&').forEach(function (fragment) {
-          console.log(fragment);
-          fragment.split('=').forEach(function (pair) {
-            variables._query[pair[0]] = pair[1];
-          });
+      if (stubs.length == 2) {
+        stubs = stubs[1].split('/').slice(1);
+        var variables = state.route.variables;
+        variables.forEach(function (variable) {
+          variable.value = stubs[variable.position];
         });
-      }
-
-      return variables;
+        var query = self.location.hash.split('?');
+        if (query.length == 2) {
+          variables._query = {};
+          query[1].split('&').forEach(function (fragment) {
+            console.log(fragment);
+            fragment.split('=').forEach(function (pair) {
+              variables._query[pair[0]] = pair[1];
+            });
+          });
+        }
+        return variables;
+      } else return;
     }
   }]);
 

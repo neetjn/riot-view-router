@@ -89,29 +89,26 @@ export class Utils {
     var self = this.$router
 
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
-    if (stubs.length == 2)
-      stubs = stubs[1].split('/').slice(1)
-    else
-      stubs = ['/']
-
     let variables = state.route.variables
-    variables.forEach((variable) => {
-      variable.value = stubs[variable.position]
-    })
+    if (stubs.length == 2) {
 
-    let query = self.location.hash.split('?') ?
-    if (query.length == 2) {
-      query = query[1]
-      variables._query = {}
-      query.split('&').forEach((fragment) => {
-        console.log(fragment)
-        fragment.split('=').forEach((pair) => {
-          variables._query[pair[0]] = pair[1]
+      let query = self.location.hash.split('?')
+      if (query.length == 2) {
+        variables._query = {}
+        query[1].split('&').forEach((fragment) => {
+          console.log(fragment)
+          fragment.split('=').forEach((pair) => {
+            variables._query[pair[0]] = pair[1]
+          })
         })
+      }
+      variables.forEach((variable) => {
+        variable.value = stubs[variable.position]
       })
+      return variables
     }
-
-    return variables
+    else
+      return
   }
 
 }
