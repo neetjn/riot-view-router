@@ -102,6 +102,10 @@ const states = [
 ]
 
 const router = Router.install(riot, options, states)
+
+router.on('start', () => {
+  console.log('hello world!')
+})
 ```
 
 You may then access the `Router` instance via your tags with `$router` like so,
@@ -121,6 +125,18 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
   <button r-sref="/profile/{username}">Navigate to profile</button>
   <a r-sref="/profile/{username}">Navigate to profile</a>
 </sometag>
+```
+
+Both route and query string variables can also be accessed directly via the target tag with opts. Take for example navigating to the url `.../!#/profile/john?views=1` with the route pattern `/profile/:username`.
+
+```
+<profile>
+  <h1>
+    User: <small>{this.opts.username}</small>
+  </h1>
+  <h5>Views: {this.opts.queryArgs.views}</h5>
+
+</profile>
 ```
 
 ### Router API
