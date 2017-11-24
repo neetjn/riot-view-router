@@ -105,7 +105,6 @@ export class Utils {
           variables._query[fragment[0]] = fragment[1]
         })
       }
-      console.log(variables)
       return variables
     }
 
