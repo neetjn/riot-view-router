@@ -32,6 +32,7 @@ export class Tools {
         opts.forEach((opt) => {
           parsed_opts[opt.name] = opt.value
         }) // # add props
+        parsed_opts.queryArgs = opts._query
         riot.mount(state.tag, parsed_opts)
         if (state.title) {
           let title = state.title

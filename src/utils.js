@@ -55,7 +55,7 @@ export class Utils {
 
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
     if (stubs.length == 2)
-      stubs = stubs[1].split('/').slice(1)
+      stubs = stubs.join('').split('?')[0].split('/').slice(1)
     else
       stubs = ['/']
 
@@ -89,9 +89,11 @@ export class Utils {
     var self = this.$router
 
     let variables = state.route.variables.map(v => Object.assign({}, v))
+    // # make a deep copy of state variables as to not pollute state
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
     if (stubs.length == 2) {
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
+      // # remove query string from url
       variables.forEach((variable) => {
         variable.value = stubs[variable.position]
       })
@@ -99,12 +101,11 @@ export class Utils {
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {
-          console.log(fragment)
-          fragment.split('=').forEach((pair) => {
-            variables._query[pair[0]] = pair[1]
-          })
+          fragment = fragment.split('=')
+          variables._query[fragment[0]] = fragment[1]
         })
       }
+      console.log(variables)
       return variables
     }
 

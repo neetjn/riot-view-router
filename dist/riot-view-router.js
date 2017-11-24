@@ -430,7 +430,7 @@ var Constants = exports.Constants = {
     marker: /[a-zA-Z\-]*/g,
     stateName: /[a-zA-Z0-9]/g,
     routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
-    routeVariable: /(:[a-zA-Z]*)/g
+    routeVariable: /(:[a-z]*)/g
   },
   intervals: {
     start: 10,
@@ -603,6 +603,7 @@ var Tools = exports.Tools = function () {
           opts.forEach(function (opt) {
             parsed_opts[opt.name] = opt.value;
           }); // # add props
+          parsed_opts.queryArgs = opts._query;
           riot.mount(state.tag, parsed_opts);
           if (state.title) {
             var title = state.title;
@@ -714,7 +715,7 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.hash.split(self.$constants.defaults.hash);
-      if (stubs.length == 2) stubs = stubs[1].split('/').slice(1);else stubs = ['/'];
+      if (stubs.length == 2) stubs = stubs.join('').split('?')[0].split('/').slice(1);else stubs = ['/'];
 
       var state = self.states.find(function (state) {
         var route = state.route;
@@ -758,11 +759,14 @@ var Utils = exports.Utils = function () {
     value: function extractRouteVars(state) {
       var self = this.$router;
 
-      var variables = state.route.variables;
+      var variables = state.route.variables.map(function (v) {
+        return Object.assign({}, v);
+      });
+      // # make a deep copy of state variables as to not pollute state
       var stubs = self.location.hash.split(self.$constants.defaults.hash);
       if (stubs.length == 2) {
-        stubs = stubs.join('').split('?')[0];
-        console.log(stubs);
+        stubs = stubs.join('').split('?')[0].split('/').slice(1);
+        // # remove query string from url
         variables.forEach(function (variable) {
           variable.value = stubs[variable.position];
         });
@@ -770,12 +774,11 @@ var Utils = exports.Utils = function () {
         if (query.length == 2) {
           variables._query = {};
           query[1].split('&').forEach(function (fragment) {
-            console.log(fragment);
-            fragment.split('=').forEach(function (pair) {
-              variables._query[pair[0]] = pair[1];
-            });
+            fragment = fragment.split('=');
+            variables._query[fragment[0]] = fragment[1];
           });
         }
+        console.log(variables);
         return variables;
       }
 
