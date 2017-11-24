@@ -134,7 +134,7 @@ Both route and query string variables can also be accessed directly via the targ
   <h1>
     User: <small>{this.opts.username}</small>
   </h1>
-  <h5>Views: {this.opts.queryArgs.views}</h5>
+  <h5>Views: {this.opts.qargs.views}</h5>
 
 </profile>
 ```
