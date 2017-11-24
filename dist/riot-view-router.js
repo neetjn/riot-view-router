@@ -758,10 +758,11 @@ var Utils = exports.Utils = function () {
     value: function extractRouteVars(state) {
       var self = this.$router;
 
+      var variables = state.route.variables;
       var stubs = self.location.hash.split(self.$constants.defaults.hash);
       if (stubs.length == 2) {
-        stubs = stubs[1].split('/').slice(1);
-        var variables = state.route.variables;
+        stubs = stubs.join('').split('?')[0];
+        console.log(stubs);
         variables.forEach(function (variable) {
           variable.value = stubs[variable.position];
         });
@@ -776,7 +777,9 @@ var Utils = exports.Utils = function () {
           });
         }
         return variables;
-      } else return;
+      }
+
+      return [];
     }
   }]);
 

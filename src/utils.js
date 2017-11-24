@@ -88,10 +88,13 @@ export class Utils {
   extractRouteVars(state) {
     var self = this.$router
 
+    let variables = state.route.variables.map(v => Object.assign({}, v))
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
-    let variables = state.route.variables
     if (stubs.length == 2) {
-
+      stubs = stubs.join('').split('?')[0].split('/').slice(1)
+      variables.forEach((variable) => {
+        variable.value = stubs[variable.position]
+      })
       let query = self.location.hash.split('?')
       if (query.length == 2) {
         variables._query = {}
@@ -102,13 +105,10 @@ export class Utils {
           })
         })
       }
-      variables.forEach((variable) => {
-        variable.value = stubs[variable.position]
-      })
       return variables
     }
-    else
-      return
+
+    return []
   }
 
 }
