@@ -55,7 +55,7 @@ describe('riot-view-router mixin', function() {
       defaultState: 'home',
       fallbackState: '404'
     }, STATES)
-    expect(router.$router.debugging).toBe(false)
+    expect(router.debugging).toBe(false)
   })
 
   it('default state is enforced', function() {
@@ -77,7 +77,7 @@ describe('riot-view-router mixin', function() {
   })
 
   it('logger logstore functions as expected', function() {
-    var router = helperGetMixin().$router
+    var router = helperGetMixin()
     expect(router.$logger).toBeDefined()
     var message = random.string(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     var types = {
