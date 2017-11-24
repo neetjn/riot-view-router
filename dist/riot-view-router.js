@@ -157,9 +157,9 @@ var Router = exports.Router = function () {
     self.running = false;
 
     var requiredOptions = ['defaultState'];
-    var optionalDefaultOptions = ['debugging', 'href', 'fallbackState'];
-    var acceptedOptions = requiredOptions.concat(optionalDefaultOptions);
-    for (var option in options) {
+    var optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot'];
+    var acceptedOptions = requiredOptions.concat(optionalOptions);
+    for (option in options) {
       if (acceptedOptions.indexOf(option) == -1) throw Error('Unknown option "' + option + '" is not supported');
     } // # validate router optionsu
 
@@ -639,8 +639,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -720,22 +718,14 @@ var Utils = exports.Utils = function () {
       var state = self.states.find(function (state) {
         var route = state.route;
         if (stubs.length == route.pattern.length) {
-          var _loop = function _loop(stub) {
+          for (stub in stubs) {
             if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
               if (!route.variables.find(function (variable) {
                 return variable.position == stub;
               })) {
-                return {
-                  v: false
-                };
+                return false;
               }
             }
-          };
-
-          for (var stub in stubs) {
-            var _ret = _loop(stub);
-
-            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
           }
           return true;
         }

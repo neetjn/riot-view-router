@@ -12,7 +12,9 @@
     "prefer-const": ["error", {
       "destructuring": "any",
       "ignoreReadBeforeAssign": false
-    }]
+    }],
+    "prefer-template": "error",
+    "no-useless-concat": "error"
   },
   "globals": {
     "document": true,

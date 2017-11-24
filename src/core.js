@@ -54,7 +54,7 @@ export class Router {
 
     self.href = self.href || self.location.href
     if (!self.href.endsWith('/'))
-      self.href = self.href + '/'
+      self.href = `${self.href}/`
 
     const stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
