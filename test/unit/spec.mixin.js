@@ -13,9 +13,7 @@ describe('riot-view-router mixin', function() {
   function helperGetMixin(options, states) {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
-    var router = new Router(options || OPTIONS, states || STATES)
-    riot.mixin('router', router)
-    return riot.mixin('router')
+    return Router.install(riot, options || OPTIONS, states || STATES)
   }
 
   it('creates property "$router"', function() {
