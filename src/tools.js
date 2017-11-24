@@ -35,7 +35,7 @@ export class Tools {
         parsed_opts.qargs = opts._query
         riot.mount(state.tag, parsed_opts)
         if (state.title) {
-          let title = state.title
+          let title = self.titleRoot ? `${self.titleRoot} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
           document.title = title
         }
