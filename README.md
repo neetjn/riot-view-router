@@ -108,13 +108,13 @@ router.on('start', () => {
 })
 ```
 
-You may then access the `Router` instance via your tags with `$router` like so,
+You may then access the `Router` instance via your tags with `router` like so,
 
 ```html
 <app>
   <r-view></r-view>
 
-  this.$router.start()
+  this.router.start()
 </app>
 ```
 

@@ -16,20 +16,15 @@ describe('riot-view-router mixin', function() {
     return Router.install(riot, options || OPTIONS, states || STATES)
   }
 
-  it('creates property "$router"', function() {
-    var mixin = helperGetMixin()
-    expect(mixin.$router).not.toBeUndefined()
-  })
-
   it('processes and merges options', function() {
-    var router = helperGetMixin().$router
+    var router = helperGetMixin()
     for (var opt in OPTIONS) {
       expect(router[opt]).toBe(OPTIONS[opt])
     }
   })
 
   it('processes and merges states', function() {
-    var router = helperGetMixin().$router
+    var router = helperGetMixin()
     expect(router.states.length).toBe(STATES.length)
     router.states.forEach(function(state, index) {
       for (var prop in state) {
@@ -46,7 +41,7 @@ describe('riot-view-router mixin', function() {
   })
 
   it('splits state routes with variables as intended', function() {
-    var router = helperGetMixin(OPTIONS, STATES).$router
+    var router = helperGetMixin(OPTIONS, STATES)
     var variables = router.states.find(function(state) {
       return state.name == 'profile'
     }).route.variables // # get variables processed by route splitter
