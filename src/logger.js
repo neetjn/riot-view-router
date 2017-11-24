@@ -38,7 +38,7 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   log (message) {
-    let timestamp = this.time
+    const timestamp = this.time
     if (this.$router.debugging)
       console.log(this._format(message, timestamp))
     this.logs.push({ type: 'general', message, timestamp })
@@ -49,7 +49,7 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   warn (message) {
-    let timestamp = this.time
+    const timestamp = this.time
     if (this.$router.debugging)
       console.warn(this._format(message, timestamp))
     this.logs.push({ type: 'warning', message, timestamp })
@@ -60,7 +60,7 @@ export class Logger {
    * @param {string} message - Message to log.
    */
   error (message) {
-    let timestamp = this.time
+    const timestamp = this.time
     if (this.$router.debugging)
       console.error(this._format(message, timestamp))
     this.logs.push({ type: 'critical', message, timestamp })

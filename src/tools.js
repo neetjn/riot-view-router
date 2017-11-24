@@ -18,17 +18,17 @@ export class Tools {
 
     return new Promise((resolve) => {
       if (self.$state) {
-        let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
+        const tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
         if (!tag) {
           self.$logger.error('(transition) Could not find a matching tag to unmount')
           reject()
         }
         tag.unmount()
       }
-      let node = document.createElement(state.tag)
+      const node = document.createElement(state.tag)
       self.context.appendChild(node)
       if (opts) {
-        let parsed_opts = { }
+        const parsed_opts = { }
         opts.forEach((opt) => {
           parsed_opts[opt.name] = opt.value
         }) // # add props
