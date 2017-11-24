@@ -35,7 +35,7 @@ npm install riot-view-router
 ```
 For a quick start using jsdelivr:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```
 
 **riot-view-router** supports the following options,

@@ -57,7 +57,8 @@ var mocks = {
     },
     {
       name: 'profile',
-      template: '<h1>user: <span id="username">{ opts.username }</span></h1>'
+      template: '<h1>user: <span id="username">{ opts.username }</span></h1> \
+                 <h5 @if={opts.qargs}><span id="views">{ opts.qargs.views }</span></h5>'
     },
     {
       name: 'not-found',
