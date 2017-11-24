@@ -67,6 +67,13 @@ Using the mixin is then as simple as,
 ```js
 import Router from 'riot-view-router'
 
+const options = {
+  debugging: true,
+  defaultState: 'home',
+  fallbackState: '404',
+  href: 'https://mysite.com/blogs'
+}
+
 const states = [
   {
     name: 'home',
@@ -94,12 +101,7 @@ const states = [
   }
 ]
 
-riot.mixin(new Router({
-  debugging: true,
-  defaultState: 'home',
-  fallbackState: '404',
-  href: 'https://mysite.com/blogs'
-}, states))
+const router = Router.install(riot, options, states)
 ```
 
 You may then access the `Router` instance via your tags with `$router` like so,
