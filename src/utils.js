@@ -62,7 +62,7 @@ export class Utils {
     const state = self.states.find((state) => {
       const route = state.route
       if (stubs.length == route.pattern.length) {
-        for (stub in stubs) {
+        for (const stub in stubs) {
           if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
             if (!route.variables.find((variable) => variable.position == stub)) {
               return false

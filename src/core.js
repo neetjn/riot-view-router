@@ -40,7 +40,7 @@ export class Router {
     const requiredOptions = ['defaultState']
     const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
     const acceptedOptions = requiredOptions.concat(optionalOptions)
-    for (option in options) {
+    for (const option in options) {
       if (acceptedOptions.indexOf(option) == -1)
         throw Error(`Unknown option "${option}" is not supported`)
     } // # validate router optionsu
