@@ -27,8 +27,8 @@ export class Utils {
     if (!route.match(self.$constants.regex.routeFormat))
       throw Error(`Route "${route}" did not match expected route format`)
 
-    let pattern = route.split('/').slice(1)
-    let variables = pattern.filter((item) => {
+    const pattern = route.split('/').slice(1)
+    const variables = pattern.filter((item) => {
       return item.match(self.$constants.regex.routeVariable)
     }).map((item) => {
       return {
@@ -59,10 +59,10 @@ export class Utils {
     else
       stubs = ['/']
 
-    let state = self.states.find((state) => {
-      let route = state.route
+    const state = self.states.find((state) => {
+      const route = state.route
       if (stubs.length == route.pattern.length) {
-        for (let stub in stubs) {
+        for (const stub in stubs) {
           if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
             if (!route.variables.find((variable) => variable.position == stub)) {
               return false
@@ -88,7 +88,7 @@ export class Utils {
   extractRouteVars(state) {
     var self = this.$router
 
-    let variables = state.route.variables.map(v => Object.assign({}, v))
+    const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
     if (stubs.length == 2) {
@@ -97,7 +97,7 @@ export class Utils {
       variables.forEach((variable) => {
         variable.value = stubs[variable.position]
       })
-      let query = self.location.hash.split('?')
+      const query = self.location.hash.split('?')
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {

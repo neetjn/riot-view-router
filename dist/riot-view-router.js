@@ -157,8 +157,8 @@ var Router = exports.Router = function () {
     self.running = false;
 
     var requiredOptions = ['defaultState'];
-    var optionalDefaultOptions = ['debugging', 'href', 'fallbackState'];
-    var acceptedOptions = requiredOptions.concat(optionalDefaultOptions);
+    var optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot'];
+    var acceptedOptions = requiredOptions.concat(optionalOptions);
     for (var option in options) {
       if (acceptedOptions.indexOf(option) == -1) throw Error('Unknown option "' + option + '" is not supported');
     } // # validate router optionsu
@@ -606,7 +606,7 @@ var Tools = exports.Tools = function () {
           parsed_opts.qargs = opts._query;
           riot.mount(state.tag, parsed_opts);
           if (state.title) {
-            var title = state.title;
+            var title = self.titleRoot ? self.titleRoot + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
               return title = title.replace('<' + opt.name + '>', opt.value);
             });

@@ -7,6 +7,7 @@ var mocks = {
     debugging: true,
     defaultState: 'home',
     fallbackState: '404',
+    titleRoot: 'Test App'
   },
 
   /**
