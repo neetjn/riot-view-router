@@ -10,28 +10,21 @@ describe('riot-view-router mixin', function() {
 
   riot = require('riot')
 
-  function helperGetMixin(options, states) {
+  function bootstrap(options, states) {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
-    var router = new Router(options || OPTIONS, states || STATES)
-    riot.mixin('router', router)
-    return riot.mixin('router')
+    return Router.install(riot, options || OPTIONS, states || STATES)
   }
 
-  it('creates property "$router"', function() {
-    var mixin = helperGetMixin()
-    expect(mixin.$router).not.toBeUndefined()
-  })
-
   it('processes and merges options', function() {
-    var router = helperGetMixin().$router
+    var router = bootstrap()
     for (var opt in OPTIONS) {
       expect(router[opt]).toBe(OPTIONS[opt])
     }
   })
 
   it('processes and merges states', function() {
-    var router = helperGetMixin().$router
+    var router = bootstrap()
     expect(router.states.length).toBe(STATES.length)
     router.states.forEach(function(state, index) {
       for (var prop in state) {
@@ -48,7 +41,7 @@ describe('riot-view-router mixin', function() {
   })
 
   it('splits state routes with variables as intended', function() {
-    var router = helperGetMixin(OPTIONS, STATES).$router
+    var router = bootstrap(OPTIONS, STATES)
     var variables = router.states.find(function(state) {
       return state.name == 'profile'
     }).route.variables // # get variables processed by route splitter
@@ -58,16 +51,16 @@ describe('riot-view-router mixin', function() {
   })
 
   it('debugging option is defaulted to false', function() {
-    var router = helperGetMixin({
+    var router = bootstrap({
       defaultState: 'home',
       fallbackState: '404'
     }, STATES)
-    expect(router.$router.debugging).toBe(false)
+    expect(router.debugging).toBe(false)
   })
 
   it('default state is enforced', function() {
     expect(function() {
-      helperGetMixin({
+      bootstrap({
         debugging: false
       }, STATES)
     }).toThrowError(ReferenceError)
@@ -77,14 +70,14 @@ describe('riot-view-router mixin', function() {
     var opt = random.string(15, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     expect(function() {
       var options = Object.assign({}, OPTIONS)
-      helperGetMixin(Object.assign(options, {
+      bootstrap(Object.assign(options, {
         [opt]: opt
       }), STATES)
     }).toThrowError(Error)
   })
 
   it('logger logstore functions as expected', function() {
-    var router = helperGetMixin().$router
+    var router = bootstrap()
     expect(router.$logger).toBeDefined()
     var message = random.string(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     var types = {

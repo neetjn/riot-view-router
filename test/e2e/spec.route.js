@@ -25,6 +25,28 @@ describe('riot-view-router', function() {
     }).catch(failAsyncTest)
   })
 
+  describe('given route parameters', function() {
+
+    it('should properly pass route variables as opts', function(done) {
+      router.navigate('/profile/view/john').then(() => {
+        isLocation('/profile/view/john')
+        isRendered('profile')
+        expect(document.querySelector('#username').innerText).toBe('john')
+        done()
+      }).catch(failAsyncTest)
+    })
+
+    it('should properly pass route query strings as opts', function(done) {
+      router.navigate('/profile/view/john?views=alot').then(() => {
+        isLocation('/profile/view/john?views=alot')
+        isRendered('profile')
+        expect(document.querySelector('#views').innerText).toBe('alot')
+        done()
+      }).catch(failAsyncTest)
+    })
+
+  })
+
   describe('given an invalid route', function() {
 
     it('should navigate to fallback state and render tag on invalid route', function(done) {
