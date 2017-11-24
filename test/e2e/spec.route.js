@@ -26,6 +26,7 @@ describe('riot-view-router', function() {
   })
 
   it('should properly update page title', function(done) {
+    expect(document.title).toBe('Test App - Hello World')
     done()
   })
 
