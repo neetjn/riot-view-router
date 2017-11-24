@@ -25,6 +25,10 @@ describe('riot-view-router', function() {
     }).catch(failAsyncTest)
   })
 
+  it('should properly update page title', function(done) {
+    done()
+  })
+
   describe('given route parameters', function() {
 
     it('should properly pass route variables as opts', function(done) {
