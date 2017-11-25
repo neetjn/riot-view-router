@@ -358,6 +358,18 @@ var Router = exports.Router = function () {
     }
 
     /**
+     * Used to refresh the current route.
+     */
+
+  }, {
+    key: 'reload',
+    value: function reload() {
+      var self = this;
+
+      self.push();
+    }
+
+    /**
      * Used to register router specific events.
      * @param {string} event - Name of event to register.
      * @param {function} handler - Function to execute on listener.

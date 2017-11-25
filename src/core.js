@@ -248,6 +248,15 @@ export class Router {
   }
 
   /**
+   * Used to refresh the current route.
+   */
+  reload () {
+    const self = this
+
+    self.push()
+  }
+
+  /**
    * Used to register router specific events.
    * @param {string} event - Name of event to register.
    * @param {function} handler - Function to execute on listener.
