@@ -54,7 +54,7 @@ export class Router {
       if (self.location.href.indexOf(self.href) == -1)
         throw Error('Defined href not found within location context')
 
-    self.href = self.href || self.location.href
+    self.href = self.href || self.location.href.split(self.$constants.defaults.hash)[0]
     if (!self.href.endsWith('/'))
       self.href = `${self.href}/`
 
