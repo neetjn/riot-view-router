@@ -9,15 +9,17 @@ export class Router {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
+   * @param {riot} _riot - Riot instance to target.
    * @param {object} options - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (options, states) {
+  constructor (_riot, options, states) {
     var self = this
 
     self.version = version
     self.$constants = Constants
+    self.$riot = _riot
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
@@ -36,6 +38,16 @@ export class Router {
     })
 
     self.running = false
+
+    self.$riot.on('updated', () => {
+      if (self.running) {
+        document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+          el.onclick = function () {
+            self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+          }
+        })
+      }
+    })
 
     const requiredOptions = ['defaultState']
     const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
@@ -114,7 +126,7 @@ export class Router {
    * @returns {Promise}
    */
   navigate (route, skipPush) {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
@@ -143,7 +155,7 @@ export class Router {
    * @returns {Promise}
    */
   push (name, opts) {
-    var self = this
+    const self = this
 
     return new Promise((resolve) => {
       if (!self.running) {
@@ -189,7 +201,7 @@ export class Router {
    * @returns {Promise}
    */
   start () {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
@@ -230,7 +242,7 @@ export class Router {
    * @returns {Promise}
    */
   stop () {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (self.running) {
@@ -252,7 +264,7 @@ export class Router {
    * @returns {Promise}
    */
   on (event, handler) {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!event || self.$constants.events.supported.indexOf(event) < -1) {
@@ -273,7 +285,7 @@ export class Router {
    * @returns {Promise}
    */
   _dispatch (event, params) {
-    var self = this
+    const self = this
 
     return new Promise((resolve) => {
       if (!event || self.$constants.events.supported.indexOf(event) < -1) {

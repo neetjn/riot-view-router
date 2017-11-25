@@ -87,8 +87,8 @@ Object.defineProperty(exports, "__esModule", {
 var _core = __webpack_require__(1);
 
 exports.default = {
-  install: function install(r, options, states) {
-    var router = new _core.Router(options, states);
+  install: function install(_riot, options, states) {
+    var router = new _core.Router(_riot, options, states);
     r.mixin({ router: router });
     return router;
   }
@@ -126,17 +126,19 @@ var Router = exports.Router = function () {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
+   * @param {riot} _riot - Riot instance to target.
    * @param {object} options - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  function Router(options, states) {
+  function Router(_riot, options, states) {
     _classCallCheck(this, Router);
 
     var self = this;
 
     self.version = _package.version;
     self.$constants = _constants.Constants;
+    self.$riot = _riot;
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
@@ -155,6 +157,16 @@ var Router = exports.Router = function () {
     });
 
     self.running = false;
+
+    self.$riot.on('updated', function () {
+      if (self.running) {
+        document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
+          el.onclick = function () {
+            self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
+          };
+        });
+      }
+    });
 
     var requiredOptions = ['defaultState'];
     var optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot'];
@@ -604,7 +616,7 @@ var Tools = exports.Tools = function () {
             parsed_opts[opt.name] = opt.value;
           }); // # add props
           parsed_opts.qargs = opts._query;
-          riot.mount(state.tag, parsed_opts);
+          self.$riot.mount(state.tag, parsed_opts);
           if (state.title) {
             var title = self.titleRoot ? self.titleRoot + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
@@ -612,13 +624,7 @@ var Tools = exports.Tools = function () {
             });
             document.title = title;
           }
-        } else riot.mount(state.tag);
-
-        document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
-          el.onclick = function () {
-            self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
-          };
-        });
+        } else self.$riot.mount(state.tag);
 
         self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
       });

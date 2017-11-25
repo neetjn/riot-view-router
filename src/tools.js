@@ -14,7 +14,7 @@ export class Tools {
    * @param {array}
    */
   transition (state, opts) {
-    var self = this.$router
+    const self = this.$router
 
     return new Promise((resolve) => {
       if (self.$state) {
@@ -33,7 +33,7 @@ export class Tools {
           parsed_opts[opt.name] = opt.value
         }) // # add props
         parsed_opts.qargs = opts._query
-        riot.mount(state.tag, parsed_opts)
+        self.$riot.mount(state.tag, parsed_opts)
         if (state.title) {
           let title = self.titleRoot ? `${self.titleRoot} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
@@ -41,13 +41,7 @@ export class Tools {
         }
       }
       else
-        riot.mount(state.tag)
-
-      document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
-        el.onclick = function () {
-          self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
-        }
-      })
+        self.$riot.mount(state.tag)
 
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
