@@ -7,6 +7,7 @@ var mocks = {
     debugging: true,
     defaultState: 'home',
     fallbackState: '404',
+    titleRoot: 'Test App'
   },
 
   /**
@@ -30,6 +31,12 @@ var mocks = {
       route: '/profile/view/:username',
       tag: 'profile',
       title: '<username>\'s profile page'
+    },
+    {
+      name: 'time',
+      route: '/time',
+      tag: 'time',
+      title: 'Current Time'
     },
     {
       name: '404',
@@ -57,7 +64,12 @@ var mocks = {
     },
     {
       name: 'profile',
-      template: '<h1>user: <span id="username">{ opts.username }</span></h1>'
+      template: '<h1>user: <span id="username">{ opts.username }</span></h1> \
+                 <h5 @if={opts.qargs}><span id="views">{ opts.qargs.views }</span></h5>'
+    },
+    {
+      name: 'time',
+      template: '<h1 id="timestamp">{ new Date().getTime() }</h1>'
     },
     {
       name: 'not-found',

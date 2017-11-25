@@ -13,7 +13,7 @@ export class Utils {
    * @param {string} name - Name of state to search for.
    */
   stateByName (name) {
-    var self = this.$router
+    const self = this.$router
     return self.states.find((state) => name == state.name)
   }
 
@@ -22,13 +22,13 @@ export class Utils {
    * @param {string} route - Route from state.
    */
   splitRoute(route) {
-    var self = this.$router
+    const self = this.$router
 
     if (!route.match(self.$constants.regex.routeFormat))
       throw Error(`Route "${route}" did not match expected route format`)
 
-    let pattern = route.split('/').slice(1)
-    let variables = pattern.filter((item) => {
+    const pattern = route.split('/').slice(1)
+    const variables = pattern.filter((item) => {
       return item.match(self.$constants.regex.routeVariable)
     }).map((item) => {
       return {
@@ -51,18 +51,18 @@ export class Utils {
    * Used to search for a state by your current route.
    */
   stateByRoute() {
-    var self = this.$router
+    const self = this.$router
 
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
     if (stubs.length == 2)
-      stubs = stubs[1].split('/').slice(1)
+      stubs = stubs.join('').split('?')[0].split('/').slice(1)
     else
       stubs = ['/']
 
-    let state = self.states.find((state) => {
-      let route = state.route
+    const state = self.states.find((state) => {
+      const route = state.route
       if (stubs.length == route.pattern.length) {
-        for (let stub in stubs) {
+        for (const stub in stubs) {
           if (stubs[stub] !== route.pattern[stub] && route.pattern[stub] !== '*') {
             if (!route.variables.find((variable) => variable.position == stub)) {
               return false
@@ -86,19 +86,29 @@ export class Utils {
    * @param {object} state - State object for variable matching.
    */
   extractRouteVars(state) {
-    var self = this.$router
+    const self = this.$router
 
+    const variables = state.route.variables.map(v => Object.assign({}, v))
+    // # make a deep copy of state variables as to not pollute state
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
-    if (stubs.length == 2)
-      stubs = stubs[1].split('/').slice(1)
-    else
-      stubs = ['/']
+    if (stubs.length == 2) {
+      stubs = stubs.join('').split('?')[0].split('/').slice(1)
+      // # remove query string from url
+      variables.forEach((variable) => {
+        variable.value = stubs[variable.position]
+      })
+      const query = self.location.hash.split('?')
+      if (query.length == 2) {
+        variables._query = {}
+        query[1].split('&').forEach((fragment) => {
+          fragment = fragment.split('=')
+          variables._query[fragment[0]] = fragment[1]
+        })
+      }
+      return variables
+    }
 
-    let variables = state.route.variables
-    variables.forEach((variable) => {
-      variable.value = stubs[variable.position]
-    })
-    return variables
+    return []
   }
 
 }

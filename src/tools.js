@@ -14,39 +14,46 @@ export class Tools {
    * @param {array}
    */
   transition (state, opts) {
-    var self = this.$router
+    const self = this.$router
 
     return new Promise((resolve) => {
       if (self.$state) {
-        let tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!tag) {
+        const removable = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
+        if (!removable) {
           self.$logger.error('(transition) Could not find a matching tag to unmount')
           reject()
         }
-        tag.unmount()
+        removable.unmount()
       }
-      let node = document.createElement(state.tag)
+      const node = document.createElement(state.tag)
       self.context.appendChild(node)
+
       if (opts) {
-        let parsed_opts = { }
+        const parsed_opts = { }
         opts.forEach((opt) => {
           parsed_opts[opt.name] = opt.value
         }) // # add props
-        riot.mount(state.tag, parsed_opts)
+        parsed_opts.qargs = opts._query
+        var tag = self.$riot.mount(state.tag, parsed_opts)
         if (state.title) {
-          let title = state.title
+          let title = self.titleRoot ? `${self.titleRoot} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
           document.title = title
         }
       }
       else
-        riot.mount(state.tag)
+        var tag = self.$riot.mount(state.tag)
 
-      document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
-        el.onclick = function () {
-          self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+      tag[0].on('updated', () => {
+        if (self.running) {
+          document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+            el.onclick = function () {
+              self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+            }
+          })
         }
-      })
+      }) // # observable for binding sref occurrences
+      tag[0].trigger('updated') // # trigger sref binding
 
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })

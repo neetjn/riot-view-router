@@ -1,7 +1,11 @@
-import { Router as _Router } from './core'
+import { Router } from './core'
 
-export default function (options, states) {
-  return {
-    $router: new _Router(options, states)
+export default {
+
+  install(_riot, options, states) {
+    const router = new Router(_riot, options, states)
+    _riot.mixin({ router })
+    return router
   }
+
 }

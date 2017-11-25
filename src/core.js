@@ -9,15 +9,17 @@ export class Router {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
+   * @param {riot} _riot - Riot instance to target.
    * @param {object} options - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (options, states) {
+  constructor (_riot, options, states) {
     var self = this
 
     self.version = version
     self.$constants = Constants
+    self.$riot = _riot
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
@@ -37,10 +39,10 @@ export class Router {
 
     self.running = false
 
-    let requiredOptions = ['defaultState']
-    let optionalDefaultOptions = ['debugging', 'href', 'fallbackState']
-    let acceptedOptions = requiredOptions.concat(optionalDefaultOptions)
-    for (let option in options) {
+    const requiredOptions = ['defaultState']
+    const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
+    const acceptedOptions = requiredOptions.concat(optionalOptions)
+    for (const option in options) {
       if (acceptedOptions.indexOf(option) == -1)
         throw Error(`Unknown option "${option}" is not supported`)
     } // # validate router optionsu
@@ -52,12 +54,12 @@ export class Router {
       if (self.location.href.indexOf(self.href) == -1)
         throw Error('Defined href not found within location context')
 
-    self.href = self.href || self.location.href
+    self.href = self.href || self.location.href.split(self.$constants.defaults.hash)[0]
     if (!self.href.endsWith('/'))
-      self.href = self.href + '/'
+      self.href = `${self.href}/`
 
-    let stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state)=>Object.assign({}, state))
+    const stateProperties = ['name', 'route', 'tag']
+    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
     states.forEach((state) => {
       if (!state.name.match(self.$constants.regex.stateName)) {
         throw Error(`Invalid state name "${state.name}",\
@@ -114,7 +116,7 @@ export class Router {
    * @returns {Promise}
    */
   navigate (route, skipPush) {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
@@ -143,7 +145,7 @@ export class Router {
    * @returns {Promise}
    */
   push (name, opts) {
-    var self = this
+    const self = this
 
     return new Promise((resolve) => {
       if (!self.running) {
@@ -158,7 +160,7 @@ export class Router {
       else
         var state = self.$utils.stateByName(name)
 
-      let location = self.location.hash.split(self.$constants.defaults.hash)[1]
+      const location = self.location.hash.split(self.$constants.defaults.hash)[1]
 
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
@@ -189,7 +191,7 @@ export class Router {
    * @returns {Promise}
    */
   start () {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
@@ -197,7 +199,7 @@ export class Router {
 
         function _start() {
           var view_check = window.setInterval(() => {
-            let context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+            const context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
             if (context) {
               self.context = context
               self.push() // # route to initial state
@@ -230,18 +232,35 @@ export class Router {
    * @returns {Promise}
    */
   stop () {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
-      if (self.running) {
-        self.running = false
-        delete window.onhashchange
-        self._dispatch('stop').then(resolve).catch(resolve)
-      }
-      else {
+      if (!self.running) {
         self.$logger.error('(stop) Router was not running')
         reject()
       }
+
+      self.running = false
+      delete window.onhashchange
+      self._dispatch('stop').then(resolve).catch(resolve)
+    })
+  }
+
+  /**
+   * Used to refresh the current route.
+   */
+  reload () {
+    const self = this
+
+    return new Promise((resolve, reject) => {
+      if (!self.running) {
+        self.$logger.error('(reload) Router has not yet been started')
+        return reject()
+      }
+
+      self.push().then(() => {
+        self._dispatch('reload').then(resolve).catch(resolve)
+      })
     })
   }
 
@@ -252,7 +271,7 @@ export class Router {
    * @returns {Promise}
    */
   on (event, handler) {
-    var self = this
+    const self = this
 
     return new Promise((resolve, reject) => {
       if (!event || self.$constants.events.supported.indexOf(event) < -1) {
@@ -273,7 +292,7 @@ export class Router {
    * @returns {Promise}
    */
   _dispatch (event, params) {
-    var self = this
+    const self = this
 
     return new Promise((resolve) => {
       if (!event || self.$constants.events.supported.indexOf(event) < -1) {

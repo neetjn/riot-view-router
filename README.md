@@ -23,6 +23,10 @@
 
 *This project only supports riot.js 3, support for previous versions is not available.*
 
+### Examples
+
+* [riot-todo](https://github.com/neetjn/riot-todo): Todo web app created with riot.js, skeletoncss, animate.css, and foundation-icons. 
+
 ### Usage
 
 To install via Bower, simply do the following:
@@ -35,7 +39,7 @@ npm install riot-view-router
 ```
 For a quick start using jsdelivr:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```
 
 **riot-view-router** supports the following options,
@@ -47,6 +51,8 @@ For a quick start using jsdelivr:
 > **`*defaultState`**: Default state for router to navigate to on start if route not matched.
 
 > **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
+
+> **`titleRoot`**: Title prefix for routes using a page title. 
 
 States are composed of the following settings,
 
@@ -66,6 +72,13 @@ Using the mixin is then as simple as,
 
 ```js
 import Router from 'riot-view-router'
+
+const options = {
+  debugging: true,
+  defaultState: 'home',
+  fallbackState: '404',
+  href: 'https://mysite.com/blogs'
+}
 
 const states = [
   {
@@ -94,21 +107,20 @@ const states = [
   }
 ]
 
-riot.mixin(new Router({
-  debugging: true,
-  defaultState: 'home',
-  fallbackState: '404',
-  href: 'https://mysite.com/blogs'
-}, states))
+const router = Router.install(riot, options, states)
+
+router.on('start', () => {
+  console.log('hello world!')
+})
 ```
 
-You may then access the `Router` instance via your tags with `$router` like so,
+You may then access the `Router` instance via your tags with `router` like so,
 
 ```html
 <app>
   <r-view></r-view>
 
-  this.$router.start()
+  this.router.start()
 </app>
 ```
 
@@ -119,6 +131,18 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
   <button r-sref="/profile/{username}">Navigate to profile</button>
   <a r-sref="/profile/{username}">Navigate to profile</a>
 </sometag>
+```
+
+Both route and query string variables can also be accessed directly via the target tag with opts. Take for example navigating to the url `.../!#/profile/john?views=1` with the route pattern `/profile/:username`.
+
+```
+<profile>
+  <h1>
+    User: <small>{this.opts.username}</small>
+  </h1>
+  <h5>Views: {this.opts.qargs.views}</h5>
+
+</profile>
 ```
 
 ### Router API
@@ -132,6 +156,8 @@ The **riot-view-router** has a very simple, easily operable API.
 > **`start()`**: Start router, listen on window hash   changes.
 
 > **`stop()`**: Stop router, related listeners and lifecycle events.
+
+> **`reload()`**: Reload current route.
 
 > **`on(*event, *handler)`**: Register a lifecycle event (start, stop, navigation, push, transition).
 
