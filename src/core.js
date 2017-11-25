@@ -235,15 +235,32 @@ export class Router {
     const self = this
 
     return new Promise((resolve, reject) => {
-      if (self.running) {
-        self.running = false
-        delete window.onhashchange
-        self._dispatch('stop').then(resolve).catch(resolve)
-      }
-      else {
+      if (!self.running) {
         self.$logger.error('(stop) Router was not running')
         reject()
       }
+
+      self.running = false
+      delete window.onhashchange
+      self._dispatch('stop').then(resolve).catch(resolve)
+    })
+  }
+
+  /**
+   * Used to refresh the current route.
+   */
+  reload () {
+    const self = this
+
+    return new Promise((resolve, reject) => {
+      if (!self.running) {
+        self.$logger.error('(reload) Router has not yet been started')
+        return reject()
+      }
+
+      self.push().then(() => {
+        self._dispatch('reload').then(resolve).catch(resolve)
+      })
     })
   }
 
