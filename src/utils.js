@@ -13,7 +13,7 @@ export class Utils {
    * @param {string} name - Name of state to search for.
    */
   stateByName (name) {
-    var self = this.$router
+    const self = this.$router
     return self.states.find((state) => name == state.name)
   }
 
@@ -22,7 +22,7 @@ export class Utils {
    * @param {string} route - Route from state.
    */
   splitRoute(route) {
-    var self = this.$router
+    const self = this.$router
 
     if (!route.match(self.$constants.regex.routeFormat))
       throw Error(`Route "${route}" did not match expected route format`)
@@ -51,7 +51,7 @@ export class Utils {
    * Used to search for a state by your current route.
    */
   stateByRoute() {
-    var self = this.$router
+    const self = this.$router
 
     let stubs = self.location.hash.split(self.$constants.defaults.hash)
     if (stubs.length == 2)
@@ -86,7 +86,7 @@ export class Utils {
    * @param {object} state - State object for variable matching.
    */
   extractRouteVars(state) {
-    var self = this.$router
+    const self = this.$router
 
     const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
