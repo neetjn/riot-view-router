@@ -27,6 +27,7 @@ export class Tools {
       }
       const node = document.createElement(state.tag)
       self.context.appendChild(node)
+
       if (opts) {
         const parsed_opts = { }
         opts.forEach((opt) => {
@@ -52,9 +53,7 @@ export class Tools {
           })
         }
       }) // # observable for binding sref occurrences
-
-      tag[0].update() // # trigger sref binding
-
+      tag[0].trigger('updated') // # trigger sref binding
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
