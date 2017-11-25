@@ -14,7 +14,8 @@
       "ignoreReadBeforeAssign": false
     }],
     "prefer-template": "error",
-    "no-useless-concat": "error"
+    "no-useless-concat": "error",
+    "quotes": ["error", "single"]
   },
   "globals": {
     "document": true,
