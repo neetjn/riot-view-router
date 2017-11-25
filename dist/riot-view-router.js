@@ -89,7 +89,7 @@ var _core = __webpack_require__(1);
 exports.default = {
   install: function install(_riot, options, states) {
     var router = new _core.Router(_riot, options, states);
-    r.mixin({ router: router });
+    _riot.mixin({ router: router });
     return router;
   }
 };
@@ -157,16 +157,6 @@ var Router = exports.Router = function () {
     });
 
     self.running = false;
-
-    self.$riot.on('updated', function () {
-      if (self.running) {
-        document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
-          el.onclick = function () {
-            self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
-          };
-        });
-      }
-    });
 
     var requiredOptions = ['defaultState'];
     var optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot'];
@@ -599,14 +589,14 @@ var Tools = exports.Tools = function () {
 
       return new Promise(function (resolve) {
         if (self.$state) {
-          var tag = riot.util.vdom.find(function (tag) {
+          var removable = riot.util.vdom.find(function (tag) {
             return tag.root.localName == self.$state.tag;
           });
-          if (!tag) {
+          if (!removable) {
             self.$logger.error('(transition) Could not find a matching tag to unmount');
             reject();
           }
-          tag.unmount();
+          removable.unmount();
         }
         var node = document.createElement(state.tag);
         self.context.appendChild(node);
@@ -616,7 +606,7 @@ var Tools = exports.Tools = function () {
             parsed_opts[opt.name] = opt.value;
           }); // # add props
           parsed_opts.qargs = opts._query;
-          self.$riot.mount(state.tag, parsed_opts);
+          var tag = self.$riot.mount(state.tag, parsed_opts);
           if (state.title) {
             var title = self.titleRoot ? self.titleRoot + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
@@ -624,7 +614,19 @@ var Tools = exports.Tools = function () {
             });
             document.title = title;
           }
-        } else self.$riot.mount(state.tag);
+        } else var tag = self.$riot.mount(state.tag);
+
+        tag[0].on('updated', function () {
+          if (self.running) {
+            document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
+              el.onclick = function () {
+                self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
+              };
+            });
+          }
+        }); // # observable for binding sref occurrences
+
+        tag[0].update(); // # trigger sref binding
 
         self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
       });

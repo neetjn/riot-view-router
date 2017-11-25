@@ -18,12 +18,12 @@ export class Tools {
 
     return new Promise((resolve) => {
       if (self.$state) {
-        const tag = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!tag) {
+        const removable = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
+        if (!removable) {
           self.$logger.error('(transition) Could not find a matching tag to unmount')
           reject()
         }
-        tag.unmount()
+        removable.unmount()
       }
       const node = document.createElement(state.tag)
       self.context.appendChild(node)
@@ -33,7 +33,7 @@ export class Tools {
           parsed_opts[opt.name] = opt.value
         }) // # add props
         parsed_opts.qargs = opts._query
-        self.$riot.mount(state.tag, parsed_opts)
+        var tag = self.$riot.mount(state.tag, parsed_opts)
         if (state.title) {
           let title = self.titleRoot ? `${self.titleRoot} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
@@ -41,7 +41,19 @@ export class Tools {
         }
       }
       else
-        self.$riot.mount(state.tag)
+        var tag = self.$riot.mount(state.tag)
+
+      tag[0].on('updated', () => {
+        if (self.running) {
+          document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+            el.onclick = function () {
+              self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+            }
+          })
+        }
+      }) // # observable for binding sref occurrences
+
+      tag[0].update() // # trigger sref binding
 
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })

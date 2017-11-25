@@ -39,16 +39,6 @@ export class Router {
 
     self.running = false
 
-    self.$riot.on('updated', () => {
-      if (self.running) {
-        document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
-          el.onclick = function () {
-            self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
-          }
-        })
-      }
-    })
-
     const requiredOptions = ['defaultState']
     const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
     const acceptedOptions = requiredOptions.concat(optionalOptions)
