@@ -235,15 +235,14 @@ export class Router {
     const self = this
 
     return new Promise((resolve, reject) => {
-      if (self.running) {
-        self.running = false
-        delete window.onhashchange
-        self._dispatch('stop').then(resolve).catch(resolve)
-      }
-      else {
+      if (!self.running) {
         self.$logger.error('(stop) Router was not running')
         reject()
       }
+
+      self.running = false
+      delete window.onhashchange
+      self._dispatch('stop').then(resolve).catch(resolve)
     })
   }
 
@@ -259,7 +258,7 @@ export class Router {
         return reject()
       }
 
-      return self.push().then(() => {
+      self.push().then(() => {
         self._dispatch('reload').then(resolve).catch(resolve)
       })
     })

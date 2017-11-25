@@ -346,14 +346,14 @@ var Router = exports.Router = function () {
       var self = this;
 
       return new Promise(function (resolve, reject) {
-        if (self.running) {
-          self.running = false;
-          delete window.onhashchange;
-          self._dispatch('stop').then(resolve).catch(resolve);
-        } else {
+        if (!self.running) {
           self.$logger.error('(stop) Router was not running');
           reject();
         }
+
+        self.running = false;
+        delete window.onhashchange;
+        self._dispatch('stop').then(resolve).catch(resolve);
       });
     }
 
@@ -366,7 +366,16 @@ var Router = exports.Router = function () {
     value: function reload() {
       var self = this;
 
-      self.push();
+      return new Promise(function (resolve, reject) {
+        if (!self.running) {
+          self.$logger.error('(reload) Router has not yet been started');
+          return reject();
+        }
+
+        self.push().then(function () {
+          self._dispatch('reload').then(resolve).catch(resolve);
+        });
+      });
     }
 
     /**
@@ -451,7 +460,7 @@ var Constants = exports.Constants = {
     navigate: 50
   },
   events: {
-    supported: ['start', 'stop', 'navigation', 'push', 'transition'],
+    supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],
     delay: 0
   }
 };
