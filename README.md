@@ -52,6 +52,8 @@ For a quick start using jsdelivr:
 
 > **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
 
+> **`titleRoot`**: Title prefix for routes using a page title. 
+
 States are composed of the following settings,
 
 > **`*name`**: State name.
