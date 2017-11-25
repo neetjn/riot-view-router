@@ -627,6 +627,7 @@ var Tools = exports.Tools = function () {
           }
         }); // # observable for binding sref occurrences
         tag[0].trigger('updated'); // # trigger sref binding
+
         self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
       });
     }
