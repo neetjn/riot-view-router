@@ -253,7 +253,16 @@ export class Router {
   reload () {
     const self = this
 
-    self.push()
+    return new Promise((resolve, reject) => {
+      if (!self.running) {
+        self.$logger.error('(reload) Router has not yet been started')
+        return reject()
+      }
+
+      return self.push().then(() => {
+        self._dispatch('reload').then(resolve).catch(resolve)
+      })
+    })
   }
 
   /**
