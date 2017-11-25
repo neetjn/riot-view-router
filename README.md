@@ -23,6 +23,10 @@
 
 *This project only supports riot.js 3, support for previous versions is not available.*
 
+### Examples
+
+* [riot-todo](https://github.com/neetjn/riot-todo): Todo web app created with riot.js, skeletoncss, animate.css, and foundation-icons. 
+
 ### Usage
 
 To install via Bower, simply do the following:
