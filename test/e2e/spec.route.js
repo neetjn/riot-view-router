@@ -50,6 +50,17 @@ describe('riot-view-router', function() {
       }).catch(failAsyncTest)
     })
 
+    it('should reload views appropriately', function(done) {
+      router.navigate('/time').then(() => {
+        isLocation('/time')
+        var timestamp = document.querySelector('#timestamp').innerText
+        router.reload().then(() => {
+          expect(document.querySelector('#timestamp').innerText).not.toBe(timestamp)
+          done()
+        })
+      }).catch(failAsyncTest)
+    })
+
   })
 
   describe('given an invalid route', function() {

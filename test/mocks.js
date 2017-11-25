@@ -33,6 +33,12 @@ var mocks = {
       title: '<username>\'s profile page'
     },
     {
+      name: 'time',
+      route: '/time',
+      tag: 'time',
+      title: 'Current Time'
+    },
+    {
       name: '404',
       route: '/notfound',
       tag: 'not-found',
@@ -60,6 +66,10 @@ var mocks = {
       name: 'profile',
       template: '<h1>user: <span id="username">{ opts.username }</span></h1> \
                  <h5 @if={opts.qargs}><span id="views">{ opts.qargs.views }</span></h5>'
+    },
+    {
+      name: 'time',
+      template: '<h1 id="timestamp">{ new Date().getTime() }</h1>'
     },
     {
       name: 'not-found',
