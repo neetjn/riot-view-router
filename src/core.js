@@ -67,7 +67,7 @@ export class Router {
 
     self.settings.href = self.settings.href || self.location.href.split(self.$constants.defaults.hash)[0]
     if (!self.settings.href.endsWith('/'))
-      self.href = `${self.href}/`
+      self.settings.href = `${self.settings.href}/`
 
     const stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
