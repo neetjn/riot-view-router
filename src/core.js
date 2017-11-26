@@ -59,6 +59,7 @@ export class Router {
 
     self = Object.assign(self.settings, settings)
     self.settings.debugging = self.settings.debugging || false
+    self.settings.marker = self.$constants.defaults.marker
 
     if (self.href)
       if (self.location.href.indexOf(self.href) == -1)
@@ -98,17 +99,6 @@ export class Router {
     else {
       self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
       self.settings.fallback = self.settings.default
-    }
-
-    if (self.settings.marker) {
-      if (!self.settings.marker.match(self.$constants.regex.marker)) {
-        self.$logger.warn(`Marker "${self.settings.marker}" contains unsupported characters`)
-        self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
-        self.settings.marker = self.$constants.defaults.marker
-      }
-    }
-    else {
-      self.settings.marker = self.$constants.defaults.marker
     }
   }
 
