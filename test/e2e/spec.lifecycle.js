@@ -7,7 +7,7 @@ describe('riot-view-router lifecycle event', function() {
     var check = { count: 0 }
     function handler() { check.count += 1 }
     router.on('navigation', handler).then(() => {
-      expect(router.$events.navigation).toBe(handler)
+      expect(router.events.navigation).toBe(handler)
       router.navigate('/about').then(() => {
         expect(check.count).toBe(1)
         done()

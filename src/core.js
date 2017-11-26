@@ -17,14 +17,15 @@ export class Router {
   constructor (instance, settings, states) {
     var self = this
 
+    self.constants = Constants
     self.version = version
     self.settings = {}
+    self.events = {}
+
     self.$riot = instance
-    self.$constants = Constants
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
-    self.$events = {}
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -56,20 +57,20 @@ export class Router {
       throw Error('Default state route cannot take variable parameters')
 
     for (const setting in self.settings) {
-      const validator = self.$constants.regex.settings[setting]
+      const validator = self.constants.regex.settings[setting]
       if (validator && !setting.match(validator))
         throw Error(`Setting "${setting}" has an invalid value of "${settings[setting]}"`)
     }
 
     self.settings = Object.assign({}, settings)
     self.settings.debugging = self.settings.debugging || false
-    self.settings.marker = self.$constants.defaults.marker
+    self.settings.marker = self.constants.defaults.marker
 
     if (self.settings.href)
       if (self.location.href.indexOf(self.settings.href) == -1)
         throw Error('Defined href not found within location context')
 
-    self.settings.href = self.settings.href || self.location.href.split(self.$constants.defaults.hash)[0]
+    self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0]
     if (!self.settings.href.endsWith('/'))
       self.settings.href = `${self.settings.href}/`
 
@@ -83,7 +84,7 @@ export class Router {
     }) // # validate state properties
     states.forEach((state) => {
       for (const property in state) {
-        const validator = self.$constants.regex.state[property]
+        const validator = self.constants.regex.state[property]
         if (validator && !state[property].match(validator))
           throw Error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
       }
@@ -121,17 +122,17 @@ export class Router {
         return reject()
       }
 
-      self.location = self.settings.href + self.$constants.defaults.hash + route
+      self.location = self.settings.href + self.constants.defaults.hash + route
       var route_check = setInterval(() => {
-        if (self.location.hash == self.$constants.defaults.hash + route) {
+        if (self.location.hash == self.constants.defaults.hash + route) {
           window.clearInterval(route_check)
           if (!skipPush)
             self.push().then(() => self._dispatch('navigation', { route }).then(resolve).catch(resolve))
           else
             self._dispatch('navigation', { route }).then(resolve).catch(resolve)
         }
-      }, self.$constants.intervals.navigate)
-      setTimeout(reject, self.$constants.defaults.timeout)
+      }, self.constants.intervals.navigate)
+      setTimeout(reject, self.constants.defaults.timeout)
     })
   }
 
@@ -157,7 +158,7 @@ export class Router {
       else
         var state = self.$utils.stateByName(name)
 
-      const location = self.location.hash.split(self.$constants.defaults.hash)[1]
+      const location = self.location.hash.split(self.constants.defaults.hash)[1]
 
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
@@ -204,11 +205,11 @@ export class Router {
               window.clearInterval(view_check)
               self._dispatch('start').then(resolve).catch(resolve)
             }
-          }, self.$constants.intervals.start) // # search for view context
-          setTimeout(reject, self.$constants.defaults.timeout)
+          }, self.constants.intervals.start) // # search for view context
+          setTimeout(reject, self.constants.defaults.timeout)
         }
 
-        if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
+        if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
               self.settings.default
@@ -271,12 +272,12 @@ export class Router {
     const self = this
 
     return new Promise((resolve, reject) => {
-      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+      if (!event || self.constants.events.supported.indexOf(event) < -1) {
         self.$logger.error(`(on) "${event}" is not a supported event`)
         reject()
       }
       else {
-        self.$events[event] = handler
+        self.events[event] = handler
         resolve()
       }
     })
@@ -292,12 +293,12 @@ export class Router {
     const self = this
 
     return new Promise((resolve) => {
-      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+      if (!event || self.constants.events.supported.indexOf(event) < -1) {
         self.$logger.error(`(dispatch) "${event}" is not a supported event`)
         reject()
       }
-      if (typeof self.$events[event] == 'function')
-        resolve(self.$events[event](params))
+      if (typeof self.events[event] == 'function')
+        resolve(self.events[event](params))
       else
         reject()
     })

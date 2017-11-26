@@ -136,14 +136,15 @@ var Router = exports.Router = function () {
 
     var self = this;
 
+    self.constants = _constants.Constants;
     self.version = _package.version;
     self.settings = {};
+    self.events = {};
+
     self.$riot = instance;
-    self.$constants = _constants.Constants;
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
-    self.$events = {};
 
     Object.defineProperty(self, 'location', {
       get: function get() {
@@ -172,17 +173,17 @@ var Router = exports.Router = function () {
     if (settings.default.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
 
     for (var _setting in self.settings) {
-      var validator = self.$constants.regex.settings[_setting];
+      var validator = self.constants.regex.settings[_setting];
       if (validator && !_setting.match(validator)) throw Error('Setting "' + _setting + '" has an invalid value of "' + settings[_setting] + '"');
     }
 
     self.settings = Object.assign({}, settings);
     self.settings.debugging = self.settings.debugging || false;
-    self.settings.marker = self.$constants.defaults.marker;
+    self.settings.marker = self.constants.defaults.marker;
 
     if (self.settings.href) if (self.location.href.indexOf(self.settings.href) == -1) throw Error('Defined href not found within location context');
 
-    self.settings.href = self.settings.href || self.location.href.split(self.$constants.defaults.hash)[0];
+    self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0];
     if (!self.settings.href.endsWith('/')) self.settings.href = self.settings.href + '/';
 
     var stateProperties = ['name', 'route', 'tag'];
@@ -196,7 +197,7 @@ var Router = exports.Router = function () {
     }); // # validate state properties
     states.forEach(function (state) {
       for (var property in state) {
-        var _validator = self.$constants.regex.state[property];
+        var _validator = self.constants.regex.state[property];
         if (_validator && !state[property].match(_validator)) throw Error('State "' + state.name + '" property "' + property + '" has an invalid value of "' + state[property] + '"');
       }
     }); // # validate state property values
@@ -234,16 +235,16 @@ var Router = exports.Router = function () {
           return reject();
         }
 
-        self.location = self.settings.href + self.$constants.defaults.hash + route;
+        self.location = self.settings.href + self.constants.defaults.hash + route;
         var route_check = setInterval(function () {
-          if (self.location.hash == self.$constants.defaults.hash + route) {
+          if (self.location.hash == self.constants.defaults.hash + route) {
             window.clearInterval(route_check);
             if (!skipPush) self.push().then(function () {
               return self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
             });else self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
           }
-        }, self.$constants.intervals.navigate);
-        setTimeout(reject, self.$constants.defaults.timeout);
+        }, self.constants.intervals.navigate);
+        setTimeout(reject, self.constants.defaults.timeout);
       });
     }
 
@@ -270,7 +271,7 @@ var Router = exports.Router = function () {
           opts = self.$utils.extractRouteVars(state);
         } else var state = self.$utils.stateByName(name);
 
-        var location = self.location.hash.split(self.$constants.defaults.hash)[1];
+        var location = self.location.hash.split(self.constants.defaults.hash)[1];
 
         if (location !== state.route.route) {
           if (!state.route.variables.length) {
@@ -317,13 +318,13 @@ var Router = exports.Router = function () {
                 window.clearInterval(view_check);
                 self._dispatch('start').then(resolve).catch(resolve);
               }
-            }, self.$constants.intervals.start); // # search for view context
-            setTimeout(reject, self.$constants.defaults.timeout);
+            }, self.constants.intervals.start); // # search for view context
+            setTimeout(reject, self.constants.defaults.timeout);
           };
 
           self.running = true;
 
-          if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
+          if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
             self.navigate(self.$utils.stateByName(self.settings.default).route.route, true).then(_start);
           } else _start();
         } else {
@@ -389,11 +390,11 @@ var Router = exports.Router = function () {
       var self = this;
 
       return new Promise(function (resolve, reject) {
-        if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        if (!event || self.constants.events.supported.indexOf(event) < -1) {
           self.$logger.error('(on) "' + event + '" is not a supported event');
           reject();
         } else {
-          self.$events[event] = handler;
+          self.events[event] = handler;
           resolve();
         }
       });
@@ -412,11 +413,11 @@ var Router = exports.Router = function () {
       var self = this;
 
       return new Promise(function (resolve) {
-        if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        if (!event || self.constants.events.supported.indexOf(event) < -1) {
           self.$logger.error('(dispatch) "' + event + '" is not a supported event');
           reject();
         }
-        if (typeof self.$events[event] == 'function') resolve(self.$events[event](params));else reject();
+        if (typeof self.events[event] == 'function') resolve(self.events[event](params));else reject();
       });
     }
   }]);
@@ -647,9 +648,9 @@ var Tools = exports.Tools = function () {
 
         tag[0].on('updated', function () {
           if (self.running) {
-            document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
+            document.querySelectorAll('[' + self.constants.defaults.anchorMarker + ']').forEach(function (el) {
               el.onclick = function () {
-                self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
+                self.navigate(el.getAttribute(self.constants.defaults.anchorMarker));
               };
             });
           }
@@ -718,11 +719,11 @@ var Utils = exports.Utils = function () {
     value: function splitRoute(route) {
       var self = this.$router;
 
-      if (!route.match(self.$constants.regex.state.route)) throw Error('Route "' + route + '" did not match expected route format');
+      if (!route.match(self.constants.regex.state.route)) throw Error('Route "' + route + '" did not match expected route format');
 
       var pattern = route.split('/').slice(1);
       var variables = pattern.filter(function (item) {
-        return item.match(self.$constants.regex.misc.routeVariable);
+        return item.match(self.constants.regex.misc.routeVariable);
       }).map(function (item) {
         return {
           name: item.split('').slice(1).join(''),
@@ -750,7 +751,7 @@ var Utils = exports.Utils = function () {
     value: function stateByRoute() {
       var self = this.$router;
 
-      var stubs = self.location.hash.split(self.$constants.defaults.hash);
+      var stubs = self.location.hash.split(self.constants.defaults.hash);
       if (stubs.length == 2) stubs = stubs.join('').split('?')[0].split('/').slice(1);else stubs = ['/'];
 
       var state = self.states.find(function (state) {
@@ -799,7 +800,7 @@ var Utils = exports.Utils = function () {
         return Object.assign({}, v);
       });
       // # make a deep copy of state variables as to not pollute state
-      var stubs = self.location.hash.split(self.$constants.defaults.hash);
+      var stubs = self.location.hash.split(self.constants.defaults.hash);
       if (stubs.length == 2) {
         stubs = stubs.join('').split('?')[0].split('/').slice(1);
         // # remove query string from url

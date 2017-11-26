@@ -46,9 +46,9 @@ export class Tools {
 
       tag[0].on('updated', () => {
         if (self.running) {
-          document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+          document.querySelectorAll(`[${self.constants.defaults.anchorMarker}]`).forEach((el) => {
             el.onclick = function () {
-              self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+              self.navigate(el.getAttribute(self.constants.defaults.anchorMarker))
             }
           })
         }
