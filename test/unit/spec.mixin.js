@@ -79,6 +79,7 @@ describe('riot-view-router mixin', function() {
   it('logger logstore functions as expected', function() {
     var router = bootstrap()
     expect(router.$logger).toBeDefined()
+    expect(router.$logger.$router.debugging).toBeTruthy()
     var message = random.string(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     var types = {
       log: 'general',
