@@ -163,8 +163,11 @@ var Router = exports.Router = function () {
     var optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot'];
     var acceptedSettings = requiredSettings.concat(optionalSettings);
     for (var setting in settings) {
-      if (acceptedSettings.indexOf(setting) == -1) throw Error('Unknown setting "' + setting + '" is not supported');
-    } // # validate router settings
+      if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
+    } // # check for unaccepted settings
+    requiredSettings.forEach(function (setting) {
+      if (typeof settings[setting] === 'undefined') throw Error('Required setting "' + setting + '" not specified');
+    }); // # check for required settings
 
     if (settings.default.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
 

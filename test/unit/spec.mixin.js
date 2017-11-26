@@ -16,13 +16,12 @@ describe('riot-view-router mixin', function() {
     return Router.install(riot, settings || SETTINGS, states || STATES)
   }
 
-  it('processes and merges options', function() {
-    var router = bootstrap()
-    console.log(router)
-    for (var opt in SETTINGS) {
-      expect(router.settings[opt]).toBe(SETTINGS[opt])
-    }
-  })
+  // it('processes and merges options', function() {
+  //   var router = bootstrap()
+  //   for (var opt in SETTINGS) {
+  //     expect(router.settings[opt]).toBe(SETTINGS[opt])
+  //   }
+  // })
 
   // it('processes and merges states', function() {
   //   var router = bootstrap()
@@ -42,7 +41,7 @@ describe('riot-view-router mixin', function() {
   // })
 
   // it('splits state routes with variables as intended', function() {
-  //   var router = bootstrap(OPTIONS, STATES)
+  //   var router = bootstrap(SETTINGS, STATES)
   //   var variables = router.states.find(function(state) {
   //     return state.name == 'profile'
   //   }).route.variables // # get variables processed by route splitter
@@ -59,13 +58,16 @@ describe('riot-view-router mixin', function() {
   //   expect(router.settings.debugging).toBe(false)
   // })
 
-  // it('default state is enforced', function() {
-  //   expect(function() {
-  //     bootstrap({
-  //       debugging: false
-  //     }, STATES)
-  //   }).toThrowError(ReferenceError)
-  // })
+  it('default state is enforced', function() {
+    bootstrap({
+      debugging: false
+    }, STATES)
+    expect(function() {
+      bootstrap({
+        debugging: false
+      }, STATES)
+    }).toThrowError(ReferenceError)
+  })
 
   // it('unsupported options should not be processed', function() {
   //   var opt = random.string(15, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
