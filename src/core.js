@@ -40,15 +40,15 @@ export class Router {
 
     self.running = false
 
-    const requiredSettings = ['defaultState']
-    const optionalSettings = ['debugging', 'href', 'fallbackState', 'titleRoot']
+    const requiredSettings = ['default']
+    const optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot']
     const acceptedSettings = requiredSettings.concat(optionalSettings)
     for (const setting in settings) {
       if (acceptedSettings.indexOf(setting) == -1)
         throw Error(`Unknown setting "${setting}" is not supported`)
     } // # validate router settings
 
-    if (settings.defaultState.indexOf(':') > -1)
+    if (settings.default.indexOf(':') > -1)
       throw Error('Default state route cannot take variable parameters')
 
     self = Object.assign(self.settings, settings)
@@ -85,29 +85,29 @@ export class Router {
     }) // # get route pattern
     self.states = states
 
-    if (!self.$utils.stateByName(self.defaultState))
-      throw Error(`State "${self.defaultState}" not found in specified states`)
+    if (!self.$utils.stateByName(self.settings.default))
+      throw Error(`State "${self.settings.default}" not found in specified states`)
 
-    if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState))
-        throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
+    if (self.settings.fallback) {
+      if (!self.$utils.stateByName(self.settings.fallback))
+        throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
     }
     else {
-      self.$logger.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
-      self.fallbackState = self.defaultState
+      self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
+      self.settings.fallback = self.settings.default
     }
 
-    if (self.marker) {
-      if (!self.marker.match(self.$constants.regex.marker)) {
-        self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
+    if (self.settings.marker) {
+      if (!self.settings.marker.match(self.$constants.regex.marker)) {
+        self.$logger.warn(`Marker "${self.settings.marker}" contains unsupported characters`)
         self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
-        self.marker = self.$constants.defaults.marker
+        self.settings.marker = self.$constants.defaults.marker
       }
     }
     else {
-      self.marker = self.$constants.defaults.marker
+      self.settings.marker = self.$constants.defaults.marker
     }
-    self.marker = self.marker || self.$constants.defaults.marker
+    self.settings.marker = self.settings.marker || self.$constants.defaults.marker
   }
 
   /**
@@ -200,7 +200,7 @@ export class Router {
 
         function _start() {
           var view_check = window.setInterval(() => {
-            const context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+            const context = document.querySelector(self.settings.marker) || document.querySelector(`[${self.settings.marker}]`)
             if (context) {
               self.context = context
               self.push() // # route to initial state
@@ -215,7 +215,7 @@ export class Router {
         if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
-              self.defaultState
+              self.settings.default
             ).route.route, true).then(_start)
         }
         else

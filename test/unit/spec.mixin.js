@@ -52,8 +52,8 @@ describe('riot-view-router mixin', function() {
 
   it('debugging option is defaulted to false', function() {
     var router = bootstrap({
-      defaultState: 'home',
-      fallbackState: '404'
+      default: 'home',
+      fallback: '404'
     }, STATES)
     expect(router.debugging).toBe(false)
   })

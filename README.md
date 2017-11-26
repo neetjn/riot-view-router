@@ -52,7 +52,7 @@ For a quick start using jsdelivr:
 
 > **`*default`**: Default state for router to navigate to on start if route not matched.
 
-> **`fallback`**: Will default to fallbackState, state to fallback to on mismatch.
+> **`fallback`**: Will default to fallback, state to fallback to on mismatch.
 
 > **`marker`**: Marker for mounting views, default is `r-view`.
 
@@ -87,8 +87,8 @@ import Router from 'riot-view-router'
 
 const options = {
   debugging: true,
-  defaultState: 'home',
-  fallbackState: '404',
+  default: 'home',
+  fallback: '404',
   href: 'https://mysite.com/blogs'
 }
 

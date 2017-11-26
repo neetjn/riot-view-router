@@ -75,7 +75,7 @@ export class Utils {
 
     if (!state) {
       self.$logger.warn('Route was not matched, defaulting to fallback state')
-      return this.stateByName(self.fallbackState)
+      return this.stateByName(self.settings.fallback)
     }
 
     return state

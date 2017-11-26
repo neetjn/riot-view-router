@@ -7,8 +7,8 @@ export const Constants = {
   },
   regex: {
     settings: {
-      defaultState: /[a-zA-Z0-9]/g,
-      fallbackState: /[a-zA-Z0-9]/g,
+      default: /[a-zA-Z0-9]/g,
+      fallback: /[a-zA-Z0-9]/g,
       href: /(www|http:|https:)+[^\s]+[\w]/g,
       marker: /[a-zA-Z\-]*/g
     },
