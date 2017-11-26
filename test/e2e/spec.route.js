@@ -72,7 +72,7 @@ describe('riot-view-router', function() {
           isRendered('not-found')
           window.clearInterval(fallbackCheck)
           done()
-        }, router.$constants.intervals.navigate)
+        }, router.constants.intervals.navigate)
       }).catch(failAsyncTest)
     })
 

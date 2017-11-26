@@ -24,12 +24,12 @@ export class Utils {
   splitRoute(route) {
     const self = this.$router
 
-    if (!route.match(self.$constants.regex.routeFormat))
+    if (!route.match(self.constants.regex.state.route))
       throw Error(`Route "${route}" did not match expected route format`)
 
     const pattern = route.split('/').slice(1)
     const variables = pattern.filter((item) => {
-      return item.match(self.$constants.regex.routeVariable)
+      return item.match(self.constants.regex.misc.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),
@@ -53,7 +53,7 @@ export class Utils {
   stateByRoute() {
     const self = this.$router
 
-    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    let stubs = self.location.hash.split(self.constants.defaults.hash)
     if (stubs.length == 2)
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
     else
@@ -75,7 +75,7 @@ export class Utils {
 
     if (!state) {
       self.$logger.warn('Route was not matched, defaulting to fallback state')
-      return this.stateByName(self.fallbackState)
+      return this.stateByName(self.settings.fallback)
     }
 
     return state
@@ -90,7 +90,7 @@ export class Utils {
 
     const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
-    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    let stubs = self.location.hash.split(self.constants.defaults.hash)
     if (stubs.length == 2) {
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
       // # remove query string from url

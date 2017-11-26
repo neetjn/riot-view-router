@@ -14,7 +14,7 @@ describe('riot-view-router state reference', function() {
           isLocation('/profile/view/someguy')
           window.clearInterval(locationCheck)
           done()
-        }, router.$constants.intervals.navigate)
+        }, router.constants.intervals.navigate)
       })
     })
 

@@ -36,7 +36,7 @@ export class Tools {
         parsed_opts.qargs = opts._query
         var tag = self.$riot.mount(state.tag, parsed_opts)
         if (state.title) {
-          let title = self.titleRoot ? `${self.titleRoot} - ${state.title}` : state.title
+          let title = self.settings.titleRoot ? `${self.settings.titleRoot} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))
           document.title = title
         }
@@ -46,9 +46,9 @@ export class Tools {
 
       tag[0].on('updated', () => {
         if (self.running) {
-          document.querySelectorAll(`[${self.$constants.defaults.anchorMarker}]`).forEach((el) => {
+          document.querySelectorAll(`[${self.constants.defaults.anchorMarker}]`).forEach((el) => {
             el.onclick = function () {
-              self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker))
+              self.navigate(el.getAttribute(self.constants.defaults.anchorMarker))
             }
           })
         }

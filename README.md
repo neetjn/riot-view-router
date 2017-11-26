@@ -44,19 +44,29 @@ For a quick start using jsdelivr:
 <script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```
 
-**riot-view-router** supports the following options,
+**riot-view-router** supports the following settings,
 
 > **`debugging`**: Will default to true, spits errors and warnings to console.
 
 > **`href`**: Will default to originating location, router will operate off of this.
 
-> **`*defaultState`**: Default state for router to navigate to on start if route not matched.
+> **`*default`**: Default state for router to navigate to on start if route not matched.
 
-> **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
+> **`fallback`**: Will default to fallback, state to fallback to on mismatch.
+
+> **`marker`**: Marker for mounting views, default is `r-view`.
+
+```html
+<r-view></r-view>
+
+or
+
+<div r-view></div>
+```
 
 > **`titleRoot`**: Title prefix for routes using a page title. 
 
-States are composed of the following settings,
+States are composed of the following properties,
 
 > **`*name`**: State name.
 
@@ -77,8 +87,8 @@ import Router from 'riot-view-router'
 
 const options = {
   debugging: true,
-  defaultState: 'home',
-  fallbackState: '404',
+  default: 'home',
+  fallback: '404',
   href: 'https://mysite.com/blogs'
 }
 

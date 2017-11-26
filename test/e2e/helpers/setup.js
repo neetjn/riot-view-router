@@ -6,6 +6,6 @@ function setUp(done) {
   let html = document.createElement('app')
   document.body.appendChild(html)
   riot.mount('app')
-  router = Router.install(riot, mocks.options, mocks.states)
+  router = Router.install(riot, mocks.settings, mocks.states)
   router.start().then(done).catch(failAsyncTest)
 }

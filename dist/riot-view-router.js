@@ -87,9 +87,9 @@ Object.defineProperty(exports, "__esModule", {
 var _core = __webpack_require__(1);
 
 exports.default = {
-  install: function install(_riot, options, states) {
-    var router = new _core.Router(_riot, options, states);
-    _riot.mixin({ router: router });
+  install: function install(instance, options, states) {
+    var router = new _core.Router(instance, options, states);
+    instance.mixin({ router: router });
     return router;
   }
 };
@@ -126,23 +126,25 @@ var Router = exports.Router = function () {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
-   * @param {riot} _riot - Riot instance to target.
-   * @param {object} options - Router options.
+   * @param {riot} instance - Riot instance to target.
+   * @param {object} settings - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  function Router(_riot, options, states) {
+  function Router(instance, settings, states) {
     _classCallCheck(this, Router);
 
     var self = this;
 
+    self.constants = _constants.Constants;
     self.version = _package.version;
-    self.$constants = _constants.Constants;
-    self.$riot = _riot;
+    self.settings = {};
+    self.events = {};
+
+    self.$riot = instance;
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
-    self.$events = {};
 
     Object.defineProperty(self, 'location', {
       get: function get() {
@@ -158,63 +160,60 @@ var Router = exports.Router = function () {
 
     self.running = false;
 
-    var requiredOptions = ['defaultState'];
-    var optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot'];
-    var acceptedOptions = requiredOptions.concat(optionalOptions);
-    for (var option in options) {
-      if (acceptedOptions.indexOf(option) == -1) throw Error('Unknown option "' + option + '" is not supported');
-    } // # validate router optionsu
+    var requiredSettings = ['default'];
+    var optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot'];
+    var acceptedSettings = requiredSettings.concat(optionalSettings);
+    for (var setting in settings) {
+      if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
+    } // # check for unaccepted settings
+    requiredSettings.forEach(function (setting) {
+      if (typeof settings[setting] === 'undefined') throw ReferenceError('Required setting "' + setting + '" not specified');
+    }); // # check for required settings
 
-    self = Object.assign(self, options);
-    self.debugging = self.debugging || false;
+    if (settings.default.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
 
-    if (self.href) if (self.location.href.indexOf(self.href) == -1) throw Error('Defined href not found within location context');
+    for (var _setting in self.settings) {
+      var validator = self.constants.regex.settings[_setting];
+      if (validator && !_setting.match(validator)) throw Error('Setting "' + _setting + '" has an invalid value of "' + settings[_setting] + '"');
+    }
 
-    self.href = self.href || self.location.href.split(self.$constants.defaults.hash)[0];
-    if (!self.href.endsWith('/')) self.href = self.href + '/';
+    self.settings = Object.assign({}, settings);
+    self.settings.debugging = self.settings.debugging || false;
+    self.settings.marker = self.constants.defaults.marker;
+
+    if (self.settings.href) if (self.location.href.indexOf(self.settings.href) == -1) throw Error('Defined href not found within location context');
+
+    self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0];
+    if (!self.settings.href.endsWith('/')) self.settings.href = self.settings.href + '/';
 
     var stateProperties = ['name', 'route', 'tag'];
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(function (state) {
       return Object.assign({}, state);
     });
-    states.forEach(function (state) {
-      if (!state.name.match(self.$constants.regex.stateName)) {
-        throw Error('Invalid state name "' + state.name + '",        state names must be a valid alphanumeric string.');
-      }
-    });
     stateProperties.forEach(function (prop) {
       states.forEach(function (state) {
         if (!state[prop]) throw ReferenceError('Required state option "' + prop + '" not specified');
       });
-    }); // # validate state options
+    }); // # validate state properties
+    states.forEach(function (state) {
+      for (var property in state) {
+        var _validator = self.constants.regex.state[property];
+        if (_validator && !state[property].match(_validator)) throw Error('State "' + state.name + '" property "' + property + '" has an invalid value of "' + state[property] + '"');
+      }
+    }); // # validate state property values
     states.forEach(function (item) {
       item.route = self.$utils.splitRoute(item.route);
     }); // # get route pattern
     self.states = states;
 
-    if (!self.defaultState) throw ReferenceError('Default state must be specified');else {
-      if (self.defaultState.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
+    if (!self.$utils.stateByName(self.settings.default)) throw Error('State "' + self.settings.default + '" not found in specified states');
 
-      if (!self.$utils.stateByName(self.defaultState)) throw Error('State "' + self.defaultState + '" not found in specified states');
-    }
-
-    if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState)) throw Error('Fallback state "' + self.fallbackState + '" not found in specified states');
+    if (self.settings.fallback) {
+      if (!self.$utils.stateByName(self.settings.fallback)) throw Error('Fallback state "' + self.settings.fallback + '" not found in specified states');
     } else {
-      self.$logger.warn('Fallback state not specified, defaulting to "' + self.defaultState + '"');
-      self.fallbackState = self.defaultState;
+      self.$logger.warn('Fallback state not specified, defaulting to "' + self.settings.default + '"');
+      self.settings.fallback = self.settings.default;
     }
-
-    if (self.marker) {
-      if (!self.marker.match(self.$constants.regex.marker)) {
-        self.$logger.warn('Marker "' + self.marker + '" contains unsupported characters');
-        self.$logger.warn('Defaulting to "' + self.$constants.defaults.marker + '"');
-        self.marker = self.$constants.defaults.marker;
-      }
-    } else {
-      self.marker = self.$constants.defaults.marker;
-    }
-    self.marker = self.marker || self.$constants.defaults.marker;
   }
 
   /**
@@ -236,16 +235,16 @@ var Router = exports.Router = function () {
           return reject();
         }
 
-        self.location = self.href + self.$constants.defaults.hash + route;
+        self.location = self.settings.href + self.constants.defaults.hash + route;
         var route_check = setInterval(function () {
-          if (self.location.hash == self.$constants.defaults.hash + route) {
+          if (self.location.hash == self.constants.defaults.hash + route) {
             window.clearInterval(route_check);
             if (!skipPush) self.push().then(function () {
               return self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
             });else self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
           }
-        }, self.$constants.intervals.navigate);
-        setTimeout(reject, self.$constants.defaults.timeout);
+        }, self.constants.intervals.navigate);
+        setTimeout(reject, self.constants.defaults.timeout);
       });
     }
 
@@ -272,7 +271,7 @@ var Router = exports.Router = function () {
           opts = self.$utils.extractRouteVars(state);
         } else var state = self.$utils.stateByName(name);
 
-        var location = self.location.hash.split(self.$constants.defaults.hash)[1];
+        var location = self.location.hash.split(self.constants.defaults.hash)[1];
 
         if (location !== state.route.route) {
           if (!state.route.variables.length) {
@@ -309,7 +308,7 @@ var Router = exports.Router = function () {
         if (!self.running) {
           var _start = function _start() {
             var view_check = window.setInterval(function () {
-              var context = document.querySelector(self.marker) || document.querySelector('[' + self.marker + ']');
+              var context = document.querySelector(self.settings.marker) || document.querySelector('[' + self.settings.marker + ']');
               if (context) {
                 self.context = context;
                 self.push(); // # route to initial state
@@ -319,14 +318,14 @@ var Router = exports.Router = function () {
                 window.clearInterval(view_check);
                 self._dispatch('start').then(resolve).catch(resolve);
               }
-            }, self.$constants.intervals.start); // # search for view context
-            setTimeout(reject, self.$constants.defaults.timeout);
+            }, self.constants.intervals.start); // # search for view context
+            setTimeout(reject, self.constants.defaults.timeout);
           };
 
           self.running = true;
 
-          if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
-            self.navigate(self.$utils.stateByName(self.defaultState).route.route, true).then(_start);
+          if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
+            self.navigate(self.$utils.stateByName(self.settings.default).route.route, true).then(_start);
           } else _start();
         } else {
           self.$logger.error('(start) Router already running');
@@ -391,11 +390,11 @@ var Router = exports.Router = function () {
       var self = this;
 
       return new Promise(function (resolve, reject) {
-        if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        if (!event || self.constants.events.supported.indexOf(event) < -1) {
           self.$logger.error('(on) "' + event + '" is not a supported event');
           reject();
         } else {
-          self.$events[event] = handler;
+          self.events[event] = handler;
           resolve();
         }
       });
@@ -414,11 +413,11 @@ var Router = exports.Router = function () {
       var self = this;
 
       return new Promise(function (resolve) {
-        if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+        if (!event || self.constants.events.supported.indexOf(event) < -1) {
           self.$logger.error('(dispatch) "' + event + '" is not a supported event');
           reject();
         }
-        if (typeof self.$events[event] == 'function') resolve(self.$events[event](params));else reject();
+        if (typeof self.events[event] == 'function') resolve(self.events[event](params));else reject();
       });
     }
   }]);
@@ -450,10 +449,19 @@ var Constants = exports.Constants = {
     timeout: 5000
   },
   regex: {
-    marker: /[a-zA-Z\-]*/g,
-    stateName: /[a-zA-Z0-9]/g,
-    routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
-    routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
+    settings: {
+      default: /[a-zA-Z0-9]/g,
+      fallback: /[a-zA-Z0-9]/g,
+      href: /(www|http:|https:)+[^\s]+[\w]/g,
+      marker: /[a-zA-Z\-]*/g
+    },
+    state: {
+      name: /[a-zA-Z0-9]/g,
+      route: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g
+    },
+    misc: {
+      routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
+    }
   },
   intervals: {
     start: 10,
@@ -535,7 +543,7 @@ var Logger = exports.Logger = function () {
     key: 'log',
     value: function log(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.log(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.log(this._format(message, timestamp));
       this.logs.push({ type: 'general', message: message, timestamp: timestamp });
     }
 
@@ -548,7 +556,7 @@ var Logger = exports.Logger = function () {
     key: 'warn',
     value: function warn(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.warn(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.warn(this._format(message, timestamp));
       this.logs.push({ type: 'warning', message: message, timestamp: timestamp });
     }
 
@@ -561,7 +569,7 @@ var Logger = exports.Logger = function () {
     key: 'error',
     value: function error(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.error(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.error(this._format(message, timestamp));
       this.logs.push({ type: 'critical', message: message, timestamp: timestamp });
     }
   }]);
@@ -630,7 +638,7 @@ var Tools = exports.Tools = function () {
           parsed_opts.qargs = opts._query;
           var tag = self.$riot.mount(state.tag, parsed_opts);
           if (state.title) {
-            var title = self.titleRoot ? self.titleRoot + ' - ' + state.title : state.title;
+            var title = self.settings.titleRoot ? self.settings.titleRoot + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
               return title = title.replace('<' + opt.name + '>', opt.value);
             });
@@ -640,9 +648,9 @@ var Tools = exports.Tools = function () {
 
         tag[0].on('updated', function () {
           if (self.running) {
-            document.querySelectorAll('[' + self.$constants.defaults.anchorMarker + ']').forEach(function (el) {
+            document.querySelectorAll('[' + self.constants.defaults.anchorMarker + ']').forEach(function (el) {
               el.onclick = function () {
-                self.navigate(el.getAttribute(self.$constants.defaults.anchorMarker));
+                self.navigate(el.getAttribute(self.constants.defaults.anchorMarker));
               };
             });
           }
@@ -711,11 +719,11 @@ var Utils = exports.Utils = function () {
     value: function splitRoute(route) {
       var self = this.$router;
 
-      if (!route.match(self.$constants.regex.routeFormat)) throw Error('Route "' + route + '" did not match expected route format');
+      if (!route.match(self.constants.regex.state.route)) throw Error('Route "' + route + '" did not match expected route format');
 
       var pattern = route.split('/').slice(1);
       var variables = pattern.filter(function (item) {
-        return item.match(self.$constants.regex.routeVariable);
+        return item.match(self.constants.regex.misc.routeVariable);
       }).map(function (item) {
         return {
           name: item.split('').slice(1).join(''),
@@ -743,7 +751,7 @@ var Utils = exports.Utils = function () {
     value: function stateByRoute() {
       var self = this.$router;
 
-      var stubs = self.location.hash.split(self.$constants.defaults.hash);
+      var stubs = self.location.hash.split(self.constants.defaults.hash);
       if (stubs.length == 2) stubs = stubs.join('').split('?')[0].split('/').slice(1);else stubs = ['/'];
 
       var state = self.states.find(function (state) {
@@ -772,7 +780,7 @@ var Utils = exports.Utils = function () {
 
       if (!state) {
         self.$logger.warn('Route was not matched, defaulting to fallback state');
-        return this.stateByName(self.fallbackState);
+        return this.stateByName(self.settings.fallback);
       }
 
       return state;
@@ -792,7 +800,7 @@ var Utils = exports.Utils = function () {
         return Object.assign({}, v);
       });
       // # make a deep copy of state variables as to not pollute state
-      var stubs = self.location.hash.split(self.$constants.defaults.hash);
+      var stubs = self.location.hash.split(self.constants.defaults.hash);
       if (stubs.length == 2) {
         stubs = stubs.join('').split('?')[0].split('/').slice(1);
         // # remove query string from url

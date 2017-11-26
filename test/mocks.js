@@ -3,10 +3,10 @@ var mocks = {
   /**
    * Options for riot-view-router
    */
-  options: {
+  settings: {
     debugging: true,
-    defaultState: 'home',
-    fallbackState: '404',
+    default: 'home',
+    fallback: '404',
     titleRoot: 'Test App'
   },
 

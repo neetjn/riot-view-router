@@ -9,21 +9,23 @@ export class Router {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
-   * @param {riot} _riot - Riot instance to target.
-   * @param {object} options - Router options.
+   * @param {riot} instance - Riot instance to target.
+   * @param {object} settings - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (_riot, options, states) {
+  constructor (instance, settings, states) {
     var self = this
 
+    self.constants = Constants
     self.version = version
-    self.$constants = Constants
-    self.$riot = _riot
+    self.settings = {}
+    self.events = {}
+
+    self.$riot = instance
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
-    self.$events = {}
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -39,74 +41,70 @@ export class Router {
 
     self.running = false
 
-    const requiredOptions = ['defaultState']
-    const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
-    const acceptedOptions = requiredOptions.concat(optionalOptions)
-    for (const option in options) {
-      if (acceptedOptions.indexOf(option) == -1)
-        throw Error(`Unknown option "${option}" is not supported`)
-    } // # validate router optionsu
+    const requiredSettings = ['default']
+    const optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot']
+    const acceptedSettings = requiredSettings.concat(optionalSettings)
+    for (const setting in settings) {
+      if (acceptedSettings.indexOf(setting) === -1)
+        throw Error(`Unknown setting "${setting}" is not supported`)
+    } // # check for unaccepted settings
+    requiredSettings.forEach(setting => {
+      if (typeof settings[setting] === 'undefined')
+        throw ReferenceError(`Required setting "${setting}" not specified`)
+    }) // # check for required settings
 
-    self = Object.assign(self, options)
-    self.debugging = self.debugging || false
+    if (settings.default.indexOf(':') > -1)
+      throw Error('Default state route cannot take variable parameters')
 
-    if (self.href)
-      if (self.location.href.indexOf(self.href) == -1)
+    for (const setting in self.settings) {
+      const validator = self.constants.regex.settings[setting]
+      if (validator && !setting.match(validator))
+        throw Error(`Setting "${setting}" has an invalid value of "${settings[setting]}"`)
+    }
+
+    self.settings = Object.assign({}, settings)
+    self.settings.debugging = self.settings.debugging || false
+    self.settings.marker = self.constants.defaults.marker
+
+    if (self.settings.href)
+      if (self.location.href.indexOf(self.settings.href) == -1)
         throw Error('Defined href not found within location context')
 
-    self.href = self.href || self.location.href.split(self.$constants.defaults.hash)[0]
-    if (!self.href.endsWith('/'))
-      self.href = `${self.href}/`
+    self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0]
+    if (!self.settings.href.endsWith('/'))
+      self.settings.href = `${self.settings.href}/`
 
     const stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
-    states.forEach((state) => {
-      if (!state.name.match(self.$constants.regex.stateName)) {
-        throw Error(`Invalid state name "${state.name}",\
-        state names must be a valid alphanumeric string.`)
-      }
-    })
+    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(state => Object.assign({}, state))
     stateProperties.forEach((prop) => {
       states.forEach((state) => {
         if (!state[prop])
           throw ReferenceError(`Required state option "${prop}" not specified`)
       })
-    }) // # validate state options
+    }) // # validate state properties
+    states.forEach((state) => {
+      for (const property in state) {
+        const validator = self.constants.regex.state[property]
+        if (validator && !state[property].match(validator))
+          throw Error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
+      }
+    }) // # validate state property values
     states.forEach(function(item) {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
     self.states = states
 
-    if (!self.defaultState)
-      throw ReferenceError('Default state must be specified')
-    else {
-      if (self.defaultState.indexOf(':') > -1)
-        throw Error('Default state route cannot take variable parameters')
+    if (!self.$utils.stateByName(self.settings.default))
+      throw Error(`State "${self.settings.default}" not found in specified states`)
 
-      if (!self.$utils.stateByName(self.defaultState))
-        throw Error(`State "${self.defaultState}" not found in specified states`)
-    }
-
-    if (self.fallbackState) {
-      if (!self.$utils.stateByName(self.fallbackState))
-        throw Error(`Fallback state "${self.fallbackState}" not found in specified states`)
+    if (self.settings.fallback) {
+      if (!self.$utils.stateByName(self.settings.fallback))
+        throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
     }
     else {
-      self.$logger.warn(`Fallback state not specified, defaulting to "${self.defaultState}"`)
-      self.fallbackState = self.defaultState
+      self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
+      self.settings.fallback = self.settings.default
     }
-
-    if (self.marker) {
-      if (!self.marker.match(self.$constants.regex.marker)) {
-        self.$logger.warn(`Marker "${self.marker}" contains unsupported characters`)
-        self.$logger.warn(`Defaulting to "${self.$constants.defaults.marker}"`)
-        self.marker = self.$constants.defaults.marker
-      }
-    }
-    else {
-      self.marker = self.$constants.defaults.marker
-    }
-    self.marker = self.marker || self.$constants.defaults.marker
   }
 
   /**
@@ -124,17 +122,17 @@ export class Router {
         return reject()
       }
 
-      self.location = self.href + self.$constants.defaults.hash + route
+      self.location = self.settings.href + self.constants.defaults.hash + route
       var route_check = setInterval(() => {
-        if (self.location.hash == self.$constants.defaults.hash + route) {
+        if (self.location.hash == self.constants.defaults.hash + route) {
           window.clearInterval(route_check)
           if (!skipPush)
             self.push().then(() => self._dispatch('navigation', { route }).then(resolve).catch(resolve))
           else
             self._dispatch('navigation', { route }).then(resolve).catch(resolve)
         }
-      }, self.$constants.intervals.navigate)
-      setTimeout(reject, self.$constants.defaults.timeout)
+      }, self.constants.intervals.navigate)
+      setTimeout(reject, self.constants.defaults.timeout)
     })
   }
 
@@ -160,7 +158,7 @@ export class Router {
       else
         var state = self.$utils.stateByName(name)
 
-      const location = self.location.hash.split(self.$constants.defaults.hash)[1]
+      const location = self.location.hash.split(self.constants.defaults.hash)[1]
 
       if (location !== state.route.route) {
         if (!state.route.variables.length) {
@@ -199,7 +197,7 @@ export class Router {
 
         function _start() {
           var view_check = window.setInterval(() => {
-            const context = document.querySelector(self.marker) || document.querySelector(`[${self.marker}]`)
+            const context = document.querySelector(self.settings.marker) || document.querySelector(`[${self.settings.marker}]`)
             if (context) {
               self.context = context
               self.push() // # route to initial state
@@ -207,14 +205,14 @@ export class Router {
               window.clearInterval(view_check)
               self._dispatch('start').then(resolve).catch(resolve)
             }
-          }, self.$constants.intervals.start) // # search for view context
-          setTimeout(reject, self.$constants.defaults.timeout)
+          }, self.constants.intervals.start) // # search for view context
+          setTimeout(reject, self.constants.defaults.timeout)
         }
 
-        if (self.location.hash.split(self.$constants.defaults.hash).length !== 2) {
+        if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
           self.navigate(
             self.$utils.stateByName(
-              self.defaultState
+              self.settings.default
             ).route.route, true).then(_start)
         }
         else
@@ -274,12 +272,12 @@ export class Router {
     const self = this
 
     return new Promise((resolve, reject) => {
-      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+      if (!event || self.constants.events.supported.indexOf(event) < -1) {
         self.$logger.error(`(on) "${event}" is not a supported event`)
         reject()
       }
       else {
-        self.$events[event] = handler
+        self.events[event] = handler
         resolve()
       }
     })
@@ -295,12 +293,12 @@ export class Router {
     const self = this
 
     return new Promise((resolve) => {
-      if (!event || self.$constants.events.supported.indexOf(event) < -1) {
+      if (!event || self.constants.events.supported.indexOf(event) < -1) {
         self.$logger.error(`(dispatch) "${event}" is not a supported event`)
         reject()
       }
-      if (typeof self.$events[event] == 'function')
-        resolve(self.$events[event](params))
+      if (typeof self.events[event] == 'function')
+        resolve(self.events[event](params))
       else
         reject()
     })

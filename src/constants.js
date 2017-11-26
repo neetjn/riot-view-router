@@ -6,10 +6,19 @@ export const Constants = {
     timeout: 5000
   },
   regex: {
-    marker: /[a-zA-Z\-]*/g,
-    stateName: /[a-zA-Z0-9]/g,
-    routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
-    routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
+    settings: {
+      default: /[a-zA-Z0-9]/g,
+      fallback: /[a-zA-Z0-9]/g,
+      href: /(www|http:|https:)+[^\s]+[\w]/g,
+      marker: /[a-zA-Z\-]*/g
+    },
+    state: {
+      name: /[a-zA-Z0-9]/g,
+      route: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g
+    },
+    misc: {
+      routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
+    }
   },
   intervals: {
     start: 10,
