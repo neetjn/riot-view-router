@@ -13,7 +13,7 @@ describe('riot-view-router mixin', function() {
   function bootstrap(settings, states) {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
-    return Router.install(riot, settings || SETTINGS, states || settings)
+    return Router.install(riot, settings || SETTINGS, states || STATES)
   }
 
   it('processes and merges options', function() {

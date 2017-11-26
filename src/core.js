@@ -70,7 +70,7 @@ export class Router {
       self.settings.href = `${self.settings.href}/`
 
     const stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
+    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(state => Object.assign({}, state))
     stateProperties.forEach((prop) => {
       states.forEach((state) => {
         if (!state[prop])
