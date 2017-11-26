@@ -231,7 +231,7 @@ var Router = exports.Router = function () {
           return reject();
         }
 
-        self.location = self.href + self.$constants.defaults.hash + route;
+        self.location = self.settings.href + self.$constants.defaults.hash + route;
         var route_check = setInterval(function () {
           if (self.location.hash == self.$constants.defaults.hash + route) {
             window.clearInterval(route_check);
@@ -634,7 +634,7 @@ var Tools = exports.Tools = function () {
           parsed_opts.qargs = opts._query;
           var tag = self.$riot.mount(state.tag, parsed_opts);
           if (state.title) {
-            var title = self.titleRoot ? self.titleRoot + ' - ' + state.title : state.title;
+            var title = self.settings.titleRoot ? self.settings.titleRoot + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
               return title = title.replace('<' + opt.name + '>', opt.value);
             });
