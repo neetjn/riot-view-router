@@ -54,6 +54,10 @@ export class Router {
     self = Object.assign(self.settings, settings)
     self.settings.debugging = self.settings.debugging || false
 
+    // TODO left here, finish implementation of new constants/regex validations
+    // update marker to read from settings
+    // etc
+
     if (self.href)
       if (self.location.href.indexOf(self.href) == -1)
         throw Error('Defined href not found within location context')
