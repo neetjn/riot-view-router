@@ -9,7 +9,7 @@ export const Constants = {
     marker: /[a-zA-Z\-]*/g,
     stateName: /[a-zA-Z0-9]/g,
     routeFormat: /^\/(?::?[a-zA-Z0-9]+\/?)*$/g,
-    routeVariable: /(:(?!qargs)[a-z]*)/g
+    routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
   },
   intervals: {
     start: 10,
