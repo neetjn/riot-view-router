@@ -24,12 +24,12 @@ export class Utils {
   splitRoute(route) {
     const self = this.$router
 
-    if (!route.match(self.$constants.regex.routeFormat))
+    if (!route.match(self.$constants.regex.state.route))
       throw Error(`Route "${route}" did not match expected route format`)
 
     const pattern = route.split('/').slice(1)
     const variables = pattern.filter((item) => {
-      return item.match(self.$constants.regex.routeVariable)
+      return item.match(self.$constants.regex.misc.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),

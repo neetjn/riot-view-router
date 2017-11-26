@@ -49,7 +49,7 @@ export class Router {
     } // # check for unaccepted settings
     requiredSettings.forEach(setting => {
       if (typeof settings[setting] === 'undefined')
-        throw Error(`Required setting "${setting}" not specified`)
+        throw ReferenceError(`Required setting "${setting}" not specified`)
     }) // # check for required settings
 
     if (settings.default.indexOf(':') > -1)

@@ -166,7 +166,7 @@ var Router = exports.Router = function () {
       if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
     } // # check for unaccepted settings
     requiredSettings.forEach(function (setting) {
-      if (typeof settings[setting] === 'undefined') throw Error('Required setting "' + setting + '" not specified');
+      if (typeof settings[setting] === 'undefined') throw ReferenceError('Required setting "' + setting + '" not specified');
     }); // # check for required settings
 
     if (settings.default.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
@@ -718,11 +718,11 @@ var Utils = exports.Utils = function () {
     value: function splitRoute(route) {
       var self = this.$router;
 
-      if (!route.match(self.$constants.regex.routeFormat)) throw Error('Route "' + route + '" did not match expected route format');
+      if (!route.match(self.$constants.regex.state.route)) throw Error('Route "' + route + '" did not match expected route format');
 
       var pattern = route.split('/').slice(1);
       var variables = pattern.filter(function (item) {
-        return item.match(self.$constants.regex.routeVariable);
+        return item.match(self.$constants.regex.misc.routeVariable);
       }).map(function (item) {
         return {
           name: item.split('').slice(1).join(''),
