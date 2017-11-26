@@ -547,7 +547,7 @@ var Logger = exports.Logger = function () {
     key: 'log',
     value: function log(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.log(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.log(this._format(message, timestamp));
       this.logs.push({ type: 'general', message: message, timestamp: timestamp });
     }
 
@@ -560,7 +560,7 @@ var Logger = exports.Logger = function () {
     key: 'warn',
     value: function warn(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.warn(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.warn(this._format(message, timestamp));
       this.logs.push({ type: 'warning', message: message, timestamp: timestamp });
     }
 
@@ -573,7 +573,7 @@ var Logger = exports.Logger = function () {
     key: 'error',
     value: function error(message) {
       var timestamp = this.time;
-      if (this.$router.debugging) console.error(this._format(message, timestamp));
+      if (this.$router.settings.debugging) console.error(this._format(message, timestamp));
       this.logs.push({ type: 'critical', message: message, timestamp: timestamp });
     }
   }]);
