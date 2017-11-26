@@ -87,9 +87,9 @@ Object.defineProperty(exports, "__esModule", {
 var _core = __webpack_require__(1);
 
 exports.default = {
-  install: function install(_riot, options, states) {
-    var router = new _core.Router(_riot, options, states);
-    _riot.mixin({ router: router });
+  install: function install(instance, options, states) {
+    var router = new _core.Router(instance, options, states);
+    instance.mixin({ router: router });
     return router;
   }
 };
@@ -173,7 +173,7 @@ var Router = exports.Router = function () {
       if (validator && !_setting.match(validator)) throw Error('Setting "' + _setting + '" has an invalid value of "' + settings[_setting] + '"');
     }
 
-    self = Object.assign(self.settings, settings);
+    self.settings = Object.assign({}, settings);
     self.settings.debugging = self.settings.debugging || false;
     self.settings.marker = self.$constants.defaults.marker;
 

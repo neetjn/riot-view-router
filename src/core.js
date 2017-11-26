@@ -57,7 +57,7 @@ export class Router {
         throw Error(`Setting "${setting}" has an invalid value of "${settings[setting]}"`)
     }
 
-    self = Object.assign(self.settings, settings)
+    self.settings = Object.assign({}, settings)
     self.settings.debugging = self.settings.debugging || false
     self.settings.marker = self.$constants.defaults.marker
 

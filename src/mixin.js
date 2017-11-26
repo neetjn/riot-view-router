@@ -2,9 +2,9 @@ import { Router } from './core'
 
 export default {
 
-  install(_riot, options, states) {
-    const router = new Router(_riot, options, states)
-    _riot.mixin({ router })
+  install(instance, options, states) {
+    const router = new Router(instance, options, states)
+    instance.mixin({ router })
     return router
   }
 

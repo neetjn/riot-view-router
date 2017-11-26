@@ -3,7 +3,7 @@ var mocks = {
   /**
    * Options for riot-view-router
    */
-  options: {
+  settings: {
     debugging: true,
     default: 'home',
     fallback: '404',
