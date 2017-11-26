@@ -117,7 +117,7 @@ export class Router {
         return reject()
       }
 
-      self.location = self.href + self.$constants.defaults.hash + route
+      self.location = self.settings.href + self.$constants.defaults.hash + route
       var route_check = setInterval(() => {
         if (self.location.hash == self.$constants.defaults.hash + route) {
           window.clearInterval(route_check)
