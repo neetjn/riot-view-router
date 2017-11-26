@@ -51,12 +51,12 @@ export class Router {
     if (settings.default.indexOf(':') > -1)
       throw Error('Default state route cannot take variable parameters')
 
+    for (const setting in self.settings)
+      if (self.$constants.regex.settings[setting] && !setting.match(self.$constants.regex.settings[setting]))
+        throw Error(`Setting "${setting}" has an invalid value of "${settings[setting]}"`)
+
     self = Object.assign(self.settings, settings)
     self.settings.debugging = self.settings.debugging || false
-
-    // TODO left here, finish implementation of new constants/regex validations
-    // update marker to read from settings
-    // etc
 
     if (self.href)
       if (self.location.href.indexOf(self.href) == -1)
