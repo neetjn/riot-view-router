@@ -51,9 +51,11 @@ export class Router {
     if (settings.default.indexOf(':') > -1)
       throw Error('Default state route cannot take variable parameters')
 
-    for (const setting in self.settings)
-      if (self.$constants.regex.settings[setting] && !setting.match(self.$constants.regex.settings[setting]))
+    for (const setting in self.settings) {
+      const validator = self.$constants.regex.settings[setting]
+      if (validator && !setting.match(validator))
         throw Error(`Setting "${setting}" has an invalid value of "${settings[setting]}"`)
+    }
 
     self = Object.assign(self.settings, settings)
     self.settings.debugging = self.settings.debugging || false
@@ -68,18 +70,19 @@ export class Router {
 
     const stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map((state) => Object.assign({}, state))
-    states.forEach((state) => {
-      if (!state.name.match(self.$constants.regex.stateName)) {
-        throw Error(`Invalid state name "${state.name}",\
-        state names must be a valid alphanumeric string.`)
-      }
-    })
     stateProperties.forEach((prop) => {
       states.forEach((state) => {
         if (!state[prop])
           throw ReferenceError(`Required state option "${prop}" not specified`)
       })
-    }) // # validate state options
+    }) // # validate state properties
+    states.forEach((state) => {
+      for (const property in state) {
+        const validator = self.$constants.regex.state[property]
+        if (validator && !state[property].match(validator))
+          throw Error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
+      }
+    }) // # validate state property values
     states.forEach(function(item) {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
@@ -107,7 +110,6 @@ export class Router {
     else {
       self.settings.marker = self.$constants.defaults.marker
     }
-    self.settings.marker = self.settings.marker || self.$constants.defaults.marker
   }
 
   /**

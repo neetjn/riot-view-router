@@ -168,12 +168,13 @@ var Router = exports.Router = function () {
 
     if (settings.default.indexOf(':') > -1) throw Error('Default state route cannot take variable parameters');
 
+    for (var _setting in self.settings) {
+      var validator = self.$constants.regex.settings[_setting];
+      if (validator && !_setting.match(validator)) throw Error('Setting "' + _setting + '" has an invalid value of "' + settings[_setting] + '"');
+    }
+
     self = Object.assign(self.settings, settings);
     self.settings.debugging = self.settings.debugging || false;
-
-    // TODO left here, finish implementation of new constants/regex validations
-    // update marker to read from settings
-    // etc
 
     if (self.href) if (self.location.href.indexOf(self.href) == -1) throw Error('Defined href not found within location context');
 
@@ -184,16 +185,17 @@ var Router = exports.Router = function () {
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(function (state) {
       return Object.assign({}, state);
     });
-    states.forEach(function (state) {
-      if (!state.name.match(self.$constants.regex.stateName)) {
-        throw Error('Invalid state name "' + state.name + '",        state names must be a valid alphanumeric string.');
-      }
-    });
     stateProperties.forEach(function (prop) {
       states.forEach(function (state) {
         if (!state[prop]) throw ReferenceError('Required state option "' + prop + '" not specified');
       });
-    }); // # validate state options
+    }); // # validate state properties
+    states.forEach(function (state) {
+      for (var property in state) {
+        var _validator = self.$constants.regex.state[property];
+        if (_validator && !state[property].match(_validator)) throw Error('State "' + state.name + '" property "' + property + '" has an invalid value of "' + state[property] + '"');
+      }
+    }); // # validate state property values
     states.forEach(function (item) {
       item.route = self.$utils.splitRoute(item.route);
     }); // # get route pattern
@@ -217,7 +219,6 @@ var Router = exports.Router = function () {
     } else {
       self.settings.marker = self.$constants.defaults.marker;
     }
-    self.settings.marker = self.settings.marker || self.$constants.defaults.marker;
   }
 
   /**
