@@ -177,10 +177,10 @@ var Router = exports.Router = function () {
     self.settings.debugging = self.settings.debugging || false;
     self.settings.marker = self.$constants.defaults.marker;
 
-    if (self.href) if (self.location.href.indexOf(self.href) == -1) throw Error('Defined href not found within location context');
+    if (self.settings.href) if (self.location.href.indexOf(self.settings.href) == -1) throw Error('Defined href not found within location context');
 
-    self.href = self.href || self.location.href.split(self.$constants.defaults.hash)[0];
-    if (!self.href.endsWith('/')) self.href = self.href + '/';
+    self.settings.href = self.settings.href || self.location.href.split(self.$constants.defaults.hash)[0];
+    if (!self.settings.href.endsWith('/')) self.settings.href = self.settings.href + '/';
 
     var stateProperties = ['name', 'route', 'tag'];
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(function (state) {

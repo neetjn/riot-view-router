@@ -61,8 +61,8 @@ export class Router {
     self.settings.debugging = self.settings.debugging || false
     self.settings.marker = self.$constants.defaults.marker
 
-    if (self.href)
-      if (self.location.href.indexOf(self.href) == -1)
+    if (self.settings.href)
+      if (self.location.href.indexOf(self.settings.href) == -1)
         throw Error('Defined href not found within location context')
 
     self.settings.href = self.settings.href || self.location.href.split(self.$constants.defaults.hash)[0]
