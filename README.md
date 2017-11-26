@@ -44,7 +44,7 @@ For a quick start using jsdelivr:
 <script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```
 
-**riot-view-router** supports the following options,
+**riot-view-router** supports the following settings,
 
 > **`debugging`**: Will default to true, spits errors and warnings to console.
 
@@ -56,7 +56,7 @@ For a quick start using jsdelivr:
 
 > **`titleRoot`**: Title prefix for routes using a page title. 
 
-States are composed of the following settings,
+States are composed of the following properties,
 
 > **`*name`**: State name.
 

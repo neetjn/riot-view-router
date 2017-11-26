@@ -9,17 +9,18 @@ export class Router {
   /**
    * Represents the riot-view-router mixin.
    * @constructor
-   * @param {riot} _riot - Riot instance to target.
-   * @param {object} options - Router options.
+   * @param {riot} instance - Riot instance to target.
+   * @param {object} settings - Router options.
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (_riot, options, states) {
+  constructor (instance, settings, states) {
     var self = this
 
     self.version = version
+    self.settings = {}
+    self.$riot = instance
     self.$constants = Constants
-    self.$riot = _riot
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
@@ -39,16 +40,19 @@ export class Router {
 
     self.running = false
 
-    const requiredOptions = ['defaultState']
-    const optionalOptions = ['debugging', 'href', 'fallbackState', 'titleRoot']
-    const acceptedOptions = requiredOptions.concat(optionalOptions)
-    for (const option in options) {
-      if (acceptedOptions.indexOf(option) == -1)
-        throw Error(`Unknown option "${option}" is not supported`)
-    } // # validate router optionsu
+    const requiredSettings = ['defaultState']
+    const optionalSettings = ['debugging', 'href', 'fallbackState', 'titleRoot']
+    const acceptedSettings = requiredSettings.concat(optionalSettings)
+    for (const setting in settings) {
+      if (acceptedSettings.indexOf(setting) == -1)
+        throw Error(`Unknown setting "${setting}" is not supported`)
+    } // # validate router settings
 
-    self = Object.assign(self, options)
-    self.debugging = self.debugging || false
+    if (settings.defaultState.indexOf(':') > -1)
+      throw Error('Default state route cannot take variable parameters')
+
+    self = Object.assign(self.settings, settings)
+    self.settings.debugging = self.settings.debugging || false
 
     if (self.href)
       if (self.location.href.indexOf(self.href) == -1)
@@ -77,15 +81,8 @@ export class Router {
     }) // # get route pattern
     self.states = states
 
-    if (!self.defaultState)
-      throw ReferenceError('Default state must be specified')
-    else {
-      if (self.defaultState.indexOf(':') > -1)
-        throw Error('Default state route cannot take variable parameters')
-
-      if (!self.$utils.stateByName(self.defaultState))
-        throw Error(`State "${self.defaultState}" not found in specified states`)
-    }
+    if (!self.$utils.stateByName(self.defaultState))
+      throw Error(`State "${self.defaultState}" not found in specified states`)
 
     if (self.fallbackState) {
       if (!self.$utils.stateByName(self.fallbackState))
