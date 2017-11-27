@@ -64,7 +64,7 @@ export class Router {
 
     self.settings = Object.assign({}, settings)
     self.settings.debugging = self.settings.debugging || false
-    self.settings.useFragments = self.settings.useFragments || true
+    self.settings.fragments = self.settings.fragments || true
     self.settings.marker = self.settings.marker || self.constants.defaults.marker
 
     if (self.settings.href)

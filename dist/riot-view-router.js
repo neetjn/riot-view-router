@@ -161,7 +161,7 @@ var Router = exports.Router = function () {
     self.running = false;
 
     var requiredSettings = ['default'];
-    var optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot'];
+    var optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot'];
     var acceptedSettings = requiredSettings.concat(optionalSettings);
     for (var setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
@@ -179,7 +179,8 @@ var Router = exports.Router = function () {
 
     self.settings = Object.assign({}, settings);
     self.settings.debugging = self.settings.debugging || false;
-    self.settings.marker = self.constants.defaults.marker;
+    self.settings.fragments = self.settings.fragments || true;
+    self.settings.marker = self.settings.marker || self.constants.defaults.marker;
 
     if (self.settings.href) if (self.location.href.indexOf(self.settings.href) == -1) throw Error('Defined href not found within location context');
 
@@ -752,7 +753,11 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.hash.split(self.constants.defaults.hash);
-      if (stubs.length == 2) stubs = stubs.join('').split('?')[0].split('/').slice(1);else stubs = ['/'];
+      if (stubs.length == 2) {
+        if (self.settings.fragments) stubs = stubs.join('').split('#')[0].split();
+        console.log(stubs);
+        stubs = stubs.join('').split('?')[0].split('/').slice(1);
+      } else stubs = ['/'];
 
       var state = self.states.find(function (state) {
         var route = state.route;
@@ -802,6 +807,7 @@ var Utils = exports.Utils = function () {
       // # make a deep copy of state variables as to not pollute state
       var stubs = self.location.hash.split(self.constants.defaults.hash);
       if (stubs.length == 2) {
+        if (self.settings.fragments) stubs = stubs.join('').split('#')[0].split();
         stubs = stubs.join('').split('?')[0].split('/').slice(1);
         // # remove query string from url
         variables.forEach(function (variable) {
