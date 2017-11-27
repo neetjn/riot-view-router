@@ -42,7 +42,7 @@ export class Router {
     self.running = false
 
     const requiredSettings = ['default']
-    const optionalSettings = ['debugging', 'fallback', 'href', 'jumping', 'marker', 'titleRoot']
+    const optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot']
     const acceptedSettings = requiredSettings.concat(optionalSettings)
     for (const setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1)
@@ -64,7 +64,7 @@ export class Router {
 
     self.settings = Object.assign({}, settings)
     self.settings.debugging = self.settings.debugging || false
-    self.settings.jumping = self.settings.jumping || true
+    self.settings.useFragments = self.settings.useFragments || true
     self.settings.marker = self.settings.marker || self.constants.defaults.marker
 
     if (self.settings.href)

@@ -46,15 +46,17 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following settings,
 
-> **`debugging`**: Will default to true, spits errors and warnings to console.
+> **`debugging`** ; `bool` : Will default to true, spits errors and warnings to console.
 
-> **`href`**: Will default to originating location, router will operate off of this.
+> **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
-> **`*default`**: Default state for router to navigate to on start if route not matched.
+> **`fragments`** ; `bool` : Will support fragment identification.
 
-> **`fallback`**: Will default to fallback, state to fallback to on mismatch.
+> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
 
-> **`marker`**: Marker for mounting views, default is `r-view`.
+> **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
+
+> **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
 
 ```html
 <r-view></r-view>
