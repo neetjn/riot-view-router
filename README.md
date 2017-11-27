@@ -50,7 +50,7 @@ For a quick start using jsdelivr:
 
 > **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
-> **`fragments`** ; `bool` : Will support fragment identification.
+> **`fragments`** ; `bool` : Will default to true, adds support for fragment identification.
 
 > **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
 
@@ -70,17 +70,17 @@ or
 
 States are composed of the following properties,
 
-> **`*name`**: State name.
+> **`*name`** ; `string` : State name.
 
-> **`*route`**: Route to match state by.
+> **`*route`** ; `string` : Route to match state by.
 
-> **`*tag`**: Tag to inject into rout view, mount.
+> **`*tag`** ; `string` : Tag to inject into rout view, mount.
 
-> **`title`**: Title to set window.
+> **`title`** ; `string` : Title to set window.
 
-> **`onEnter(*handler)`**: Callback for entering state.
+> **`onEnter(*handler)`** ; `function` : Callback for entering state.
 
-> **`onLeave(*handler)`**: Callback for leaving state.
+> **`onLeave(*handler)`** ; `function` : Callback for leaving state.
 
 Using the mixin is then as simple as,
 
