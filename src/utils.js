@@ -57,7 +57,6 @@ export class Utils {
     if (stubs.length == 2) {
       if (self.settings.fragments)
         stubs = stubs.join('').split('#')[0].split()
-      console.log(stubs)
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
     }
     else
@@ -98,6 +97,8 @@ export class Utils {
     if (stubs.length == 2) {
       if (self.settings.fragments)
         stubs = stubs.join('').split('#')[0].split()
+      console.log(stubs)
+      // TODO: left here,stubs isn't showing hash but hash is being processed into vars?
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
       // # remove query string from url
       variables.forEach((variable) => {
