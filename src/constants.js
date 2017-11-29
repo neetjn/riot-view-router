@@ -22,7 +22,8 @@ export const Constants = {
   },
   intervals: {
     start: 10,
-    navigate: 50
+    navigate: 50,
+    fragments: 250
   },
   events: {
     supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],

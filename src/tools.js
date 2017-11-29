@@ -55,6 +55,17 @@ export class Tools {
       }) // # observable for binding sref occurrences
       tag[0].trigger('updated') // # trigger sref binding
 
+      if (self.settings.fragments) {
+        let fragment = self.location.hash.split(self.constants.defaults.hash)
+        if (fragment.length == 2) {
+          fragment = fragment[1].slice(0, fragment[1].indexOf('?')).split('#')
+          if (fragment.length == 2 && document.querySelector(`#${fragment[1]}`))
+            setTimeout(() => {
+              document.querySelector(`#${fragment[1]}`).scrollIntoView()
+            }, self.constants.intervals.fragments)
+        }
+      }
+
       self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
