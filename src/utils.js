@@ -94,17 +94,17 @@ export class Utils {
     const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
     let stubs = self.location.hash.split(self.constants.defaults.hash)
+    let query = []
     if (stubs.length == 2) {
-      if (self.settings.fragments)
+      if (self.settings.fragments) {
         stubs = stubs.join('').split('#')[0].split()
-      console.log(stubs)
-      // TODO: left here,stubs isn't showing hash but hash is being processed into vars?
+        query = self.location.hash.split('#')[0].split('?')
+      } else
+        query = self.location.hash.split('?')
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
-      // # remove query string from url
       variables.forEach((variable) => {
         variable.value = stubs[variable.position]
       })
-      const query = self.location.hash.split('?')
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {
