@@ -56,17 +56,24 @@ export class Tools {
       tag[0].trigger('updated') // # trigger sref binding
 
       if (self.settings.fragments) {
-        let fragment = self.location.hash.split(self.constants.defaults.hash)
-        if (fragment.length == 2) {
-          fragment = fragment[1].slice(0, fragment[1].indexOf('?')).split('#')
-          if (fragment.length == 2 && document.querySelector(`#${fragment[1]}`))
-            setTimeout(() => {
+        const fragment = self.location.hash.split(self.constants.defaults.hash).join('').split('#')
+        if (fragment.length === 2) {
+          let attempts = 0
+          const search = setInterval(() => {
+            attempts += 1
+            if (document.querySelector(`#${fragment[1]}`)) {
               document.querySelector(`#${fragment[1]}`).scrollIntoView()
-            }, self.constants.intervals.fragments)
+              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              clearInterval(search)
+            } else if (attempts * self.constants.intervals.fragments >= self.constants.waits.fragments) {
+              self.$logger.error(`(transition) Fragment identifier "#${fragment[1]}" not found.`)
+              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              clearInterval(search)
+            }
+          }, self.constants.intervals.fragments)
         }
-      }
-
-      self._dispatch('transition', { state }).then(resolve).catch(resolve)
+      } else
+        self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
 

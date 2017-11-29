@@ -469,6 +469,9 @@ var Constants = exports.Constants = {
     navigate: 50,
     fragments: 250
   },
+  waits: {
+    fragments: 2000
+  },
   events: {
     supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],
     delay: 0
@@ -660,16 +663,23 @@ var Tools = exports.Tools = function () {
         tag[0].trigger('updated'); // # trigger sref binding
 
         if (self.settings.fragments) {
-          var fragment = self.location.hash.split(self.constants.defaults.hash);
-          if (fragment.length == 2) {
-            fragment = fragment[1].slice(0, fragment[1].indexOf('?')).split('#');
-            if (fragment.length == 2 && document.querySelector('#' + fragment[1])) setTimeout(function () {
-              document.querySelector('#' + fragment[1]).scrollIntoView();
+          var fragment = self.location.hash.split(self.constants.defaults.hash).join('').split('#');
+          if (fragment.length === 2) {
+            var attempts = 0;
+            var search = setInterval(function () {
+              attempts += 1;
+              if (document.querySelector('#' + fragment[1])) {
+                document.querySelector('#' + fragment[1]).scrollIntoView();
+                self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+                clearInterval(search);
+              } else if (attempts * self.constants.intervals.fragments >= self.constants.waits.fragments) {
+                self.$logger.error('(transition) Fragment identifier "#' + fragment[1] + '" not found.');
+                self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+                clearInterval(search);
+              }
             }, self.constants.intervals.fragments);
           }
-        }
-
-        self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+        } else self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
       });
     }
   }]);
