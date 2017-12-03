@@ -161,7 +161,7 @@ var Router = exports.Router = function () {
     self.running = false;
 
     var requiredSettings = ['default'];
-    var optionalSettings = ['debugging', 'href', 'fallback', 'titleRoot'];
+    var optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot'];
     var acceptedSettings = requiredSettings.concat(optionalSettings);
     for (var setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
@@ -179,7 +179,8 @@ var Router = exports.Router = function () {
 
     self.settings = Object.assign({}, settings);
     self.settings.debugging = self.settings.debugging || false;
-    self.settings.marker = self.constants.defaults.marker;
+    self.settings.fragments = self.settings.fragments || true;
+    self.settings.marker = self.settings.marker || self.constants.defaults.marker;
 
     if (self.settings.href) if (self.location.href.indexOf(self.settings.href) == -1) throw Error('Defined href not found within location context');
 
@@ -465,7 +466,11 @@ var Constants = exports.Constants = {
   },
   intervals: {
     start: 10,
-    navigate: 50
+    navigate: 50,
+    fragments: 250
+  },
+  waits: {
+    fragments: 2000
   },
   events: {
     supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],
@@ -657,7 +662,24 @@ var Tools = exports.Tools = function () {
         }); // # observable for binding sref occurrences
         tag[0].trigger('updated'); // # trigger sref binding
 
-        self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+        if (self.settings.fragments) {
+          var fragment = self.location.hash.split(self.constants.defaults.hash).join('').split('#');
+          if (fragment.length === 2) {
+            var attempts = 0;
+            var search = setInterval(function () {
+              attempts += 1;
+              if (document.querySelector('#' + fragment[1])) {
+                document.querySelector('#' + fragment[1]).scrollIntoView();
+                self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+                clearInterval(search);
+              } else if (attempts * self.constants.intervals.fragments >= self.constants.waits.fragments) {
+                self.$logger.error('(transition) Fragment identifier "#' + fragment[1] + '" not found.');
+                self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
+                clearInterval(search);
+              }
+            }, self.constants.intervals.fragments);
+          }
+        } else self._dispatch('transition', { state: state }).then(resolve).catch(resolve);
       });
     }
   }]);
@@ -752,7 +774,10 @@ var Utils = exports.Utils = function () {
       var self = this.$router;
 
       var stubs = self.location.hash.split(self.constants.defaults.hash);
-      if (stubs.length == 2) stubs = stubs.join('').split('?')[0].split('/').slice(1);else stubs = ['/'];
+      if (stubs.length == 2) {
+        if (self.settings.fragments) stubs = stubs.join('').split('#')[0].split();
+        stubs = stubs.join('').split('?')[0].split('/').slice(1);
+      } else stubs = ['/'];
 
       var state = self.states.find(function (state) {
         var route = state.route;
@@ -801,13 +826,16 @@ var Utils = exports.Utils = function () {
       });
       // # make a deep copy of state variables as to not pollute state
       var stubs = self.location.hash.split(self.constants.defaults.hash);
+      var query = [];
       if (stubs.length == 2) {
+        if (self.settings.fragments) {
+          stubs = stubs.join('').split('#')[0].split();
+          query = self.location.hash.split('#')[1].split('?');
+        } else query = self.location.hash.split('?');
         stubs = stubs.join('').split('?')[0].split('/').slice(1);
-        // # remove query string from url
         variables.forEach(function (variable) {
           variable.value = stubs[variable.position];
         });
-        var query = self.location.hash.split('?');
         if (query.length == 2) {
           variables._query = {};
           query[1].split('&').forEach(function (fragment) {

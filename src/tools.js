@@ -55,7 +55,25 @@ export class Tools {
       }) // # observable for binding sref occurrences
       tag[0].trigger('updated') // # trigger sref binding
 
-      self._dispatch('transition', { state }).then(resolve).catch(resolve)
+      if (self.settings.fragments) {
+        const fragment = self.location.hash.split(self.constants.defaults.hash).join('').split('#')
+        if (fragment.length === 2) {
+          let attempts = 0
+          const search = setInterval(() => {
+            attempts += 1
+            if (document.querySelector(`#${fragment[1]}`)) {
+              document.querySelector(`#${fragment[1]}`).scrollIntoView()
+              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              clearInterval(search)
+            } else if (attempts * self.constants.intervals.fragments >= self.constants.waits.fragments) {
+              self.$logger.error(`(transition) Fragment identifier "#${fragment[1]}" not found.`)
+              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              clearInterval(search)
+            }
+          }, self.constants.intervals.fragments)
+        }
+      } else
+        self._dispatch('transition', { state }).then(resolve).catch(resolve)
     })
   }
 

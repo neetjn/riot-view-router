@@ -46,15 +46,17 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following settings,
 
-> **`debugging`**: Will default to true, spits errors and warnings to console.
+> **`debugging`** ; `bool` : Will default to true, spits errors and warnings to console.
 
-> **`href`**: Will default to originating location, router will operate off of this.
+> **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
-> **`*default`**: Default state for router to navigate to on start if route not matched.
+> **`fragments`** ; `bool` : Will default to true, adds support for fragment identification.
 
-> **`fallback`**: Will default to fallback, state to fallback to on mismatch.
+> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
 
-> **`marker`**: Marker for mounting views, default is `r-view`.
+> **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
+
+> **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
 
 ```html
 <r-view></r-view>
@@ -68,17 +70,17 @@ or
 
 States are composed of the following properties,
 
-> **`*name`**: State name.
+> **`*name`** ; `string` : State name.
 
-> **`*route`**: Route to match state by.
+> **`*route`** ; `string` : Route to match state by.
 
-> **`*tag`**: Tag to inject into rout view, mount.
+> **`*tag`** ; `string` : Tag to inject into rout view, mount.
 
-> **`title`**: Title to set window.
+> **`title`** ; `string` : Title to set window.
 
-> **`onEnter(*handler)`**: Callback for entering state.
+> **`onEnter(*handler)`** ; `function` : Callback for entering state.
 
-> **`onLeave(*handler)`**: Callback for leaving state.
+> **`onLeave(*handler)`** ; `function` : Callback for leaving state.
 
 Using the mixin is then as simple as,
 

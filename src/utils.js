@@ -54,8 +54,11 @@ export class Utils {
     const self = this.$router
 
     let stubs = self.location.hash.split(self.constants.defaults.hash)
-    if (stubs.length == 2)
+    if (stubs.length == 2) {
+      if (self.settings.fragments)
+        stubs = stubs.join('').split('#')[0].split()
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
+    }
     else
       stubs = ['/']
 
@@ -91,13 +94,17 @@ export class Utils {
     const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
     let stubs = self.location.hash.split(self.constants.defaults.hash)
+    let query = []
     if (stubs.length == 2) {
+      if (self.settings.fragments) {
+        stubs = stubs.join('').split('#')[0].split()
+        query = self.location.hash.split('#')[1].split('?')
+      } else
+        query = self.location.hash.split('?')
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
-      // # remove query string from url
       variables.forEach((variable) => {
         variable.value = stubs[variable.position]
       })
-      const query = self.location.hash.split('?')
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {
