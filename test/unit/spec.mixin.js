@@ -3,23 +3,23 @@ var mocks = require('../mocks')
 
 var Router = require('../../dist/riot-view-router')
 
-var OPTIONS = mocks.options
+var SETTINGS = mocks.settings
 var STATES = mocks.states
 
 describe('riot-view-router mixin', function() {
 
   riot = require('riot')
 
-  function bootstrap(options, states) {
+  function bootstrap(settings, states) {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
-    return Router.install(riot, options || OPTIONS, states || STATES)
+    return Router.install(riot, settings || SETTINGS, states || STATES)
   }
 
   it('processes and merges options', function() {
     var router = bootstrap()
-    for (var opt in OPTIONS) {
-      expect(router[opt]).toBe(OPTIONS[opt])
+    for (var opt in SETTINGS) {
+      expect(router.settings[opt]).toBe(SETTINGS[opt])
     }
   })
 
@@ -41,9 +41,9 @@ describe('riot-view-router mixin', function() {
   })
 
   it('splits state routes with variables as intended', function() {
-    var router = bootstrap(OPTIONS, STATES)
+    var router = bootstrap()
     var variables = router.states.find(function(state) {
-      return state.name == 'profile'
+      return state.name === 'profile'
     }).route.variables // # get variables processed by route splitter
     expect(variables.length).toBe(1)
     expect(variables[0].name).toBe('username') // # check name
@@ -52,10 +52,10 @@ describe('riot-view-router mixin', function() {
 
   it('debugging option is defaulted to false', function() {
     var router = bootstrap({
-      defaultState: 'home',
-      fallbackState: '404'
+      default: 'home',
+      fallback: '404'
     }, STATES)
-    expect(router.debugging).toBe(false)
+    expect(router.settings.debugging).toBe(false)
   })
 
   it('default state is enforced', function() {
@@ -79,6 +79,7 @@ describe('riot-view-router mixin', function() {
   it('logger logstore functions as expected', function() {
     var router = bootstrap()
     expect(router.$logger).toBeDefined()
+    expect(router.$logger.$router.settings.debugging).toBeTruthy()
     var message = random.string(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     var types = {
       log: 'general',

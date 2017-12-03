@@ -39,7 +39,7 @@ export class Logger {
    */
   log (message) {
     const timestamp = this.time
-    if (this.$router.debugging)
+    if (this.$router.settings.debugging)
       console.log(this._format(message, timestamp))
     this.logs.push({ type: 'general', message, timestamp })
   }
@@ -50,7 +50,7 @@ export class Logger {
    */
   warn (message) {
     const timestamp = this.time
-    if (this.$router.debugging)
+    if (this.$router.settings.debugging)
       console.warn(this._format(message, timestamp))
     this.logs.push({ type: 'warning', message, timestamp })
   }
@@ -61,7 +61,7 @@ export class Logger {
    */
   error (message) {
     const timestamp = this.time
-    if (this.$router.debugging)
+    if (this.$router.settings.debugging)
       console.error(this._format(message, timestamp))
     this.logs.push({ type: 'critical', message, timestamp })
   }

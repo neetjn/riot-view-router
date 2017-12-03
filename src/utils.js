@@ -24,12 +24,12 @@ export class Utils {
   splitRoute(route) {
     const self = this.$router
 
-    if (!route.match(self.$constants.regex.routeFormat))
+    if (!route.match(self.constants.regex.state.route))
       throw Error(`Route "${route}" did not match expected route format`)
 
     const pattern = route.split('/').slice(1)
     const variables = pattern.filter((item) => {
-      return item.match(self.$constants.regex.routeVariable)
+      return item.match(self.constants.regex.misc.routeVariable)
     }).map((item) => {
       return {
         name: item.split('').slice(1).join(''),
@@ -53,9 +53,12 @@ export class Utils {
   stateByRoute() {
     const self = this.$router
 
-    let stubs = self.location.hash.split(self.$constants.defaults.hash)
-    if (stubs.length == 2)
+    let stubs = self.location.hash.split(self.constants.defaults.hash)
+    if (stubs.length == 2) {
+      if (self.settings.fragments)
+        stubs = stubs.join('').split('#')[0].split()
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
+    }
     else
       stubs = ['/']
 
@@ -75,7 +78,7 @@ export class Utils {
 
     if (!state) {
       self.$logger.warn('Route was not matched, defaulting to fallback state')
-      return this.stateByName(self.fallbackState)
+      return this.stateByName(self.settings.fallback)
     }
 
     return state
@@ -90,14 +93,18 @@ export class Utils {
 
     const variables = state.route.variables.map(v => Object.assign({}, v))
     // # make a deep copy of state variables as to not pollute state
-    let stubs = self.location.hash.split(self.$constants.defaults.hash)
+    let stubs = self.location.hash.split(self.constants.defaults.hash)
+    let query = []
     if (stubs.length == 2) {
+      if (self.settings.fragments) {
+        stubs = stubs.join('').split('#')[0].split()
+        query = self.location.hash.split('#')[1].split('?')
+      } else
+        query = self.location.hash.split('?')
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
-      // # remove query string from url
       variables.forEach((variable) => {
         variable.value = stubs[variable.position]
       })
-      const query = self.location.hash.split('?')
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {

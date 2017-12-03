@@ -15,6 +15,8 @@
 
 **riot-view-router** is a lightweight, extensive state based riot.js router for tag views. It was designed after the ui-router project, with all the quirks of riot.js.
 
+This project makes use of the HTML5 history api, using `pushState` under the hood.
+
 ### Support
 
 | Chome  | Edge | Firefox | Opera    | Safari |
@@ -42,41 +44,53 @@ For a quick start using jsdelivr:
 <script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```
 
-**riot-view-router** supports the following options,
+**riot-view-router** supports the following settings,
 
-> **`debugging`**: Will default to true, spits errors and warnings to console.
+> **`debugging`** ; `bool` : Will default to true, spits errors and warnings to console.
 
-> **`href`**: Will default to originating location, router will operate off of this.
+> **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
-> **`*defaultState`**: Default state for router to navigate to on start if route not matched.
+> **`fragments`** ; `bool` : Will default to true, adds support for fragment identification.
 
-> **`fallbackState`**: Will default to fallbackState, state to fallback to on mismatch.
+> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
+
+> **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
+
+> **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
+
+```html
+<r-view></r-view>
+
+or
+
+<div r-view></div>
+```
 
 > **`titleRoot`**: Title prefix for routes using a page title. 
 
-States are composed of the following settings,
+States are composed of the following properties,
 
-> **`*name`**: State name.
+> **`*name`** ; `string` : State name.
 
-> **`*route`**: Route to match state by.
+> **`*route`** ; `string` : Route to match state by.
 
-> **`*tag`**: Tag to inject into rout view, mount.
+> **`*tag`** ; `string` : Tag to inject into rout view, mount.
 
-> **`title`**: Title to set window.
+> **`title`** ; `string` : Title to set window.
 
-> **`onEnter(*handler)`**: Callback for entering state.
+> **`onEnter(*handler)`** ; `function` : Callback for entering state.
 
-> **`onLeave(*handler)`**: Callback for leaving state.
+> **`onLeave(*handler)`** ; `function` : Callback for leaving state.
 
 Using the mixin is then as simple as,
 
 ```js
 import Router from 'riot-view-router'
 
-const options = {
+const settings = {
   debugging: true,
-  defaultState: 'home',
-  fallbackState: '404',
+  default: 'home',
+  fallback: '404',
   href: 'https://mysite.com/blogs'
 }
 
@@ -107,7 +121,7 @@ const states = [
   }
 ]
 
-const router = Router.install(riot, options, states)
+const router = Router.install(riot, settings, states)
 
 router.on('start', () => {
   console.log('hello world!')
