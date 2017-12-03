@@ -98,7 +98,7 @@ export class Utils {
     if (stubs.length == 2) {
       if (self.settings.fragments) {
         stubs = stubs.join('').split('#')[0].split()
-        query = self.location.hash.split('#')[0].split('?')
+        query = self.location.hash.split('#')[1].split('?')
       } else
         query = self.location.hash.split('?')
       stubs = stubs.join('').split('?')[0].split('/').slice(1)

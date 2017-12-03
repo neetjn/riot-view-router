@@ -45,6 +45,7 @@ describe('riot-view-router', function() {
       router.navigate('/profile/view/john?views=alot').then(() => {
         isLocation('/profile/view/john?views=alot')
         isRendered('profile')
+        console.log(document.body.innerHTML)
         expect(document.querySelector('#views').innerText).toBe('alot')
         done()
       }).catch(failAsyncTest)
