@@ -87,7 +87,7 @@ Using the mixin is then as simple as,
 ```js
 import Router from 'riot-view-router'
 
-const options = {
+const settings = {
   debugging: true,
   default: 'home',
   fallback: '404',
@@ -121,7 +121,7 @@ const states = [
   }
 ]
 
-const router = Router.install(riot, options, states)
+const router = Router.install(riot, settings, states)
 
 router.on('start', () => {
   console.log('hello world!')
