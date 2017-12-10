@@ -143,6 +143,8 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
 </sometag>
 ```
 
+`r-sref` can be used with complete routes, or state names.
+
 Both route and query string variables can also be accessed directly via the target tag with opts. Take for example navigating to the url `.../!#/profile/john?views=1` with the route pattern `/profile/:username`.
 
 ```
