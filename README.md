@@ -134,12 +134,12 @@ You may then access the `Router` instance via your tags with `router` like so,
 </app>
 ```
 
-To navigate to a route within your riot tags, you may use `r-sref` to reference a state on any element supporting a click event listener,
+To navigate to a route within your riot tags, you may use `r-sref` to reference a state on any element supporting a click event listener. `r-sref` can be used with both complete routes and state names.
 
 ```html
 <sometag>
   <button r-sref="/profile/{username}">Navigate to profile</button>
-  <a r-sref="/profile/{username}">Navigate to profile</a>
+  <a r-sref="about">About Page</a>
 </sometag>
 ```
 
