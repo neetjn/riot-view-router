@@ -48,7 +48,7 @@ export class Tools {
         if (self.running) {
           document.querySelectorAll(`[${self.constants.defaults.anchorMarker}]`).forEach((el) => {
             el.onclick = function () {
-              const sref = el.getAttribute(self.constants.defaults.anchorMarker);
+              const sref = el.getAttribute(self.constants.defaults.anchorMarker)
               if (self.$utils.stateByName(sref)) {
                 const state = self.$utils.stateByName(sref)
                 if (!state.route.variables.length) {
