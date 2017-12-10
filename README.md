@@ -134,7 +134,7 @@ You may then access the `Router` instance via your tags with `router` like so,
 </app>
 ```
 
-To navigate to a route within your riot tags, you may use `r-sref` to reference a state on any element supporting a click event listener,
+To navigate to a route within your riot tags, you may use `r-sref` to reference a state on any element supporting a click event listener. `r-sref` can be used with both complete routes and state names.
 
 ```html
 <sometag>
@@ -142,8 +142,6 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
   <a r-sref="about">About Page</a>
 </sometag>
 ```
-
-`r-sref` can be used with both complete routes and state names.
 
 Both route and query string variables can also be accessed directly via the target tag with opts. Take for example navigating to the url `.../!#/profile/john?views=1` with the route pattern `/profile/:username`.
 
