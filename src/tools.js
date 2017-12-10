@@ -48,7 +48,17 @@ export class Tools {
         if (self.running) {
           document.querySelectorAll(`[${self.constants.defaults.anchorMarker}]`).forEach((el) => {
             el.onclick = function () {
-              self.navigate(el.getAttribute(self.constants.defaults.anchorMarker))
+              const sref = el.getAttribute(self.constants.defaults.anchorMarker);
+              if (self.$utils.stateByName(sref)) {
+                const state = self.$utils.stateByName(sref)
+                if (!state.route.variables.length) {
+                  self.navigate(state.route.route)
+                } else {
+                  self.$logger.error('(transition) Could not navigate to state due to expected route variables.')
+                }
+              } else {
+                self.navigate(sref)
+              }
             }
           })
         }
