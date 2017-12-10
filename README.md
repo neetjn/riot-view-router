@@ -139,7 +139,7 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
 ```html
 <sometag>
   <button r-sref="/profile/{username}">Navigate to profile</button>
-  <a r-sref="/profile/{username}">Navigate to profile</a>
+  <a r-sref="about">About Page</a>
 </sometag>
 ```
 
