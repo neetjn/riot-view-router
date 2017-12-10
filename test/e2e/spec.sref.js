@@ -19,9 +19,9 @@ describe('riot-view-router state reference', function() {
   })
 
   it('should redirect to given state by name', function(done) {
-    document.querySelector('button[r-sref]').click()
+    document.querySelector('a[r-sref]').click()
     var locationCheck = setInterval(() => {
-      isLocation('/profile/view/someguy')
+      isLocation('/about')
       window.clearInterval(locationCheck)
       done()
     }, router.constants.intervals.navigate)
