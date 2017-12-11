@@ -9,7 +9,14 @@ module.exports = function (config) {
       'e2e/helpers/*.js',
       'e2e/spec.*.js'
     ],
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+    preprocessors: {
+      '../dist/riot-view-router.js': ['coverage']
+    },
+    coverageReporter: {
+      type : 'html',
+      dir : '../coverage/'
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
