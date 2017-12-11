@@ -2,7 +2,7 @@
 
 [![build](https://travis-ci.org/neetjn/riot-view-router.svg?branch=master)](https://travis-ci.org/neetjn/riot-view-router/)
 [![npm version](https://badge.fury.io/js/riot-view-router.svg)](https://badge.fury.io/js/riot-view-router)
-[![Code Health](https://landscape.io/github/neetjn/riot-view-router/master/landscape.svg?style=flat)](https://landscape.io/github/neetjn/riot-view-router/master)
+[![codecov](https://codecov.io/gh/neetjn/riot-view-router/branch/master/graph/badge.svg)](https://codecov.io/gh/neetjn/riot-view-router)
 [![Join the chat at https://gitter.im/riot-view-router/Lobby](https://badges.gitter.im/riot-view-router/Lobby.svg)](https://gitter.im/riot-view-router/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![NPM](https://nodei.co/npm/riot-view-router.png)](https://nodei.co/npm/riot-view-router/)
