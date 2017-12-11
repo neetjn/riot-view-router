@@ -14,8 +14,11 @@ module.exports = function (config) {
       '../dist/riot-view-router.js': ['coverage']
     },
     coverageReporter: {
-      type : 'html',
-      dir : '../coverage/'
+      reporters: [
+        {type : 'html', dir : '../coverage/'},
+        {type:'lcovonly', dir : '../coverage/'},
+        {type:'json', dir : '../coverage/'}
+      ]
     },
     port: 9876,
     colors: true,
