@@ -1,6 +1,6 @@
 {
   "name": "riot-view-router",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Lightweight, extensive riot.js router for tag views.",
   "main": "dist/riot-view-router.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "eslint-plugin-riot": "^0.1.7",
     "jasmine": "2.5.2",
     "karma": "^1.7.1",
+    "karma-coverage": "^1.1.1",
     "karma-electron": "^5.2.1",
     "karma-jasmine": "^1.1.0",
     "karma-riot": "^2.0.0",
