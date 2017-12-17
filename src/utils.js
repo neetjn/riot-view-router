@@ -103,13 +103,13 @@ export class Utils {
         query = self.location.hash.split('?')
       stubs = stubs.join('').split('?')[0].split('/').slice(1)
       variables.forEach((variable) => {
-        variable.value = stubs[variable.position]
+        variable.value = decodeURI(stubs[variable.position])
       })
       if (query.length == 2) {
         variables._query = {}
         query[1].split('&').forEach((fragment) => {
           fragment = fragment.split('=')
-          variables._query[fragment[0]] = fragment[1]
+          variables._query[fragment[0]] = decodeURI(fragment[1])
         })
       }
       return variables
