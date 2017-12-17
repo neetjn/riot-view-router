@@ -430,7 +430,7 @@ var Router = exports.Router = function () {
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"riot-view-router","version":"0.0.6","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
+module.exports = {"name":"riot-view-router","version":"0.0.7","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-coverage":"^1.1.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
 
 /***/ }),
 /* 3 */
@@ -844,13 +844,13 @@ var Utils = exports.Utils = function () {
         } else query = self.location.hash.split('?');
         stubs = stubs.join('').split('?')[0].split('/').slice(1);
         variables.forEach(function (variable) {
-          variable.value = stubs[variable.position];
+          variable.value = decodeURI(stubs[variable.position]);
         });
         if (query.length == 2) {
           variables._query = {};
           query[1].split('&').forEach(function (fragment) {
             fragment = fragment.split('=');
-            variables._query[fragment[0]] = fragment[1];
+            variables._query[fragment[0]] = decodeURI(fragment[1]);
           });
         }
         return variables;
