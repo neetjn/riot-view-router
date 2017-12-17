@@ -57,6 +57,7 @@ var mocks = {
     {
       name: 'home',
       template: '<button r-sref="/profile/view/someguy">someguy\'s profile</button> \
+                 <input type="button" r-sref="/profile/view/john%20nolette" value="johns profile" /> \
                  <a r-sref="about">about page</a>'
     },
     {

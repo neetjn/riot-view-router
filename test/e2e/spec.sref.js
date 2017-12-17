@@ -29,7 +29,13 @@ describe('riot-view-router state reference', function() {
 
   describe('given a route with url encoded variables and query strings', function() {
     it('router should properly decode the data', function(done) {
-
+      document.querySelector('input[r-sref]').click()
+      var locationCheck = setInterval(() => {
+        isLocation('/profile/view/john%20nolette')
+        expect(document.querySelector('#username').innerText).toBe('john nolette')
+        window.clearInterval(locationCheck)
+        done()
+      }, router.constants.intervals.navigate)
     })
   })
 
