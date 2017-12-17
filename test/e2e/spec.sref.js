@@ -27,4 +27,10 @@ describe('riot-view-router state reference', function() {
     }, router.constants.intervals.navigate)
   })
 
+  describe('given a route with url encoded variables and query strings', function() {
+    it('router should properly decode the data', function(done) {
+
+    })
+  })
+
 })
