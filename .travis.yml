@@ -12,7 +12,8 @@ before_script:
 script:
   - npm run build
   - npm run test
-  - codecov
+  - test $TRAVIS_BRANCH = "master" &&
+    codecov
 deploy:
   provider: npm
   email: john@neetgroup.net
