@@ -1,11 +1,27 @@
 describe('riot-view-router observable', function() {
-  it('core methods are triggered as intended when referenced', function() {
+
+  beforeEach(setUp)
+  afterEach(tearDown)
+
+  it('core methods are triggered as intended when referenced', function(done) {
     let event = ''
     router
-      .on('navigate', () => event = 'navigate')
-      .on('push', () => event = 'push')
-      .on('start', () => event = 'start')
-      .on('stop', () => event = 'stop')
-      .on('reload', () => event = 'reload')
+      .on('navigation', () => { event = 'navigate' })
+      .on('push', () => { event = 'push' })
+      .on('start', () => { event = 'start' })
+      .on('stop', () => { event = 'stop' })
+      .on('reload', () => { event = 'reload' })
+
+    router.navigate('/about', true).then(() => {
+    expect(event).toBe('navigate')
+    router.navigate('/about').then(() => {
+    expect(event).toBe('push')
+    router.reload().then(() => {
+    expect(event).toBe('reload')
+    router.stop().then(() => {
+    expect(event).toBe('stop')
+    router.start().then(() => {
+    expect(event).toBe('start')
+    done()})})})})})
   })
 })
