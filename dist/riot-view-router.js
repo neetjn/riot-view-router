@@ -139,12 +139,13 @@ var Router = exports.Router = function () {
     self.constants = _constants.Constants;
     self.version = _package.version;
     self.settings = {};
-    self.events = {};
 
     self.$riot = instance;
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
+
+    self.$riot.observable(self);
 
     Object.defineProperty(self, 'location', {
       get: function get() {
@@ -240,9 +241,10 @@ var Router = exports.Router = function () {
         var route_check = setInterval(function () {
           if (self.location.hash == self.constants.defaults.hash + route) {
             window.clearInterval(route_check);
+            self.trigger('navigation', { route: route });
             if (!skipPush) self.push().then(function () {
-              return self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
-            });else self._dispatch('navigation', { route: route }).then(resolve).catch(resolve);
+              return resolve();
+            });else resolve();
           }
         }, self.constants.intervals.navigate);
         setTimeout(reject, self.constants.defaults.timeout);
@@ -291,7 +293,8 @@ var Router = exports.Router = function () {
         if (state.onEnter) state.onEnter(state); // # call onEnter, pass new state
 
         self.$state = state;
-        self._dispatch('push').then(resolve).catch(resolve);
+        self.trigger('push');
+        resolve();
       });
     }
 
@@ -317,7 +320,8 @@ var Router = exports.Router = function () {
                   return self.push();
                 };
                 window.clearInterval(view_check);
-                self._dispatch('start').then(resolve).catch(resolve);
+                self.trigger('start');
+                resolve();
               }
             }, self.constants.intervals.start); // # search for view context
             setTimeout(reject, self.constants.defaults.timeout);
@@ -350,10 +354,10 @@ var Router = exports.Router = function () {
           self.$logger.error('(stop) Router was not running');
           reject();
         }
-
         self.running = false;
         delete window.onhashchange;
-        self._dispatch('stop').then(resolve).catch(resolve);
+        self.trigger('stop');
+        resolve();
       });
     }
 
@@ -373,52 +377,9 @@ var Router = exports.Router = function () {
         }
 
         self.push().then(function () {
-          self._dispatch('reload').then(resolve).catch(resolve);
-        });
-      });
-    }
-
-    /**
-     * Used to register router specific events.
-     * @param {string} event - Name of event to register.
-     * @param {function} handler - Function to execute on listener.
-     * @returns {Promise}
-     */
-
-  }, {
-    key: 'on',
-    value: function on(event, handler) {
-      var self = this;
-
-      return new Promise(function (resolve, reject) {
-        if (!event || self.constants.events.supported.indexOf(event) < -1) {
-          self.$logger.error('(on) "' + event + '" is not a supported event');
-          reject();
-        } else {
-          self.events[event] = handler;
+          self.trigger('reload');
           resolve();
-        }
-      });
-    }
-
-    /**
-     * Used to dispatch router specific events.
-     * @param {string} event - Event to dispatch.
-     * @param {object} params - Parameters to pass to event handler.
-     * @returns {Promise}
-     */
-
-  }, {
-    key: '_dispatch',
-    value: function _dispatch(event, params) {
-      var self = this;
-
-      return new Promise(function (resolve) {
-        if (!event || self.constants.events.supported.indexOf(event) < -1) {
-          self.$logger.error('(dispatch) "' + event + '" is not a supported event');
-          reject();
-        }
-        if (typeof self.events[event] == 'function') resolve(self.events[event](params));else reject();
+        });
       });
     }
   }]);
@@ -430,7 +391,7 @@ var Router = exports.Router = function () {
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"riot-view-router","version":"0.0.8","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://github.com/neetjn/riot-view-router#readme","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-coverage":"^1.1.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
+module.exports = {"name":"riot-view-router","version":"0.0.8","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://neetjn.github.io/riot-view-router/","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-coverage":"^1.1.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
 
 /***/ }),
 /* 3 */
