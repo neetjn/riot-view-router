@@ -7,15 +7,14 @@ describe('riot-view-router state reference', function() {
     var called = false
     router.on('navigation', () => {
       called = true
-    }).then(() => {
-      document.querySelector('button[r-sref]').click()
-      var locationCheck = setInterval(() => {
-        expect(called).toBeTruthy()
-        isLocation('/profile/view/someguy')
-        window.clearInterval(locationCheck)
-        done()
-      }, router.constants.intervals.navigate)
     })
+    document.querySelector('button[r-sref]').click()
+    var locationCheck = setInterval(() => {
+      expect(called).toBeTruthy()
+      isLocation('/profile/view/someguy')
+      window.clearInterval(locationCheck)
+      done()
+    }, router.constants.intervals.navigate)
   })
 
   it('should redirect to given state by name', function(done) {

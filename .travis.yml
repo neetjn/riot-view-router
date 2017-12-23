@@ -12,8 +12,7 @@ before_script:
 script:
   - npm run build
   - npm run test
-  - test $TRAVIS_BRANCH = "master" &&
-    codecov
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then codecov; fi
 deploy:
   provider: npm
   email: john@neetgroup.net

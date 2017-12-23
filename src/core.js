@@ -20,12 +20,13 @@ export class Router {
     self.constants = Constants
     self.version = version
     self.settings = {}
-    self.events = {}
 
     self.$riot = instance
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
+
+    self.$riot.observable(self)
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -127,10 +128,11 @@ export class Router {
       var route_check = setInterval(() => {
         if (self.location.hash == self.constants.defaults.hash + route) {
           window.clearInterval(route_check)
+          self.trigger('navigation', { route })
           if (!skipPush)
-            self.push().then(() => self._dispatch('navigation', { route }).then(resolve).catch(resolve))
+            self.push().then(() => resolve())
           else
-            self._dispatch('navigation', { route }).then(resolve).catch(resolve)
+            resolve()
         }
       }, self.constants.intervals.navigate)
       setTimeout(reject, self.constants.defaults.timeout)
@@ -181,7 +183,8 @@ export class Router {
         state.onEnter(state) // # call onEnter, pass new state
 
       self.$state = state
-      self._dispatch('push').then(resolve).catch(resolve)
+      self.trigger('push')
+      resolve()
     })
   }
 
@@ -204,7 +207,8 @@ export class Router {
               self.push() // # route to initial state
               window.onhashchange = () => self.push()
               window.clearInterval(view_check)
-              self._dispatch('start').then(resolve).catch(resolve)
+              self.trigger('start')
+              resolve()
             }
           }, self.constants.intervals.start) // # search for view context
           setTimeout(reject, self.constants.defaults.timeout)
@@ -238,10 +242,10 @@ export class Router {
         self.$logger.error('(stop) Router was not running')
         reject()
       }
-
       self.running = false
       delete window.onhashchange
-      self._dispatch('stop').then(resolve).catch(resolve)
+      self.trigger('stop')
+      resolve()
     })
   }
 
@@ -258,50 +262,9 @@ export class Router {
       }
 
       self.push().then(() => {
-        self._dispatch('reload').then(resolve).catch(resolve)
-      })
-    })
-  }
-
-  /**
-   * Used to register router specific events.
-   * @param {string} event - Name of event to register.
-   * @param {function} handler - Function to execute on listener.
-   * @returns {Promise}
-   */
-  on (event, handler) {
-    const self = this
-
-    return new Promise((resolve, reject) => {
-      if (!event || self.constants.events.supported.indexOf(event) < -1) {
-        self.$logger.error(`(on) "${event}" is not a supported event`)
-        reject()
-      }
-      else {
-        self.events[event] = handler
+        self.trigger('reload')
         resolve()
-      }
-    })
-  }
-
-  /**
-   * Used to dispatch router specific events.
-   * @param {string} event - Event to dispatch.
-   * @param {object} params - Parameters to pass to event handler.
-   * @returns {Promise}
-   */
-  _dispatch (event, params) {
-    const self = this
-
-    return new Promise((resolve) => {
-      if (!event || self.constants.events.supported.indexOf(event) < -1) {
-        self.$logger.error(`(dispatch) "${event}" is not a supported event`)
-        reject()
-      }
-      if (typeof self.events[event] == 'function')
-        resolve(self.events[event](params))
-      else
-        reject()
+      })
     })
   }
 
