@@ -110,6 +110,18 @@ export class Router {
     }
   }
 
+/**
+ * Used to add new states.
+ * @param {object} state - State to consume.
+ * @returns {Promise}
+ */
+  add (state) {
+    const self = this
+
+    // # TODO: left here, move state logic and checks
+    // # must move fallback and default checks to start method
+  }
+
   /**
    * Used to navigate with hash pattern.
    * @param {string} route - Route to relocate to.
