@@ -83,41 +83,19 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _core = __webpack_require__(1);
-
-exports.default = {
-  install: function install(instance, options, states) {
-    var router = new _core.Router(instance, options, states);
-    instance.mixin({ router: router });
-    return router;
-  }
-};
-module.exports = exports['default'];
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.Router = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _package = __webpack_require__(2);
+var _package = __webpack_require__(1);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
-var _logger = __webpack_require__(4);
+var _logger = __webpack_require__(3);
 
-var _tools = __webpack_require__(5);
+var _tools = __webpack_require__(4);
 
-var _utils = __webpack_require__(6);
+var _utils = __webpack_require__(5);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -131,7 +109,7 @@ var Router = exports.Router = function () {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  function Router(instance, settings, states) {
+  function Router(instance, settings) {
     _classCallCheck(this, Router);
 
     var self = this;
@@ -139,13 +117,15 @@ var Router = exports.Router = function () {
     self.constants = _constants.Constants;
     self.version = _package.version;
     self.settings = {};
+    self.states = [];
 
     self.$riot = instance;
+    self.$riot.observable(self);
+    self.$riot.mixin({ router: self });
+
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
-
-    self.$riot.observable(self);
 
     Object.defineProperty(self, 'location', {
       get: function get() {
@@ -161,13 +141,11 @@ var Router = exports.Router = function () {
 
     self.running = false;
 
-    var requiredSettings = ['default'];
-    var optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot'];
-    var acceptedSettings = requiredSettings.concat(optionalSettings);
+    var acceptedSettings = self.constants.options.settings.required.concat(self.constants.options.settings.optional);
     for (var setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1) throw Error('Unknown setting "' + setting + '" is not supported');
     } // # check for unaccepted settings
-    requiredSettings.forEach(function (setting) {
+    self.constants.options.settings.required.forEach(function (setting) {
       if (typeof settings[setting] === 'undefined') throw ReferenceError('Required setting "' + setting + '" not specified');
     }); // # check for required settings
 
@@ -188,45 +166,55 @@ var Router = exports.Router = function () {
     self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0];
     if (!self.settings.href.endsWith('/')) self.settings.href = self.settings.href + '/';
 
-    var stateProperties = ['name', 'route', 'tag'];
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(function (state) {
-      return Object.assign({}, state);
-    });
-    stateProperties.forEach(function (prop) {
-      states.forEach(function (state) {
-        if (!state[prop]) throw ReferenceError('Required state option "' + prop + '" not specified');
-      });
-    }); // # validate state properties
-    states.forEach(function (state) {
-      for (var property in state) {
-        var _validator = self.constants.regex.state[property];
-        if (_validator && !state[property].match(_validator)) throw Error('State "' + state.name + '" property "' + property + '" has an invalid value of "' + state[property] + '"');
-      }
-    }); // # validate state property values
-    states.forEach(function (item) {
-      item.route = self.$utils.splitRoute(item.route);
-    }); // # get route pattern
-    self.states = states;
-
     if (!self.$utils.stateByName(self.settings.default)) throw Error('State "' + self.settings.default + '" not found in specified states');
 
-    if (self.settings.fallback) {
-      if (!self.$utils.stateByName(self.settings.fallback)) throw Error('Fallback state "' + self.settings.fallback + '" not found in specified states');
-    } else {
+    if (!self.settings.fallback) {
       self.$logger.warn('Fallback state not specified, defaulting to "' + self.settings.default + '"');
       self.settings.fallback = self.settings.default;
     }
   }
 
   /**
-   * Used to navigate with hash pattern.
-   * @param {string} route - Route to relocate to.
-   * @param {boolean} push - Push state after navigation.
+   * Used to add new states.
+   * @param {object} state - State to consume.
    * @returns {Promise}
    */
 
 
   _createClass(Router, [{
+    key: 'add',
+    value: function add(state) {
+      var self = this;
+
+      return new Promise(function (resolve, reject) {
+        state = Object.assign({}, state);
+        self.constants.options.states.required.forEach(function (prop) {
+          if (!state[prop]) {
+            self.$logger.error('Required state option "' + prop + '" not specified');
+            reject();
+          }
+        }); // # validate state properties
+        for (var property in state) {
+          var validator = self.constants.regex.state[property];
+          if (validator && !state[property].match(validator)) {
+            self.$logger.error('State "' + state.name + '" property "' + property + '" has an invalid value of "' + state[property] + '"');
+            reject();
+          }
+        } // # validate state property values
+        state.route = self.$utils.splitRoute(state.route);
+        self.states.push(state);
+        resolve();
+      });
+    }
+
+    /**
+     * Used to navigate with hash pattern.
+     * @param {string} route - Route to relocate to.
+     * @param {boolean} push - Push state after navigation.
+     * @returns {Promise}
+     */
+
+  }, {
     key: 'navigate',
     value: function navigate(route, skipPush) {
       var self = this;
@@ -314,6 +302,7 @@ var Router = exports.Router = function () {
             var view_check = window.setInterval(function () {
               var context = document.querySelector(self.settings.marker) || document.querySelector('[' + self.settings.marker + ']');
               if (context) {
+                self.running = true;
                 self.context = context;
                 self.push(); // # route to initial state
                 window.onhashchange = function () {
@@ -327,7 +316,7 @@ var Router = exports.Router = function () {
             setTimeout(reject, self.constants.defaults.timeout);
           };
 
-          self.running = true;
+          if (!self.$utils.stateByName(self.settings.fallback)) throw Error('Fallback state "' + self.settings.fallback + '" not found in specified states');
 
           if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
             self.navigate(self.$utils.stateByName(self.settings.default).route.route, true).then(_start);
@@ -388,13 +377,13 @@ var Router = exports.Router = function () {
 }();
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"riot-view-router","version":"0.0.8","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://neetjn.github.io/riot-view-router/","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-coverage":"^1.1.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
+module.exports = {"name":"riot-view-router","version":"0.0.9","description":"Lightweight, extensive riot.js router for tag views.","main":"dist/riot-view-router.js","scripts":{"build:prod":"node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js","build:dev":"node_modules/.bin/webpack --config build/webpack.conf.js","build":"npm run build:dev && npm run build:prod","lint":"node_modules/.bin/eslint src/**.js","test:unit":"node_modules/.bin/jasmine test/unit/spec.*.js","test:e2e":"node_modules/.bin/karma start test/karma.conf.js","test":"npm run lint && npm run test:unit && npm run test:e2e"},"repository":{"type":"git","url":"git+https://github.com/neetjn/riot-view-router.git"},"keywords":["riot","riot.js","javascript","route","tag"],"author":"John Nolette","license":"MIT","bugs":{"url":"https://github.com/neetjn/riot-view-router/issues"},"homepage":"https://neetjn.github.io/riot-view-router/","devDependencies":{"babel-core":"^6.26.0","babel-eslint":"^7.2.3","babel-loader":"^7.1.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-env":"^1.6.1","cross-env":"^5.1.0","electron":"^1.7.9","eslint":"^4.9.0","eslint-plugin-riot":"^0.1.7","jasmine":"2.5.2","karma":"^1.7.1","karma-coverage":"^1.1.1","karma-electron":"^5.2.1","karma-jasmine":"^1.1.0","karma-riot":"^2.0.0","random-js":"1.0.8","riot":"^3.7.3","webpack":"^3.8.1"},"dependencies":{}}
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -409,6 +398,21 @@ var Constants = exports.Constants = {
     marker: 'r-view',
     anchorMarker: 'r-sref',
     timeout: 5000
+  },
+  intervals: {
+    start: 10,
+    navigate: 50,
+    fragments: 250
+  },
+  options: {
+    settings: {
+      required: ['default'],
+      optional: ['debugging', 'fallback', 'href', 'fragments', 'marker', 'title']
+    },
+    states: {
+      required: ['name', 'route', 'tag'],
+      optional: ['title', 'onEnter', 'onLeave']
+    }
   },
   regex: {
     settings: {
@@ -425,22 +429,13 @@ var Constants = exports.Constants = {
       routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
     }
   },
-  intervals: {
-    start: 10,
-    navigate: 50,
-    fragments: 250
-  },
   waits: {
     fragments: 2000
-  },
-  events: {
-    supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],
-    delay: 0
   }
 };
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -544,7 +539,7 @@ var Logger = exports.Logger = function () {
 }();
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -659,7 +654,7 @@ var Tools = exports.Tools = function () {
 }();
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
