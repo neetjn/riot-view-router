@@ -14,12 +14,13 @@ export class Router {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (instance, settings, states) {
+  constructor (instance, settings) {
     var self = this
 
     self.constants = Constants
     self.version = version
     self.settings = {}
+    self.states = []
 
     self.$riot = instance
     self.$riot.observable(self)
@@ -77,6 +78,23 @@ export class Router {
     if (!self.settings.href.endsWith('/'))
       self.settings.href = `${self.settings.href}/`
 
+    if (!self.$utils.stateByName(self.settings.default))
+      throw Error(`State "${self.settings.default}" not found in specified states`)
+
+    if (!self.settings.fallback) {
+      self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
+      self.settings.fallback = self.settings.default
+    }
+  }
+
+/**
+ * Used to add new states.
+ * @param {object} state - State to consume.
+ * @returns {Promise}
+ */
+  add (state) {
+    const self = this
+
     const stateProperties = ['name', 'route', 'tag']
     states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(state => Object.assign({}, state))
     stateProperties.forEach((prop) => {
@@ -96,28 +114,6 @@ export class Router {
       item.route = self.$utils.splitRoute(item.route)
     }) // # get route pattern
     self.states = states
-
-    if (!self.$utils.stateByName(self.settings.default))
-      throw Error(`State "${self.settings.default}" not found in specified states`)
-
-    if (self.settings.fallback) {
-      if (!self.$utils.stateByName(self.settings.fallback))
-        throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
-    }
-    else {
-      self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
-      self.settings.fallback = self.settings.default
-    }
-  }
-
-/**
- * Used to add new states.
- * @param {object} state - State to consume.
- * @returns {Promise}
- */
-  add (state) {
-    const self = this
-
     // # TODO: left here, move state logic and checks
     // # must move fallback and default checks to start method
   }
@@ -210,7 +206,9 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        self.running = true
+
+        if (!self.$utils.stateByName(self.settings.fallback))
+          throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
 
         function _start() {
           var view_check = window.setInterval(() => {
@@ -221,6 +219,7 @@ export class Router {
               window.onhashchange = () => self.push()
               window.clearInterval(view_check)
               self.trigger('start')
+              self.running = true
               resolve()
             }
           }, self.constants.intervals.start) // # search for view context
