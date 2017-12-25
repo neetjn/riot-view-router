@@ -214,12 +214,12 @@ export class Router {
           var view_check = window.setInterval(() => {
             const context = document.querySelector(self.settings.marker) || document.querySelector(`[${self.settings.marker}]`)
             if (context) {
+              self.running = true
               self.context = context
               self.push() // # route to initial state
               window.onhashchange = () => self.push()
               window.clearInterval(view_check)
               self.trigger('start')
-              self.running = true
               resolve()
             }
           }, self.constants.intervals.start) // # search for view context
