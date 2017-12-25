@@ -44,14 +44,13 @@ export class Router {
 
     self.running = false
 
-    const requiredSettings = ['default']
-    const optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot']
-    const acceptedSettings = requiredSettings.concat(optionalSettings)
+    const acceptedSettings = self.constants.options.settings.required.concat(
+      self.constants.options.settings.optional)
     for (const setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1)
         throw Error(`Unknown setting "${setting}" is not supported`)
     } // # check for unaccepted settings
-    requiredSettings.forEach(setting => {
+    self.constants.options.settings.required.forEach(setting => {
       if (typeof settings[setting] === 'undefined')
         throw ReferenceError(`Required setting "${setting}" not specified`)
     }) // # check for required settings
@@ -95,27 +94,25 @@ export class Router {
   add (state) {
     const self = this
 
-    const stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(state => Object.assign({}, state))
-    stateProperties.forEach((prop) => {
-      states.forEach((state) => {
-        if (!state[prop])
-          throw ReferenceError(`Required state option "${prop}" not specified`)
-      })
-    }) // # validate state properties
-    states.forEach((state) => {
+    return new Promise((resolve, reject) => {
+      state = Object.assign({}, state)
+      self.constants.options.states.required.forEach((prop) => {
+        if (!state[prop]) {
+          self.$logger.error(`Required state option "${prop}" not specified`)
+          reject()
+        }
+      }) // # validate state properties
       for (const property in state) {
         const validator = self.constants.regex.state[property]
-        if (validator && !state[property].match(validator))
-          throw Error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
-      }
-    }) // # validate state property values
-    states.forEach(function(item) {
-      item.route = self.$utils.splitRoute(item.route)
-    }) // # get route pattern
-    self.states = states
-    // # TODO: left here, move state logic and checks
-    // # must move fallback and default checks to start method
+        if (validator && !state[property].match(validator)) {
+          self.$logger.error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
+          reject()
+        }
+      } // # validate state property values
+      state.route = self.$utils.splitRoute(state.route)
+      self.states.push(state)
+      resolve()
+    })
   }
 
   /**

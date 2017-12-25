@@ -62,7 +62,7 @@ or
 <div r-view></div>
 ```
 
-> **`titleRoot`**: Title prefix for routes using a page title. 
+> **`title`**: Title prefix for routes using a page title. 
 
 States are composed of the following properties,
 
