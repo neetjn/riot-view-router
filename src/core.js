@@ -22,11 +22,12 @@ export class Router {
     self.settings = {}
 
     self.$riot = instance
+    self.$riot.observable(self)
+    self.$riot.mixin({ router: self })
+
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
-
-    self.$riot.observable(self)
 
     Object.defineProperty(self, 'location', {
       get: function() {
