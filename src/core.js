@@ -118,7 +118,7 @@ export default class {
    * @param {boolean} push - Push state after navigation.
    * @returns {Promise}
    */
-  navigate (route, skipPush) {
+  navigate (route, skipPush = false) {
     const self = this
 
     return new Promise((resolve, reject) => {
@@ -208,7 +208,6 @@ export default class {
           var view_check = window.setInterval(() => {
             const context = document.querySelector(self.settings.marker) || document.querySelector(`[${self.settings.marker}]`)
             if (context) {
-              self.running = true
               self.context = context
               self.push() // # route to initial state
               window.onhashchange = () => self.push()
@@ -219,6 +218,8 @@ export default class {
           }, self.constants.intervals.start) // # search for view context
           setTimeout(reject, self.constants.defaults.timeout)
         }
+
+        self.running = true
 
         if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
           self.navigate(

@@ -213,7 +213,9 @@ var _class = function () {
 
   }, {
     key: 'navigate',
-    value: function navigate(route, skipPush) {
+    value: function navigate(route) {
+      var skipPush = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
       var self = this;
 
       return new Promise(function (resolve, reject) {
@@ -299,7 +301,6 @@ var _class = function () {
             var view_check = window.setInterval(function () {
               var context = document.querySelector(self.settings.marker) || document.querySelector('[' + self.settings.marker + ']');
               if (context) {
-                self.running = true;
                 self.context = context;
                 self.push(); // # route to initial state
                 window.onhashchange = function () {
@@ -314,6 +315,8 @@ var _class = function () {
           };
 
           if (!self.$utils.stateByName(self.settings.fallback)) throw Error('Fallback state "' + self.settings.fallback + '" not found in specified states');
+
+          self.running = true;
 
           if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
             self.navigate(self.$utils.stateByName(self.settings.default).route.route, true).then(_start);
@@ -599,7 +602,7 @@ var Tools = exports.Tools = function () {
           parsed_opts.qargs = opts._query;
           var tag = self.$riot.mount(state.tag, parsed_opts);
           if (state.title) {
-            var title = self.settings.titleRoot ? self.settings.titleRoot + ' - ' + state.title : state.title;
+            var title = self.settings.title ? self.settings.title + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
               return title = title.replace('<' + opt.name + '>', opt.value);
             });
