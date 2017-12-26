@@ -42,27 +42,27 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following settings,
 
+> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
+
 > **`debugging`** ; `bool` : Will default to true, spits errors and warnings to console.
 
 > **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
 > **`fragments`** ; `bool` : Will default to true, adds support for fragment identification.
 
-> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
-
 > **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
+
+> **`title`** ; `string` : Title prefix for routes using a page title.
 
 > **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
 
 ```html
-<r-view></r-view>
+<r-view />
 
 or
 
 <div r-view></div>
 ```
-
-> **`titleRoot`**: Title prefix for routes using a page title. 
 
 States are composed of the following properties,
 
@@ -72,7 +72,7 @@ States are composed of the following properties,
 
 > **`*tag`** ; `string` : Tag to inject into rout view, mount.
 
-> **`title`** ; `string` : Title to set window.
+> **`title`** ; `string` : Title suffix for routes.
 
 > **`onEnter(*handler)`** ; `function` : Callback for entering state.
 
@@ -83,41 +83,39 @@ Using the mixin is then as simple as,
 ```js
 import Router from 'riot-view-router'
 
-const settings = {
+const router = new Router({
   debugging: true,
   default: 'home',
   fallback: '404',
   href: 'https://mysite.com/blogs'
-}
+})
 
-const states = [
-  {
-    name: 'home',
-    route: '/',
-    tag:'home',
-    title: 'Hello World',
-    onEnter: (state) => {
-      console.log('Entering home')
-    }
-  },
-  {
-    name: '404',
-    route: '/notfound',
-    tag:'not-found',
-    title: '404 Page Not Found',
-    onLeave: (state) => {
-      console.log('Leaving home')
-    }
-  },
-  {
-    name: 'profile',
-    route: '/profile/:username',
-    tag: 'profile',
-    title: '<username>\'s profile'
+router.add({
+  name: 'home',
+  route: '/',
+  tag:'home',
+  title: 'Hello World',
+  onEnter: (state) => {
+    console.log('Entering home')
   }
-]
+})
 
-const router = Router.install(riot, settings, states)
+router.add({
+  name: '404',
+  route: '/notfound',
+  tag:'not-found',
+  title: '404 Page Not Found',
+  onLeave: (state) => {
+    console.log('Leaving home')
+  }
+})
+
+router.add({
+  name: 'profile',
+  route: '/profile/:username',
+  tag: 'profile',
+  title: '<username>\'s profile'
+})
 
 router.on('start', () => {
   console.log('hello world!')
@@ -158,6 +156,8 @@ Both route and query string variables can also be accessed directly via the targ
 ### Router API
 
 The **riot-view-router** has a very simple, easily operable API.
+
+> **`add(*state)`**: Create a new state for the given router instance.
 
 > **`navigate(*route, skipPush)`**: Navigate to a given route.
 
