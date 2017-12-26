@@ -52,19 +52,17 @@ For a quick start using jsdelivr:
 
 > **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
 
-> **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
-
 > **`title`**: Title prefix for routes using a page title.
 
+> **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
+
 ```html
-<r-view></r-view>
+<r-view />
 
 or
 
 <div r-view></div>
 ```
-
-> **`title`**: Title prefix for routes using a page title.
 
 States are composed of the following properties,
 
