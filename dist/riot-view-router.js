@@ -83,7 +83,6 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Router = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -99,7 +98,7 @@ var _utils = __webpack_require__(5);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Router = exports.Router = function () {
+var _class = function () {
 
   /**
    * Represents the riot-view-router mixin.
@@ -109,8 +108,8 @@ var Router = exports.Router = function () {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  function Router(instance, settings) {
-    _classCallCheck(this, Router);
+  function _class(instance, settings) {
+    _classCallCheck(this, _class);
 
     var self = this;
 
@@ -166,8 +165,6 @@ var Router = exports.Router = function () {
     self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0];
     if (!self.settings.href.endsWith('/')) self.settings.href = self.settings.href + '/';
 
-    if (!self.$utils.stateByName(self.settings.default)) throw Error('State "' + self.settings.default + '" not found in specified states');
-
     if (!self.settings.fallback) {
       self.$logger.warn('Fallback state not specified, defaulting to "' + self.settings.default + '"');
       self.settings.fallback = self.settings.default;
@@ -181,7 +178,7 @@ var Router = exports.Router = function () {
    */
 
 
-  _createClass(Router, [{
+  _createClass(_class, [{
     key: 'add',
     value: function add(state) {
       var self = this;
@@ -373,8 +370,11 @@ var Router = exports.Router = function () {
     }
   }]);
 
-  return Router;
+  return _class;
 }();
+
+exports.default = _class;
+module.exports = exports['default'];
 
 /***/ }),
 /* 1 */

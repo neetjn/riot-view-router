@@ -4,7 +4,7 @@ import { Logger } from './logger'
 import { Tools } from './tools'
 import { Utils } from './utils'
 
-export class Router {
+export default class {
 
   /**
    * Represents the riot-view-router mixin.
@@ -76,9 +76,6 @@ export class Router {
     self.settings.href = self.settings.href || self.location.href.split(self.constants.defaults.hash)[0]
     if (!self.settings.href.endsWith('/'))
       self.settings.href = `${self.settings.href}/`
-
-    if (!self.$utils.stateByName(self.settings.default))
-      throw Error(`State "${self.settings.default}" not found in specified states`)
 
     if (!self.settings.fallback) {
       self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
