@@ -607,7 +607,7 @@ var Tools = exports.Tools = function () {
               return title = title.replace('<' + opt.name + '>', opt.value);
             });
             document.title = title;
-          }
+          } else if (self.settings.title) document.title = self.settings.title;
         } else var tag = self.$riot.mount(state.tag);
 
         tag[0].on('updated', function () {
