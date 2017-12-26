@@ -42,13 +42,13 @@ For a quick start using jsdelivr:
 
 **riot-view-router** supports the following settings,
 
+> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
+
 > **`debugging`** ; `bool` : Will default to true, spits errors and warnings to console.
 
 > **`href`** ; `string` : Will default to originating location, router will operate off of this.
 
 > **`fragments`** ; `bool` : Will default to true, adds support for fragment identification.
-
-> **`*default`** ; `string` : Default state for router to navigate to on start if route not matched.
 
 > **`fallback`** ; `string` : Will default to fallback, state to fallback to on mismatch.
 
@@ -156,6 +156,8 @@ Both route and query string variables can also be accessed directly via the targ
 ### Router API
 
 The **riot-view-router** has a very simple, easily operable API.
+
+> **`add(*state)`**: Create a new state for the given router instance.
 
 > **`navigate(*route, skipPush)`**: Navigate to a given route.
 
