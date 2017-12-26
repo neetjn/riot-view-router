@@ -62,7 +62,7 @@ or
 <div r-view></div>
 ```
 
-> **`titleRoot`**: Title prefix for routes using a page title. 
+> **`title`**: Title prefix for routes using a page title. 
 
 States are composed of the following properties,
 
@@ -83,41 +83,39 @@ Using the mixin is then as simple as,
 ```js
 import Router from 'riot-view-router'
 
-const settings = {
+const router = new Router({
   debugging: true,
   default: 'home',
   fallback: '404',
   href: 'https://mysite.com/blogs'
-}
+})
 
-const states = [
-  {
-    name: 'home',
-    route: '/',
-    tag:'home',
-    title: 'Hello World',
-    onEnter: (state) => {
-      console.log('Entering home')
-    }
-  },
-  {
-    name: '404',
-    route: '/notfound',
-    tag:'not-found',
-    title: '404 Page Not Found',
-    onLeave: (state) => {
-      console.log('Leaving home')
-    }
-  },
-  {
-    name: 'profile',
-    route: '/profile/:username',
-    tag: 'profile',
-    title: '<username>\'s profile'
+router.add({
+  name: 'home',
+  route: '/',
+  tag:'home',
+  title: 'Hello World',
+  onEnter: (state) => {
+    console.log('Entering home')
   }
-]
+})
 
-const router = Router.install(riot, settings, states)
+router.add({
+  name: '404',
+  route: '/notfound',
+  tag:'not-found',
+  title: '404 Page Not Found',
+  onLeave: (state) => {
+    console.log('Leaving home')
+  }
+})
+
+router.add({
+  name: 'profile',
+  route: '/profile/:username',
+  tag: 'profile',
+  title: '<username>\'s profile'
+})
 
 router.on('start', () => {
   console.log('hello world!')

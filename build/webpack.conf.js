@@ -6,7 +6,7 @@ function resolve (dir) {
 }
 
 module.exports = {
-  entry: './src/mixin.js',
+  entry: './src/core.js',
   output: {
     path: resolve('./dist'),
     publicPath: 'dist/',

@@ -4,7 +4,7 @@ import { Logger } from './logger'
 import { Tools } from './tools'
 import { Utils } from './utils'
 
-export class Router {
+export default class {
 
   /**
    * Represents the riot-view-router mixin.
@@ -14,19 +14,21 @@ export class Router {
    * @param {array} states - States for router to read from.
    * @returns {Router}
    */
-  constructor (instance, settings, states) {
+  constructor (instance, settings) {
     var self = this
 
     self.constants = Constants
     self.version = version
     self.settings = {}
+    self.states = []
 
     self.$riot = instance
+    self.$riot.observable(self)
+    self.$riot.mixin({ router: self })
+
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
-
-    self.$riot.observable(self)
 
     Object.defineProperty(self, 'location', {
       get: function() {
@@ -42,14 +44,13 @@ export class Router {
 
     self.running = false
 
-    const requiredSettings = ['default']
-    const optionalSettings = ['debugging', 'fallback', 'href', 'fragments', 'marker', 'titleRoot']
-    const acceptedSettings = requiredSettings.concat(optionalSettings)
+    const acceptedSettings = self.constants.options.settings.required.concat(
+      self.constants.options.settings.optional)
     for (const setting in settings) {
       if (acceptedSettings.indexOf(setting) === -1)
         throw Error(`Unknown setting "${setting}" is not supported`)
     } // # check for unaccepted settings
-    requiredSettings.forEach(setting => {
+    self.constants.options.settings.required.forEach(setting => {
       if (typeof settings[setting] === 'undefined')
         throw ReferenceError(`Required setting "${setting}" not specified`)
     }) // # check for required settings
@@ -76,37 +77,39 @@ export class Router {
     if (!self.settings.href.endsWith('/'))
       self.settings.href = `${self.settings.href}/`
 
-    const stateProperties = ['name', 'route', 'tag']
-    states = !Array.isArray(states) ? [Object.assign({}, state)] : states.map(state => Object.assign({}, state))
-    stateProperties.forEach((prop) => {
-      states.forEach((state) => {
-        if (!state[prop])
-          throw ReferenceError(`Required state option "${prop}" not specified`)
-      })
-    }) // # validate state properties
-    states.forEach((state) => {
-      for (const property in state) {
-        const validator = self.constants.regex.state[property]
-        if (validator && !state[property].match(validator))
-          throw Error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
-      }
-    }) // # validate state property values
-    states.forEach(function(item) {
-      item.route = self.$utils.splitRoute(item.route)
-    }) // # get route pattern
-    self.states = states
-
-    if (!self.$utils.stateByName(self.settings.default))
-      throw Error(`State "${self.settings.default}" not found in specified states`)
-
-    if (self.settings.fallback) {
-      if (!self.$utils.stateByName(self.settings.fallback))
-        throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
-    }
-    else {
+    if (!self.settings.fallback) {
       self.$logger.warn(`Fallback state not specified, defaulting to "${self.settings.default}"`)
       self.settings.fallback = self.settings.default
     }
+  }
+
+/**
+ * Used to add new states.
+ * @param {object} state - State to consume.
+ * @returns {Promise}
+ */
+  add (state) {
+    const self = this
+
+    return new Promise((resolve, reject) => {
+      state = Object.assign({}, state)
+      self.constants.options.states.required.forEach((prop) => {
+        if (!state[prop]) {
+          self.$logger.error(`Required state option "${prop}" not specified`)
+          reject()
+        }
+      }) // # validate state properties
+      for (const property in state) {
+        const validator = self.constants.regex.state[property]
+        if (validator && !state[property].match(validator)) {
+          self.$logger.error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
+          reject()
+        }
+      } // # validate state property values
+      state.route = self.$utils.splitRoute(state.route)
+      self.states.push(state)
+      resolve()
+    })
   }
 
   /**
@@ -115,7 +118,7 @@ export class Router {
    * @param {boolean} push - Push state after navigation.
    * @returns {Promise}
    */
-  navigate (route, skipPush) {
+  navigate (route, skipPush = false) {
     const self = this
 
     return new Promise((resolve, reject) => {
@@ -197,7 +200,9 @@ export class Router {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-        self.running = true
+
+        if (!self.$utils.stateByName(self.settings.fallback))
+          throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
 
         function _start() {
           var view_check = window.setInterval(() => {
@@ -213,6 +218,8 @@ export class Router {
           }, self.constants.intervals.start) // # search for view context
           setTimeout(reject, self.constants.defaults.timeout)
         }
+
+        self.running = true
 
         if (self.location.hash.split(self.constants.defaults.hash).length !== 2) {
           self.navigate(

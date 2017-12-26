@@ -5,6 +5,21 @@ export const Constants = {
     anchorMarker: 'r-sref',
     timeout: 5000
   },
+  intervals: {
+    start: 10,
+    navigate: 50,
+    fragments: 250
+  },
+  options: {
+    settings: {
+      required: ['default'],
+      optional: ['debugging', 'fallback', 'href', 'fragments', 'marker', 'title']
+    },
+    states: {
+      required: ['name', 'route', 'tag'],
+      optional: ['title', 'onEnter', 'onLeave']
+    }
+  },
   regex: {
     settings: {
       default: /[a-zA-Z0-9]/g,
@@ -20,16 +35,7 @@ export const Constants = {
       routeVariable: /(:(?!qargs)[a-zA-Z]*)/g
     }
   },
-  intervals: {
-    start: 10,
-    navigate: 50,
-    fragments: 250
-  },
   waits: {
     fragments: 2000
-  },
-  events: {
-    supported: ['start', 'stop', 'reload', 'navigation', 'push', 'transition'],
-    delay: 0
   }
 }
