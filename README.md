@@ -54,6 +54,8 @@ For a quick start using jsdelivr:
 
 > **`marker`** ; `string` : Marker for mounting views, default is `r-view`.
 
+> **`title`**: Title prefix for routes using a page title.
+
 ```html
 <r-view></r-view>
 
@@ -62,7 +64,7 @@ or
 <div r-view></div>
 ```
 
-> **`title`**: Title prefix for routes using a page title. 
+> **`title`**: Title prefix for routes using a page title.
 
 States are composed of the following properties,
 
@@ -72,7 +74,7 @@ States are composed of the following properties,
 
 > **`*tag`** ; `string` : Tag to inject into rout view, mount.
 
-> **`title`** ; `string` : Title to set window.
+> **`title`** ; `string` : Title suffix for routes.
 
 > **`onEnter(*handler)`** ; `function` : Callback for entering state.
 
