@@ -1,5 +1,7 @@
 # **riot-view-router**
 
+[![npm](https://img.shields.io/npm/dm/riot-view-router.svg)](https://www.npmjs.com/package/riot-view-router)
+
 [![build](https://travis-ci.org/neetjn/riot-view-router.svg?branch=master)](https://travis-ci.org/neetjn/riot-view-router/)
 [![npm version](https://badge.fury.io/js/riot-view-router.svg)](https://badge.fury.io/js/riot-view-router)
 [![codecov](https://codecov.io/gh/neetjn/riot-view-router/branch/master/graph/badge.svg)](https://codecov.io/gh/neetjn/riot-view-router)
