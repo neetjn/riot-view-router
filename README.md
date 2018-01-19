@@ -93,16 +93,6 @@ const router = new Router({
 })
 
 router.add({
-  name: 'home',
-  route: '/',
-  tag:'home',
-  title: 'Hello World',
-  onEnter: (state) => {
-    console.log('Entering home')
-  }
-})
-
-router.add({
   name: '404',
   route: '/notfound',
   tag:'not-found',
@@ -112,12 +102,23 @@ router.add({
   }
 })
 
-router.add({
-  name: 'profile',
-  route: '/profile/:username',
-  tag: 'profile',
-  title: '<username>\'s profile'
-})
+router.add([
+  {
+    name: 'home',
+    route: '/',
+    tag:'home',
+    title: 'Hello World',
+    onEnter: (state) => {
+      console.log('Entering home')
+    }
+  },
+  {
+    name: 'profile',
+    route: '/profile/:username',
+    tag: 'profile',
+    title: '<username>\'s profile'
+  }
+])
 
 router.on('start', () => {
   console.log('hello world!')
@@ -151,7 +152,6 @@ Both route and query string variables can also be accessed directly via the targ
     User: <small>{this.opts.username}</small>
   </h1>
   <h5>Views: {this.opts.qargs.views}</h5>
-
 </profile>
 ```
 
