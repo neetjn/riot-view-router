@@ -69,9 +69,7 @@ describe('riot-view-router mixin', function() {
   })
 
   it('default state is enforced', function(done) {
-    bootstrap({
-      debugging: false
-    }, STATES)
+    bootstrap({ debugging: false }, STATES)
       .then(router => router.start())
       .catch(done)
   })
