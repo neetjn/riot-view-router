@@ -10,11 +10,10 @@ describe('riot-view-router mixin', function() {
 
   riot = require('riot')
 
-  function bootstrap(settings, states) {
+  function bootstrap(settings) {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
-    router = new Router(riot, settings || SETTINGS)
-    return router.add(states || STATES).then(() => router)
+    return new Promise(() => new Router(riot, settings || SETTINGS))
   }
 
   it('processes and merges options', function() {
@@ -25,33 +24,38 @@ describe('riot-view-router mixin', function() {
     })
   })
 
-  it('processes and merges states', function() {
+  it('processes and merges multiple states', function() {
     var router = bootstrap()
     bootstrap().then(router => {
-      expect(router.states.length).toBe(STATES.length)
-      router.states.forEach(function(state, index) {
-        for (var prop in state) {
-          if (prop !== 'route') {
-            expect(state[prop]).toBe(STATES[index][prop])
-          } // # ensure state value was merged correctly
-          else {
-            expect(state[prop].route).toBe(STATES[index][prop])
-            // # we don't expand our state for a route from STATES because
-            // # our route is split in our router constructor
+      router.add(STATES).then(() => {
+        expect(router.states.length).toBe(STATES.length)
+        router.states.forEach(function(state, index) {
+          for (var prop in state) {
+            if (prop !== 'route') {
+              expect(state[prop]).toBe(STATES[index][prop])
+            } // # ensure state value was merged correctly
+            else {
+              expect(state[prop].route).toBe(STATES[index][prop])
+              // # we don't expand our state for a route from STATES because
+              // # our route is split in our router constructor
+            }
           }
-        }
+        })
       })
     })
   })
 
-  it('splits state routes with variables as intended', function() {
+  it('sprocesses and merges single state, route variables spit as expected', function() {
     bootstrap().then(router => {
-      var variables = router.states.find(function(state) {
-        return state.name === 'profile'
-      }).route.variables // # get variables processed by route splitter
-      expect(variables.length).toBe(1)
-      expect(variables[0].name).toBe('username') // # check name
-      expect(variables[0].position).toBe(2) // # check
+      target = random.integer(0, STATES.length)
+      router.add(target).then(() => {
+        var variables = router.states.find(function(state) {
+          return state.name === target.name
+        }).route.variables // # get variables processed by route splitter
+        expect(variables.length).toBe(1)
+        expect(variables[0].name).toBe('username') // # check name
+        expect(variables[0].position).toBe(2) // # check
+      })
     })
   })
 
@@ -59,7 +63,7 @@ describe('riot-view-router mixin', function() {
     bootstrap({
       default: 'home',
       fallback: '404'
-    }, STATES).then((router) => {
+    }).then((router) => {
       expect(router.settings.debugging).toBe(false)
     })
   })
@@ -68,7 +72,7 @@ describe('riot-view-router mixin', function() {
     expect(function() {
       bootstrap({
         debugging: false
-      }, STATES)
+      }, STATES).then(router => router.start())
     }).toThrowError(ReferenceError)
   })
 

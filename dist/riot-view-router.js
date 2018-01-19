@@ -321,7 +321,7 @@ var _class = function () {
             setTimeout(reject, self.constants.defaults.timeout);
           };
 
-          if (!self.$utils.stateByName(self.settings.fallback)) throw Error('Fallback state "' + self.settings.fallback + '" not found in specified states');
+          if (!self.$utils.stateByName(self.settings.default)) throw Error('Default state "' + self.settings.default + '" not found in specified states');
 
           self.running = true;
 

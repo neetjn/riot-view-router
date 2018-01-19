@@ -211,8 +211,8 @@ export default class {
     return new Promise((resolve, reject) => {
       if (!self.running) {
 
-        if (!self.$utils.stateByName(self.settings.fallback))
-          throw Error(`Fallback state "${self.settings.fallback}" not found in specified states`)
+        if (!self.$utils.stateByName(self.settings.default))
+          throw Error(`Default state "${self.settings.default}" not found in specified states`)
 
         function _start() {
           var view_check = window.setInterval(() => {
