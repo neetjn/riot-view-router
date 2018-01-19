@@ -47,7 +47,7 @@ describe('riot-view-router mixin', function() {
 
   it('sprocesses and merges single state, route variables spit as expected', function() {
     bootstrap().then(router => {
-      target = random.integer(0, STATES.length)
+      target = random.integer(0, STATES.length - 1)
       router.add(target).then(() => {
         var variables = router.states.find(function(state) {
           return state.name === target.name
