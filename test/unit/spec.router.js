@@ -68,12 +68,12 @@ describe('riot-view-router mixin', function() {
     })
   })
 
-  it('default state is enforced', function() {
-    expect(function() {
-      bootstrap({
-        debugging: false
-      }, STATES).then(router => router.start())
-    }).toThrowError(ReferenceError)
+  it('default state is enforced', function(done) {
+    bootstrap({
+      debugging: false
+    }, STATES)
+      .then(router => router.start())
+      .catch(done)
   })
 
   it('unsupported options should not be processed', function() {
