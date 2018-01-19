@@ -14,9 +14,7 @@ describe('riot-view-router mixin', function() {
     window = Object.assign({}, mocks.window)
     document = Object.assign({}, mocks.document)
     router = new Router(riot, settings || SETTINGS)
-    return Promise
-      .all((states || STATES).map(state => router.add(state)))
-      .then(() => router)
+    return router.add(states || STATES).then(() => router)
   }
 
   it('processes and merges options', function() {

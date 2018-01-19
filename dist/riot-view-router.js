@@ -204,7 +204,7 @@ var _class = function () {
         }
 
         if (Array.isArray(states)) states.forEach(function (state) {
-          return states.push(process(Object.assign({}, state)));
+          return self.states.push(process(Object.assign({}, state)));
         });else self.states.push(process(Object.assign({}, states)));
 
         resolve();

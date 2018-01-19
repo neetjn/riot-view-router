@@ -112,7 +112,7 @@ export default class {
       }
 
       if (Array.isArray(states))
-        states.forEach(state => states.push(
+        states.forEach(state => self.states.push(
           process(Object.assign({}, state))))
       else
         self.states.push(
