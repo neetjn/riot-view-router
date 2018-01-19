@@ -85,29 +85,39 @@ export default class {
 
 /**
  * Used to add new states.
- * @param {object} state - State to consume.
+ * @param {object, array} states - States to consume.
  * @returns {Promise}
  */
-  add (state) {
+  add (states) {
     const self = this
 
     return new Promise((resolve, reject) => {
-      state = Object.assign({}, state)
-      self.constants.options.states.required.forEach((prop) => {
-        if (!state[prop]) {
-          self.$logger.error(`Required state option "${prop}" not specified`)
-          reject()
-        }
-      }) // # validate state properties
-      for (const property in state) {
-        const validator = self.constants.regex.state[property]
-        if (validator && !state[property].match(validator)) {
-          self.$logger.error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
-          reject()
-        }
-      } // # validate state property values
-      state.route = self.$utils.splitRoute(state.route)
-      self.states.push(state)
+
+      function process(state) {
+        self.constants.options.states.required.forEach((prop) => {
+          if (!state[prop]) {
+            self.$logger.error(`Required state option "${prop}" not specified`)
+            reject()
+          }
+        }) // # validate state properties
+        for (const property in state) {
+          const validator = self.constants.regex.state[property]
+          if (validator && !state[property].match(validator)) {
+            self.$logger.error(`State "${state.name}" property "${property}" has an invalid value of "${state[property]}"`)
+            reject()
+          }
+        } // # validate state property values
+        state.route = self.$utils.splitRoute(state.route)
+        return state
+      }
+
+      if (Array.isArray(states))
+        states.forEach(state => states.push(
+          process(Object.assign({}, state))))
+      else
+        self.states.push(
+          process(Object.assign({}, states)))
+
       resolve()
     })
   }
