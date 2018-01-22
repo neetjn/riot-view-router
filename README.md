@@ -83,9 +83,10 @@ States are composed of the following properties,
 Using the mixin is then as simple as,
 
 ```js
+import riot from 'riot'
 import Router from 'riot-view-router'
 
-const router = new Router({
+const router = new Router(riot, {
   debugging: true,
   default: 'home',
   fallback: '404',

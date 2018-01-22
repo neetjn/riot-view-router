@@ -211,8 +211,10 @@ export default class {
     return new Promise((resolve, reject) => {
       if (!self.running) {
 
-        if (!self.$utils.stateByName(self.settings.default))
-          throw Error(`Default state "${self.settings.default}" not found in specified states`)
+        if (!self.$utils.stateByName(self.settings.default)) {
+          self.$logger.error(`Default state "${self.settings.default}" not found in specified states`)
+          reject()
+        }
 
         function _start() {
           var view_check = window.setInterval(() => {
