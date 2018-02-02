@@ -12,7 +12,6 @@ export default class {
    * @param {riot} instance - Riot instance to target.
    * @param {object} settings - Router options.
    * @param {array} states - States for router to read from.
-   * @returns {Router}
    */
   constructor (instance, settings) {
     var self = this
@@ -25,7 +24,6 @@ export default class {
     self.$riot = instance
     self.$riot.observable(self)
     self.$riot.mixin({ router: self })
-
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
@@ -92,8 +90,8 @@ export default class {
     const self = this
 
     return new Promise((resolve, reject) => {
-
       function process(state) {
+
         self.constants.options.states.required.forEach((prop) => {
           if (!state[prop]) {
             self.$logger.error(`Required state option "${prop}" not specified`)
@@ -119,6 +117,7 @@ export default class {
           process(Object.assign({}, states)))
 
       resolve()
+
     })
   }
 
@@ -141,13 +140,14 @@ export default class {
       var route_check = setInterval(() => {
         if (self.location.hash == self.constants.defaults.hash + route) {
           window.clearInterval(route_check)
-          self.trigger('navigation', { route })
+          self.trigger('navigate', { route })
           if (!skipPush)
             self.push().then(() => resolve())
           else
             resolve()
         }
       }, self.constants.intervals.navigate)
+
       setTimeout(reject, self.constants.defaults.timeout)
     })
   }
@@ -210,7 +210,6 @@ export default class {
 
     return new Promise((resolve, reject) => {
       if (!self.running) {
-
         if (!self.$utils.stateByName(self.settings.default)) {
           self.$logger.error(`Default state "${self.settings.default}" not found in specified states`)
           reject()

@@ -1,4 +1,4 @@
-var mocks = {
+var MOCK = {
 
   /**
    * Options for riot-view-router
@@ -97,4 +97,4 @@ var mocks = {
 }
 
 if (typeof module !== 'undefined')
-  module.exports = mocks
+  module.exports = MOCK
