@@ -17,14 +17,9 @@ export class Tools {
     const self = this.$router
 
     return new Promise((resolve) => {
-      if (self.$state) {
-        const removable = riot.util.vdom.find((tag) => tag.root.localName == self.$state.tag)
-        if (!removable) {
-          self.$logger.error('(transition) Could not find a matching tag to unmount')
-          reject()
-        }
-        removable.unmount()
-      }
+      if (self.$state)
+        self.context.children[0]._tag.unmount()
+
       const node = document.createElement(state.tag)
       self.context.appendChild(node)
 

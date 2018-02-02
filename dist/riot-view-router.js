@@ -591,16 +591,8 @@ var Tools = exports.Tools = function () {
       var self = this.$router;
 
       return new Promise(function (resolve) {
-        if (self.$state) {
-          var removable = riot.util.vdom.find(function (tag) {
-            return tag.root.localName == self.$state.tag;
-          });
-          if (!removable) {
-            self.$logger.error('(transition) Could not find a matching tag to unmount');
-            reject();
-          }
-          removable.unmount();
-        }
+        if (self.$state) self.context.children[0]._tag.unmount();
+
         var node = document.createElement(state.tag);
         self.context.appendChild(node);
 
