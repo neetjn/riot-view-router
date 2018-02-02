@@ -24,12 +24,10 @@ export class Tools {
       self.context.appendChild(node)
 
       if (opts) {
-        const parsed_opts = { }
-        opts.forEach((opt) => {
-          parsed_opts[opt.name] = opt.value
-        }) // # add props
-        parsed_opts.qargs = opts._query
-        var tag = self.$riot.mount(state.tag, parsed_opts)
+        const parsedOpts = { }
+        opts.forEach(opt => parsedOpts[opt.name] = opt.value) // # add props
+        parsedOpts.qargs = opts._query
+        var tag = self.$riot.mount(state.tag, parsedOpts)
         if (state.title) {
           let title = self.settings.title ? `${self.settings.title} - ${state.title}` : state.title
           opts.forEach((opt) => title = title.replace(`<${opt.name}>`, opt.value))

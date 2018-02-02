@@ -106,7 +106,6 @@ var _class = function () {
    * @param {riot} instance - Riot instance to target.
    * @param {object} settings - Router options.
    * @param {array} states - States for router to read from.
-   * @returns {Router}
    */
   function _class(instance, settings) {
     _classCallCheck(this, _class);
@@ -121,7 +120,6 @@ var _class = function () {
     self.$riot = instance;
     self.$riot.observable(self);
     self.$riot.mixin({ router: self });
-
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);
@@ -184,8 +182,8 @@ var _class = function () {
       var self = this;
 
       return new Promise(function (resolve, reject) {
-
         function process(state) {
+
           self.constants.options.states.required.forEach(function (prop) {
             if (!state[prop]) {
               self.$logger.error('Required state option "' + prop + '" not specified');
@@ -241,6 +239,7 @@ var _class = function () {
             });else resolve();
           }
         }, self.constants.intervals.navigate);
+
         setTimeout(reject, self.constants.defaults.timeout);
       });
     }
@@ -597,12 +596,12 @@ var Tools = exports.Tools = function () {
         self.context.appendChild(node);
 
         if (opts) {
-          var parsed_opts = {};
+          var parsedOpts = {};
           opts.forEach(function (opt) {
-            parsed_opts[opt.name] = opt.value;
+            return parsedOpts[opt.name] = opt.value;
           }); // # add props
-          parsed_opts.qargs = opts._query;
-          var tag = self.$riot.mount(state.tag, parsed_opts);
+          parsedOpts.qargs = opts._query;
+          var tag = self.$riot.mount(state.tag, parsedOpts);
           if (state.title) {
             var title = self.settings.title ? self.settings.title + ' - ' + state.title : state.title;
             opts.forEach(function (opt) {
