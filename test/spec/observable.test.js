@@ -7,7 +7,7 @@ describe('riot-view-router observable', function() {
     let event = ''
     let transitioned = false
     router
-      .on('navigation', () => { event = 'navigate' })
+      .on('navigate', () => { event = 'navigate' })
       .on('push', () => { event = 'push' })
       .on('transition', () => { transitioned = true })
       .on('start', () => { event = 'start' })

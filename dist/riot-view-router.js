@@ -235,7 +235,7 @@ var _class = function () {
         var route_check = setInterval(function () {
           if (self.location.hash == self.constants.defaults.hash + route) {
             window.clearInterval(route_check);
-            self.trigger('navigation', { route: route });
+            self.trigger('navigate', { route: route });
             if (!skipPush) self.push().then(function () {
               return resolve();
             });else resolve();

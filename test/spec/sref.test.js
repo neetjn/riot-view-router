@@ -5,7 +5,7 @@ describe('riot-view-router state reference', function() {
 
   it('should bind target elements and redirect to given route', function(done) {
     var called = false
-    router.on('navigation', () => {
+    router.on('navigate', () => {
       called = true
     })
     document.querySelector('button[r-sref]').click()

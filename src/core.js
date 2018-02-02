@@ -141,7 +141,7 @@ export default class {
       var route_check = setInterval(() => {
         if (self.location.hash == self.constants.defaults.hash + route) {
           window.clearInterval(route_check)
-          self.trigger('navigation', { route })
+          self.trigger('navigate', { route })
           if (!skipPush)
             self.push().then(() => resolve())
           else

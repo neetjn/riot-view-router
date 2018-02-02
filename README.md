@@ -120,10 +120,6 @@ router.add([
     title: '<username>\'s profile'
   }
 ])
-
-router.on('start', () => {
-  console.log('hello world!')
-})
 ```
 
 You may then access the `Router` instance via your tags with `router` like so,
@@ -173,6 +169,56 @@ The **riot-view-router** has a very simple, easily operable API.
 > **`reload()`**: Reload current route.
 
 > **`on(*event, *handler)`**: Register a lifecycle event (start, stop, navigation, push, transition).
+
+### Router Observable
+
+This router supports the following observable events,
+
+> **`start`**: Triggered when the router is started.
+
+> **`stop`**: Triggered when the router is stopped.
+
+> **`reload`**: Triggered when a route is reloaded.
+
+> **`navigate`**: Trigerred when navigation occurs.
+
+> **`push`**: Triggered when pushing a new state.
+
+> **`transition`**: Triggered when transitioning into a new state, emits an optional argument ***state***.
+
+```html
+<Header>
+  <nav>
+    <ul>
+      <li each={ route in routes }
+          class={ is-active: route.active }
+          r-sref={ route.state }>
+        { route.label }
+      </li>
+    </ul>
+  </nav>
+  <script type="es6">
+    const self = this
+
+    self.routes = [
+      { label: 'Home', state: 'home', active: false },
+      { label: 'About', state: 'about', active: false },
+      { label: 'Help', state: 'help', active: false },      
+    ]
+    // middleware for toggling nav items
+    self.router.on('transition', state => {
+      self.routes.forEach(route => {
+        route.active = false
+      })
+      const s = self.routes.find(i => i.name == state.name)
+      if(s)
+        s.active = true
+
+      self.update()
+    })
+  </script>
+</Header>
+```
 
 ### Contributors
 
