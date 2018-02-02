@@ -190,7 +190,6 @@ export default class {
       if (self.$state && self.$state.onLeave)
         self.$state.onLeave(state) // # call onLeave, pass old state
 
-      console.log('\n\nmade it\n\n')
       self.$tools.transition(state, opts)
 
       if (state.onEnter)
