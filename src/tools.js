@@ -46,6 +46,8 @@ export class Tools {
       else
         var tag = self.$riot.mount(state.tag)
 
+      self.trigger('transition', { state })
+
       tag[0].on('updated', () => {
         if (self.running) {
           document.querySelectorAll(`[${self.constants.defaults.anchorMarker}]`).forEach((el) => {
@@ -75,17 +77,17 @@ export class Tools {
             attempts += 1
             if (document.querySelector(`#${fragment[1]}`)) {
               document.querySelector(`#${fragment[1]}`).scrollIntoView()
-              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              resolve()
               clearInterval(search)
             } else if (attempts * self.constants.intervals.fragments >= self.constants.waits.fragments) {
               self.$logger.error(`(transition) Fragment identifier "#${fragment[1]}" not found.`)
-              self._dispatch('transition', { state }).then(resolve).catch(resolve)
+              resolve()
               clearInterval(search)
             }
           }, self.constants.intervals.fragments)
         }
       } else
-        self._dispatch('transition', { state }).then(resolve).catch(resolve)
+        resolve()
     })
   }
 

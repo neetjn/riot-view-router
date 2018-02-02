@@ -13,7 +13,7 @@
 
 **riot-view-router** is a lightweight, extensive state based riot.js router for tag views. It was designed after the ui-router project, with all the quirks of riot.js.
 
-This project makes use of the HTML5 history api, using `pushState` under the hood.
+This project makes use of the HTML5 history api, using `pushState` under the hood; in other words this is a client sided router.
 
 ### Support
 

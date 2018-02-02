@@ -1,18 +1,18 @@
 var random = require('random-js')()
-var mocks = require('../mocks')
+var MOCK = require('../mocks')
 
 var Router = require('../../dist/riot-view-router')
 
-var SETTINGS = mocks.settings
-var STATES = mocks.states
+var SETTINGS = MOCK.settings
+var STATES = MOCK.states
 
 describe('riot-view-router mixin', function() {
 
   riot = require('riot')
 
   function bootstrap(settings) {
-    window = Object.assign({}, mocks.window)
-    document = Object.assign({}, mocks.document)
+    window = Object.assign({}, MOCK.window)
+    document = Object.assign({}, MOCK.document)
     return new Promise(() => new Router(riot, settings || SETTINGS))
   }
 
