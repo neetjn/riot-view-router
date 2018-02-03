@@ -4,7 +4,7 @@ const webpack = require('webpack')
 module.exports = {
   entry: './src/core.js',
   output: {
-    path: path.join(__dirname, './dir'),
+    path: path.join(__dirname, './dist'),
     publicPath: 'dist/',
     filename: 'riot-view-router.js',
     libraryTarget: 'umd',
