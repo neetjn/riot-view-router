@@ -120,6 +120,15 @@ var _class = function () {
     self.$riot = instance;
     self.$riot.observable(self);
     self.$riot.mixin({ router: self });
+    self.$riot.mixin({
+      route: function route(_route) {
+        _route = _route.indexOf('/' + self.constants.defaults.hash) ? _route : '/' + self.constants.defaults.hash + '/route';
+        _route = _route.split('/').map(function (fragment, index) {
+          if (index > 1) return encodeURI(fragment);else return fragment;
+        }).join('/');
+        return _route;
+      }
+    });
     self.$logger = new _logger.Logger(self);
     self.$tools = new _tools.Tools(self);
     self.$utils = new _utils.Utils(self);

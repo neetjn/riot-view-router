@@ -24,6 +24,20 @@ export default class {
     self.$riot = instance
     self.$riot.observable(self)
     self.$riot.mixin({ router: self })
+    self.$riot.mixin({
+      route: function(route) {
+        route = route.indexOf(`/${self.constants.defaults.hash}`)
+          ? route : `/${self.constants.defaults.hash}/route`
+        route = route.split('/').map((fragment, index) => {
+          if (index > 1)
+            return encodeURI(fragment)
+          else
+            return fragment
+        }).join('/')
+        return route
+      }
+    })
+
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
