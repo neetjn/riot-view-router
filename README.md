@@ -141,6 +141,14 @@ To navigate to a route within your riot tags, you may use `r-sref` to reference 
 </sometag>
 ```
 
+You may also use a general anchor tag, the router comes with a helper function baked in to help construct urls on the fly. It also supports url encoding.
+
+```html
+<sometag>
+  <a href={ route(['profile', username]) }>Profile</a>
+</sometag>
+```
+
 Both route and query string variables can also be accessed directly via the target tag with opts. Take for example navigating to the url `.../!#/profile/john?views=1` with the route pattern `/profile/:username`.
 
 ```
