@@ -4,8 +4,8 @@
   "description": "Lightweight, extensive riot.js router for tag views.",
   "main": "dist/riot-view-router.js",
   "scripts": {
-    "bundle:prod": "node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config build/webpack.conf.js",
-    "bundle:dev": "node_modules/.bin/webpack --config build/webpack.conf.js",
+    "bundle:prod": "node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --config webpack.conf.js",
+    "bundle:dev": "node_modules/.bin/webpack --config webpack.conf.js",
     "bundle": "npm run bundle:dev && npm run bundle:prod",
     "lint": "node_modules/.bin/eslint src/**.js",
     "test:unit": "node_modules/.bin/jasmine test/unit/*.test.js",

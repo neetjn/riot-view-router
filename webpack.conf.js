@@ -1,14 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
 
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
-}
-
 module.exports = {
   entry: './src/core.js',
   output: {
-    path: resolve('./dist'),
+    path: path.join(__dirname, './dir'),
     publicPath: 'dist/',
     filename: 'riot-view-router.js',
     libraryTarget: 'umd',
