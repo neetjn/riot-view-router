@@ -24,6 +24,18 @@ export default class {
     self.$riot = instance
     self.$riot.observable(self)
     self.$riot.mixin({ router: self })
+    self.$riot.mixin({
+      route: function(route) {
+        // # automagically encode url fragments
+        route = route.map((fragment, index) => index ? encodeURI(`/${fragment}`) : fragment)
+        // # safe guard for query strings
+        if (route.slice(-1).indexOf('/?'))
+          route[route.length - 1] = route[route.length - 1].replace('/?', '?')
+        // # construct final url
+        return `/${self.constants.defaults.hash}/${route.join('')}`
+      }
+    })
+
     self.$logger = new Logger(self)
     self.$tools = new Tools(self)
     self.$utils = new Utils(self)
