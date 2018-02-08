@@ -1,3 +1,5 @@
+root = true
+
 [{*.{js,html,json,yml,tag},.eslintrc}]
 charset = utf-8
 indent_style = space
