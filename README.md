@@ -21,7 +21,7 @@ This project makes use of the HTML5 history api, using `pushState` under the hoo
 |--------|------|---------|----------|--------|
 | 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
 
-*This project only supports riot.js 3, support for previous versions is not available.*
+This project supports Riot.js 4, for Riot.js 3 support see (Foobar)[].
 
 ### Examples
 
