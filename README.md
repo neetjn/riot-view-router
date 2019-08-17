@@ -33,15 +33,14 @@ npm install riot-view-router@0.1.4
 
 ### Usage
 
-To install via Bower, simply do the following:
-```sh
-bower install riot-view-router
-```
 To install via NPM:
+
 ```sh
 npm install riot-view-router
+
 ```
 For a quick start using jsdelivr:
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/riot-view-router/dist/riot-view-router.min.js"></script>
 ```

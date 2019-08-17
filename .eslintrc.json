@@ -1,12 +1,12 @@
 {
   "root": true,
   "parser": "babel-eslint",
-  "plugins": ["riot"],
   "rules": {
     "object-curly-spacing": ["error", "always"],
     "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1 }],
     "semi": ["error", "never"],
     "no-unused-vars": ["error"],
+    "no-undef": ["error"],
     "space-before-blocks": ["error", "always"],
     "quotes": ["error", "single"],
     "prefer-const": ["error", {
@@ -14,12 +14,13 @@
       "ignoreReadBeforeAssign": false
     }],
     "prefer-template": "error",
-    "no-useless-concat": "error",
-    "quotes": ["error", "single"]
+    "no-useless-concat": "error"
   },
   "globals": {
     "document": true,
     "window": true,
-    "riot": true
+    "require": true,
+    "module": true,
+    "__dirname": true
   }
 }
