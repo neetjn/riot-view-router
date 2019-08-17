@@ -1,50 +1,27 @@
-const path = require('path')
-const webpack = require('webpack')
-
 module.exports = {
-  entry: './src/core.js',
+  entry: {
+    main: './src/core.js'
+  },
   output: {
-    path: path.join(__dirname, './dist'),
-    publicPath: 'dist/',
     filename: 'riot-view-router.js',
-    libraryTarget: 'umd',
     library: 'Router',
+    libraryTarget: 'umd',
     umdNamedDefine: true
   },
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: 'node_modules/',
         use: {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: ['env'],
-            plugins: ['add-module-exports']
+            presets: ['@babel/preset-env']
           }
         }
       }
     ]
   }
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.output.filename = 'riot-view-router.min.js'
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
 }

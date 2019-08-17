@@ -21,6 +21,6 @@
     "window": true,
     "require": true,
     "module": true,
-    "__dirname": true
+    "process": true
   }
 }

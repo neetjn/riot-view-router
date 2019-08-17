@@ -35,6 +35,7 @@
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.0",
     "jest": "^24.9.0",
     "jest-dom": "^4.0.0",
     "prettier": "^1.18.2",
@@ -43,5 +44,10 @@
     "riot-jest-transformer": "^4.0.1",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "verbose": true
   }
 }
