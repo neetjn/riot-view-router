@@ -21,7 +21,11 @@ This project makes use of the HTML5 history api, using `pushState` under the hoo
 |--------|------|---------|----------|--------|
 | 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
 
-This project supports Riot.js 4, for Riot.js 3 support see (Foobar)[].
+This project supports Riot.js 4, for Riot.js 3 support see branch [riot3](https://github.com/neetjn/riot-view-router/tree/riot-3) -- this branch can be accessed with with NPM using:
+
+```sh
+npm install riot-view-router@0.1.4
+```
 
 ### Examples
 
