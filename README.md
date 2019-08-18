@@ -9,6 +9,9 @@
 
 [![NPM](https://nodei.co/npm/riot-view-router.png)](https://nodei.co/npm/riot-view-router/)
 
+
+**This project only supports Riot.js 3.x and is no longer maintained, for Riot.js 4.x see [riot-routing](https://github.com/neetjn/riot-routing).**
+
 ### About
 
 **riot-view-router** is a lightweight, extensive state based riot.js router for tag views. It was designed after the ui-router project, with all the quirks of riot.js.
@@ -20,8 +23,6 @@ This project makes use of the HTML5 history api, using `pushState` under the hoo
 | Chome  | Edge | Firefox | Opera    | Safari |
 |--------|------|---------|----------|--------|
 | 5.0+ ✔ |  ✔   | 4.0+ ✔  | 11.50+ ✔ | 5.0+ ✔ |
-
-*This project only supports riot.js 3, support for previous versions is not available.*
 
 ### Examples
 
